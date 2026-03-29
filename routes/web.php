@@ -30,5 +30,15 @@ Route::prefix('projects')->group(function () {
         Route::post('/{project_uuid}/cards', [\App\Http\Controllers\CardController::class, 'store']);
         Route::get('/{project_uuid}/cards/{card_uuid}', [\App\Http\Controllers\CardController::class, 'show']);
         Route::put('/{project_uuid}/cards/{card_uuid}', [\App\Http\Controllers\CardController::class, 'update']);
+        Route::post('/{project_uuid}/cards/{card_uuid}/image', [\App\Http\Controllers\CardController::class, 'uploadImage']);
+        Route::patch('/{project_uuid}/cards/{card_uuid}/image', [\App\Http\Controllers\CardController::class, 'linkImage']);
+        Route::delete('/{project_uuid}/cards/{card_uuid}', [\App\Http\Controllers\CardController::class, 'destroy']);
+
+        // Gallery
+        Route::get('/{project_uuid}/gallery', [\App\Http\Controllers\GalleryController::class, 'index']);
+        Route::post('/{project_uuid}/gallery', [\App\Http\Controllers\GalleryController::class, 'store']);
+        Route::put('/{project_uuid}/gallery/{uuid}', [\App\Http\Controllers\GalleryController::class, 'update']);
+        Route::delete('/{project_uuid}/gallery/{uuid}', [\App\Http\Controllers\GalleryController::class, 'destroy']);
+        Route::get('/{project_uuid}/gallery/{uuid}/image/{type?}', [\App\Http\Controllers\GalleryController::class, 'showImage']);
     });
 });

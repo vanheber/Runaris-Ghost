@@ -84,6 +84,13 @@ class ProjectManager
         DB::purge('sqlite_project');
         DB::reconnect('sqlite_project');
         
+        // Ensure the project database is up to date with the latest project-specific migrations
+        Artisan::call('migrate', [
+            '--database' => 'sqlite_project',
+            '--path' => 'database/migrations/project',
+            '--force' => true,
+        ]);
+        
         // Optionally set as default if the route requires it
         // DB::setDefaultConnection('sqlite_project');
     }

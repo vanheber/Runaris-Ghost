@@ -1,0 +1,19 @@
+# AI context optimizations
+.git/
+vendor/
+node_modules/
+public/build/
+storage/logs/
+storage/framework/
+database/database.sqlite
+package-lock.json
+composer.lock
+*.log
+*.zip
+*.tar
+*.gz
+*.pdf
+*.epub
+.DS_Store
+.idea
+.vscode

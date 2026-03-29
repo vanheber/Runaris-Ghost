@@ -14,6 +14,7 @@ class Card extends Model
         'title',
         'summary',
         'file_path',
+        'image_uuid',
         'metadata',
     ];
 

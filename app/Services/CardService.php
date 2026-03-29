@@ -84,4 +84,17 @@ class CardService
         $object = YamlFrontMatter::parse(File::get($filePath));
         return $object->body();
     }
+
+    /**
+     * Delete card and its file.
+     */
+    public function deleteCard(Project $project, Card $card): void
+    {
+        $filePath = $project->getStoragePath($card->file_path);
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+        }
+        
+        $card->delete();
+    }
 }
