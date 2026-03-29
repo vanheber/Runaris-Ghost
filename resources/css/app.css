@@ -1,0 +1,120 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Centralized Design System - Runaris Ghost (Strict Bootstrap 5.3) */
+
+/* 1. Global Aesthetics */
+body {
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.vh-workspace { height: calc(100vh - 120px); }
+.ls-wide { letter-spacing: 0.1em; }
+.cp { cursor: pointer; }
+.cp-title:hover { color: var(--bs-primary) !important; }
+
+/* 2. Ghost Interactive Elements */
+.btn-ghost-card {
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
+    color: var(--bs-primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+}
+.btn-ghost-card:hover { 
+    color: var(--bs-emphasis-color);
+    border-color: var(--bs-primary);
+    transform: scale(1.05);
+}
+
+.toggle-btn-left { top: 12px; right: 12px; }
+.toggle-btn-right { top: 12px; left: 12px; }
+
+/* 3. Split.js Gutter */
+.gutter {
+    background-color: transparent;
+    cursor: col-resize;
+    transition: background-color 0.2s;
+}
+.gutter:hover { background-color: var(--bs-primary); opacity: 0.2; }
+.gutter.gutter-horizontal { width: 8px; }
+
+/* 4. Custom Scrollbar (Stealth) */
+.scroll-custom::-webkit-scrollbar { width: 6px; }
+.scroll-custom::-webkit-scrollbar-track { background: transparent; }
+.scroll-custom::-webkit-scrollbar-thumb {
+    background: var(--bs-border-color);
+    border-radius: 10px;
+}
+.scroll-custom:hover::-webkit-scrollbar-thumb { background: var(--bs-primary); }
+.scroll-custom { scrollbar-width: thin; scrollbar-color: var(--bs-border-color) transparent; }
+
+/* 5. EasyMDE Theme Integrations */
+.EasyMDEContainer .CodeMirror { 
+    background: var(--bs-tertiary-bg) !important; 
+    color: var(--bs-body-color) !important; 
+    border-color: var(--bs-border-color) !important; 
+    border-radius: 8px !important; 
+    font-size: 1.1rem;
+    padding: 10px;
+}
+.editor-toolbar { 
+    background: var(--bs-tertiary-bg) !important; 
+    border-color: var(--bs-border-color) !important;
+    border-radius: 8px 8px 0 0;
+}
+.editor-toolbar button { color: var(--bs-body-color) !important; }
+.editor-toolbar button.active, .editor-toolbar button:hover { background: rgba(var(--bs-primary-rgb), 0.1) !important; }
+
+/* 6. Animations (Ambient & UI) */
+@keyframes moveBg { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+@keyframes float { 0%, 100% { transform: translateY(0) rotate(5deg); } 50% { transform: translateY(-40px) rotate(-5deg); } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.animate-ambient { animation: moveBg 20s ease infinite alternate; }
+.animate-float { animation: float 10s ease-in-out infinite; }
+.spin { animation: spin 1s linear infinite; display: inline-block; }
+
+.ambient-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    background: radial-gradient(circle at 20% 30%, rgba(var(--bs-primary-rgb), 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(var(--bs-primary-rgb), 0.1) 0%, transparent 40%);
+}
+
+/* 7. Utility Overrides */
+.split-pane { height: 100%; transition: width 0.3s ease; }
+.sidebar-content { opacity: 1; transition: opacity 0.2s; }
+.collapsed .sidebar-content { opacity: 0; pointer-events: none; }
+.node-row:hover { background: rgba(var(--bs-primary-rgb), 0.05) !important; cursor: pointer; }
+.node-row:hover .node-actions { display: flex !important; }
+
+/* 8. Theme Overrides (Place last for maximum specificity) */
+
+/* Force native Dark to be Dark */
+[data-bs-theme="dark"] {
+    --bs-body-bg: #121212;
+    --bs-body-bg-rgb: 18, 18, 18;
+    --bs-tertiary-bg: #1e1e1e;
+    --bs-tertiary-bg-rgb: 30, 30, 30;
+}
+
+[data-bs-theme="solar-light"] {
+    --bs-body-bg: #fdf6e3;
+    --bs-body-bg-rgb: 253, 246, 227;
+    --bs-body-color: #657b83;
+    --bs-emphasis-color: #586e75;
+    --bs-secondary-bg: #eee8d5;
+    --bs-secondary-bg-rgb: 238, 232, 213;
+    --bs-tertiary-bg: #eee8d5;
+    --bs-tertiary-bg-rgb: 238, 232, 213;
+    --bs-border-color: #93a1a1;
+    --bs-primary: #b58900;
+    --bs-primary-rgb: 181, 137, 0;
+    --bs-link-color: #b58900;
+}
