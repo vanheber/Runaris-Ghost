@@ -11,6 +11,9 @@ class Project extends Model
         'uuid',
         'description',
         'last_opened_at',
+        'bible_content',
+        'bible_summary',
+        'cover_image_uuid',
     ];
 
     protected $casts = [

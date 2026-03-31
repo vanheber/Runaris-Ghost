@@ -74,6 +74,40 @@ class CardService
     }
 
     /**
+     * Update card title and sync metadata.
+     */
+    public function updateCardTitle(Project $project, Card $card, string $title): Card
+    {
+        $filePath = $project->getStoragePath($card->file_path);
+        
+        // Parse current frontmatter
+        $object = YamlFrontMatter::parse(File::get($filePath));
+        $data = $object->matter();
+        $data['title'] = $title;
+        $data['updated_at'] = now()->toDateTimeString();
+
+        // Rebuild file
+        $newContent = "---\n";
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $newContent .= "{$key}: " . json_encode($value) . "\n";
+            } else {
+                $newContent .= "{$key}: \"{$value}\"\n";
+            }
+        }
+        $newContent .= "---\n\n";
+        $newContent .= $object->body();
+
+        File::put($filePath, $newContent);
+
+        // Sync with SQLite
+        app(ProjectManager::class)->switchToProject($project);
+        $card->update(['title' => $title]);
+
+        return $card;
+    }
+
+    /**
      * Get content from MD file.
      */
     public function getMarkdownBody(Project $project, Card $card): string

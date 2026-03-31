@@ -18,7 +18,16 @@ class ManuscriptItem extends Model
         'title',
         'order',
         'content_updated_at',
-        'word_count'
+        'word_count',
+        'is_system',
+        'has_planning',
+        'planning_updated_at'
+    ];
+    
+    protected $casts = [
+        'is_system' => 'boolean',
+        'has_planning' => 'boolean',
+        'planning_updated_at' => 'datetime'
     ];
 
     public function parent()

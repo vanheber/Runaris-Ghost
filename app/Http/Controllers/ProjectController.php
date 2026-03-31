@@ -2,23 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Models\Project;
-use App\Services\ProjectManager;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    protected $projectManager;
-
-    public function __construct(ProjectManager $projectManager)
-    {
-        $this->projectManager = $projectManager;
-    }
-
     /**
-     * List all projects (from Main DB).
+     * Display a listing of projects.
      */
     public function index()
     {
@@ -27,28 +17,68 @@ class ProjectController extends Controller
     }
 
     /**
-     * Create a new project.
+     * Store a newly created project.
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string'
         ]);
 
-        $project = $this->projectManager->createProject($validated);
+        $project = Project::create([
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'last_opened_at' => now()
+        ]);
 
-        return redirect('/projects')->with('success', 'Projeto criado com sucesso!');
+        return redirect('/projects/' . $project->uuid);
     }
 
     /**
-     * Show a project context (Dynamic Switching test).
+     * Display the writing dashboard for a specific project.
      */
     public function show($project_uuid)
     {
-        // Project context is already handled by Middleware
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
         
+        // Update last opened timestamp
+        $project->update(['last_opened_at' => now()]);
+
         return view('projects.dashboard', compact('project'));
+    }
+
+    /**
+     * Update the project cover image.
+     */
+    public function updateCover(Request $request, $project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        
+        $request->validate([
+            'image_uuid' => 'required|uuid|exists:gallery_items,uuid'
+        ]);
+
+        $project->update([
+            'cover_image_uuid' => $request->input('image_uuid')
+        ]);
+
+        return response()->json([
+            'message' => 'Capa atualizada com sucesso.',
+            'cover_image_uuid' => $project->cover_image_uuid
+        ]);
+    }
+
+    /**
+     * Export project to ePub.
+     */
+    public function exportEpub($project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        
+        $exporter = new \App\Services\ExporterService($project);
+        $filePath = $exporter->generateEpub();
+
+        return response()->download($filePath)->deleteFileAfterSend(true);
     }
 }

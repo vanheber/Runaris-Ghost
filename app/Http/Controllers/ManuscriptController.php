@@ -89,8 +89,7 @@ class ManuscriptController extends Controller
         $this->projectManager->switchToProject($project);
         $request->validate(['title' => 'required|string']);
 
-        $item = ManuscriptItem::where('uuid', $uuid)->firstOrFail();
-        $item->update(['title' => $request->input('title')]);
+        $item = $this->manuscriptService->updateTitle($project, $uuid, $request->input('title'));
 
         return response()->json($item);
     }
@@ -113,7 +112,33 @@ class ManuscriptController extends Controller
         $this->projectManager->switchToProject($project);
         $request->validate(['sorting' => 'required|array']);
 
-        $this->manuscriptService->updateOrder($request->input('sorting'));
+        $this->manuscriptService->updateOrder($project, $request->input('sorting'));
+
+        return response()->json(['status' => 'success']);
+    }
+
+    /**
+     * Get planning/beats content for a manuscript item.
+     */
+    public function getPlanning($project_uuid, string $uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        $content = $this->manuscriptService->getPlanning($project, $uuid);
+
+        return response()->json(['content' => $content]);
+    }
+
+    /**
+     * Save planning/beats content for a manuscript item.
+     */
+    public function savePlanning(Request $request, $project_uuid, string $uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        $request->validate(['content' => 'required|string']);
+
+        $this->manuscriptService->savePlanning($project, $uuid, $request->input('content'));
 
         return response()->json(['status' => 'success']);
     }

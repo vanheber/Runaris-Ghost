@@ -6,6 +6,8 @@
 
 
 <div class="container-fluid px-4 mt-2">
+    <!-- Graph Visualization Lib -->
+    <script src="//unpkg.com/force-graph"></script>
     <style>
         .card-ficha {
             cursor: pointer;
@@ -39,6 +41,9 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
+        }
+        .world-grid-btn.full-width {
+            grid-column: span 2;
         }
         .world-grid-btn {
             display: flex;
@@ -118,6 +123,25 @@
             background: rgba(var(--bs-primary-rgb), 0.1);
             color: var(--bs-primary);
         }
+        /* Planejamento Mode Highlights */
+        .btn-planning.active {
+            background-color: #fd7e14 !important;
+            border-color: #fd7e14 !important;
+            color: white !important;
+            box-shadow: 0 0 10px rgba(253, 126, 20, 0.4);
+        }
+        .editor-planning-mode {
+            border: 2px solid rgba(253, 126, 20, 0.5) !important;
+            transition: border 0.3s ease;
+        }
+        /* Unificar Toolbar com Bootstrap Icons */
+        .editor-toolbar button.bi {
+            font-family: "bootstrap-icons" !important;
+            font-style: normal;
+        }
+        .editor-toolbar button.bi::before {
+            vertical-align: middle;
+        }
     </style>
     <!-- Layout Principal -->
     <div id="main-layout" class="d-row d-flex vh-workspace mt-3">
@@ -143,6 +167,12 @@
                     </a>
                     <a id="nav-gallery" class="world-grid-btn nav-world" href="#" onclick="openGallery()" title="Galeria">
                         <i class="bi bi-images"></i> Galeria
+                    </a>
+                    <a id="nav-connections" class="world-grid-btn nav-world" href="#" onclick="openGraph()" title="Conexões">
+                        <i class="bi bi-diagram-3"></i> Conexões
+                    </a>
+                    <a id="nav-bible" class="world-grid-btn nav-world" href="#" onclick="openBible()" title="Bíblia">
+                        <i class="bi bi-book"></i> Bíblia
                     </a>
                 </div>
 
@@ -173,7 +203,13 @@
                     <div class="d-flex justify-content-between align-items-center mb-3 flex-shrink-0">
                         <div class="d-flex align-items-center">
                             <span id="editor-type-icon" class="me-2 text-primary"></span>
-                            <h3 id="current-item-title" class="fw-bold mb-0 cp-title" onclick="enableTitleEdit()">Título</h3>
+                            <div class="d-flex flex-column">
+                                <h3 id="current-item-title" class="fw-bold mb-0 cp-title" onclick="enableTitleEdit()">Título</h3>
+                                <div id="manuscript-mode-toggle" class="d-flex gap-2 mt-1 d-none">
+                                    <button id="btn-mode-writing" class="btn btn-xs btn-outline-primary active py-0 px-2 small" onclick="setManuscriptMode('writing')" style="font-size: 0.65rem;">ESCRITA</button>
+                                    <button id="btn-mode-planning" class="btn btn-xs btn-outline-secondary btn-planning py-0 px-2 small" onclick="setManuscriptMode('planning')" style="font-size: 0.65rem;">PLANEJAMENTO</button>
+                                </div>
+                            </div>
                             <input type="text" id="title-edit-input" class="form-control form-control-lg bg-transparent border-0 text-body fw-bold d-none p-0 ms-2" style="font-size: 1.75rem;" onblur="saveTitleEdit()" onkeyup="if(event.key==='Enter') saveTitleEdit()">
                         </div>
                         <div id="save-status" class="text-body-secondary small">
@@ -182,6 +218,79 @@
                     </div>
                     <div class="flex-grow-1 overflow-auto custom-editor-area">
                         <textarea id="markdown-editor"></textarea>
+                    </div>
+
+                    <!-- Connection Management Area -->
+                    <div id="card-connections-editor" class="mt-4 pt-3 border-top border-secondary border-opacity-10 d-none">
+                        <h6 class="text-primary small text-uppercase fw-bold mb-3 ls-wide">Relacionamentos</h6>
+                        <div id="active-connections" class="d-flex flex-wrap gap-2 mb-3">
+                            <!-- Conexões atuais -->
+                        </div>
+                        <div class="position-relative pt-2 pb-5"> 
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-transparent border-secondary border-opacity-25 text-body-secondary">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" id="connection-search" class="form-control bg-transparent border-secondary border-opacity-25" placeholder="Adicionar relação (digite o nome...)" onkeyup="searchConnections(this.value)">
+                            </div>
+                            <div id="connection-results" class="position-absolute w-100 bg-body-tertiary border border-primary border-opacity-50 rounded mt-1 shadow-lg d-none" style="z-index: 10000; max-height: 200px; overflow-y: auto;">
+                                <!-- Resultados da busca -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bible View -->
+                <div id="bible-container" class="card bg-body-tertiary border-0 shadow-sm p-4 h-100 d-none overflow-hidden d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-book me-2 text-primary fs-4"></i>
+                            <h3 class="fw-bold mb-0">Bíblia do Projeto</h3>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <button id="btn-sync-bible" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm" onclick="syncBibleWithAI()" title="A IA lerá seu manuscrito e atualizará o resumo.">
+                                <i class="bi bi-stars me-1 text-warning"></i> Sincronizar Bíblia
+                            </button>
+                            <div id="bible-save-status" class="text-body-secondary small">
+                                <i class="bi bi-check2-all me-1"></i> Salvo
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-1 overflow-hidden d-flex flex-column gap-4">
+                        <!-- Duas seções: Lore (Manual) e Resumo (IA) -->
+                        <div class="row h-100 g-4">
+                            <div class="col-md-7 d-flex flex-column">
+                                <h6 class="text-primary small text-uppercase fw-bold mb-2 ls-wide">DNA & Lore do Mundo</h6>
+                                <div class="flex-grow-1 overflow-auto custom-editor-area">
+                                    <textarea id="bible-editor"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-5 d-flex flex-column border-start border-secondary border-opacity-10 ps-4">
+                                <h6 class="text-accent small text-uppercase fw-bold mb-2 ls-wide">
+                                    Resumo Narrativo 
+                                    <span class="badge bg-secondary bg-opacity-10 text-body-secondary fw-normal ms-1" style="font-size: 0.6rem;">IA RECAP</span>
+                                </h6>
+                                <div class="flex-grow-1 overflow-auto custom-editor-area">
+                                    <textarea id="bible-summary-editor"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="graph-container" class="card bg-body-tertiary border-0 shadow-sm h-100 d-none overflow-hidden position-relative">
+                    <div id="graph-view" style="width: 100%; height: 100%;"></div>
+                    <div class="position-absolute top-0 end-0 p-3 z-2">
+                        <button class="btn btn-sm btn-ghost-card backdrop-blur" onclick="loadGraphData(true)" title="Atualizar Grafo">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                    <!-- Navigation Help Overlay -->
+                    <div class="position-absolute bottom-0 start-0 p-3 z-2">
+                        <div class="badge bg-dark bg-opacity-50 backdrop-blur p-2 small border border-secondary border-opacity-25" style="pointer-events: none;">
+                            <i class="bi bi-mouse me-2"></i> Scroll: Zoom | <i class="bi bi-arrows-move mx-2"></i> Arraste: Mover | <i class="bi bi-hand-index mx-2"></i> Clique: Abrir
+                        </div>
                     </div>
                 </div>
 
@@ -207,10 +316,13 @@
                             <h3 id="cards-grid-title" class="fw-bold mb-0">Personagens</h3>
                         </div>
                         <div class="d-flex gap-2 align-items-center">
-                            <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-25" style="width: 200px;">
+                            <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-25" style="width: 150px;">
                                 <span class="input-group-text bg-transparent border-0 px-2"><i class="bi bi-search opacity-50"></i></span>
                                 <input type="text" id="cards-search" class="form-control border-0 bg-transparent ps-0" placeholder="Filtrar..." oninput="filterCards(this.value)">
                             </div>
+                            <button class="btn btn-outline-primary rounded-pill btn-sm px-3" onclick="exportProject()" title="Gerar ePub para Kindle">
+                                <i class="bi bi-cloud-download me-1"></i> Exportar
+                            </button>
                             <button class="btn btn-primary rounded-pill btn-sm px-3" onclick="createCard()">
                                 <i class="bi bi-plus-lg me-1"></i> Nova Ficha
                             </button>
@@ -286,10 +398,40 @@
                         <!-- Conteúdo dinâmico -->
                     </div>
                 </div>
-                <hr class="border-secondary opacity-25 my-4">
-                <button id="delete-item-btn" type="button" class="btn btn-sm btn-outline-danger w-100 mt-2 d-none" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" onclick="itemToDeleteUuid = activeItemUuid">
-                    <i class="bi bi-trash me-1"></i> Excluir Item
-                </button>
+                <!-- Markdown Help (Hidden by default) -->
+                <div id="markdown-tips" class="mt-4 pt-4 border-top border-secondary border-opacity-10 d-none">
+                    <h6 class="text-primary small text-uppercase fw-bold mb-3 ls-wide">Guia de Formatação</h6>
+                    <div class="small text-body-secondary">
+                        <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
+                            <code># Título</code>
+                            <span class="x-small opacity-75">H1 (Principal)</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
+                            <code>## Subtítulo</code>
+                            <span class="x-small opacity-75">H2 (Seção)</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
+                            <code>**Negrito**</code>
+                            <span class="x-small opacity-75">Destaque</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
+                            <code>*Itálico*</code>
+                            <span class="x-small opacity-75">Ênfase</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
+                            <code>> Citação</code>
+                            <span class="x-small opacity-75">Pensamento</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
+                            <code>-- Texto</code>
+                            <span class="x-small opacity-75">Travessão (Auto)</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
+                            <code>---</code>
+                            <span class="x-small opacity-75">Divisão</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -409,6 +551,9 @@
     </div>
 </div>
 
+<!-- Gatilho invisível para o Modal da Galeria (evita erros de biblioteca undefined) -->
+<button id="gallery-picker-trigger" class="d-none" data-bs-toggle="modal" data-bs-target="#galleryPickerModal"></button>
+
 <!-- EasyMDE & SortableJS & Split.js -->
 <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
@@ -417,6 +562,8 @@
 
 <script>
 let easyMDE;
+let bibleEditor;
+let bibleSummaryEditor;
 let activeItemUuid = null;
 let activeCardCategory = null; // 'scenario', 'character', 'object'
 let itemToDeleteUuid = null;
@@ -428,17 +575,68 @@ let currentImageExt = '';
 let currentCards = [];
 let currentGalleryItems = [];
 let saveTimeout;
+let bibleSaveTimeout;
+let manuscriptMode = 'writing'; // 'writing' or 'planning'
+let currentGalleryMode = 'card'; // 'card' or 'editor'
 
 const projectUuid = "{{ $project->uuid }}";
+let activeProjectCoverUuid = "{{ $project->cover_image_uuid }}";
 
 document.addEventListener('DOMContentLoaded', function() {
+    const bootstrapToolbar = [
+        { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: "Negrito" },
+        { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: "Itálico" },
+        { name: "heading", action: EasyMDE.toggleHeadingSmaller, className: "bi bi-type-h1", title: "Título" },
+        "|",
+        { name: "quote", action: EasyMDE.toggleBlockquote, className: "bi bi-quote", title: "Citação" },
+        { name: "unordered-list", action: EasyMDE.toggleUnorderedList, className: "bi bi-list-ul", title: "Lista Genérica" },
+        { name: "ordered-list", action: EasyMDE.toggleOrderedList, className: "bi bi-list-ol", title: "Lista Numerada" },
+        "|",
+        {
+            name: "gallery-image",
+            action: (editor) => openGalleryPickerForEditor(),
+            className: "bi bi-image",
+            title: "Inserir imagem da galeria",
+        },
+        "|",
+        { name: "preview", action: EasyMDE.togglePreview, className: "bi bi-eye", title: "Visualizar" },
+        "|",
+        { name: "guide", action: "https://www.markdownguide.org/basic-syntax/", className: "bi bi-question-circle", title: "Guia Markdown" }
+    ];
+
     easyMDE = new EasyMDE({
         element: document.getElementById('markdown-editor'),
         spellChecker: false,
         autosave: { enabled: false },
         status: false,
+        autoDownloadFontAwesome: false,
         placeholder: "Use sua criatividade...",
-        toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "preview", "side-by-side", "fullscreen", "|", "guide"]
+        toolbar: bootstrapToolbar
+    });
+
+    bibleEditor = new EasyMDE({
+        element: document.getElementById('bible-editor'),
+        spellChecker: false,
+        autosave: { enabled: false },
+        status: false,
+        autoDownloadFontAwesome: false,
+        placeholder: "Pense na bíblia como o DNA do seu projeto...",
+        toolbar: bootstrapToolbar
+    });
+
+    bibleSummaryEditor = new EasyMDE({
+        element: document.getElementById('bible-summary-editor'),
+        spellChecker: false,
+        autosave: { enabled: false },
+        status: false,
+        autoDownloadFontAwesome: false,
+        placeholder: "O resumo narrativo será gerado aqui...",
+        toolbar: [
+            { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: "Negrito" },
+            { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: "Itálico" },
+            "|",
+            { name: "preview", action: EasyMDE.togglePreview, className: "bi bi-eye", title: "Visualizar" }
+        ]
     });
 
     easyMDE.codemirror.on("change", () => {
@@ -446,6 +644,30 @@ document.addEventListener('DOMContentLoaded', function() {
         showSaveStatus('Salvando...', 'bi-arrow-repeat spin');
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(saveActiveItem, 1500);
+    });
+
+    bibleEditor.codemirror.on("change", () => {
+        showBibleSaveStatus('Salvando...', 'bi-arrow-repeat spin');
+        clearTimeout(bibleSaveTimeout);
+        bibleSaveTimeout = setTimeout(saveBibleContent, 1500);
+    });
+
+    bibleSummaryEditor.codemirror.on("change", () => {
+        showBibleSaveStatus('Salvando...', 'bi-arrow-repeat spin');
+        clearTimeout(bibleSaveTimeout);
+        bibleSaveTimeout = setTimeout(saveBibleContent, 1500);
+    });
+
+    // Auto-convert -- to — (travessão)
+    easyMDE.codemirror.on("beforeChange", (cm, change) => {
+        if (change.origin === "+input" && change.text[0] === "-") {
+            const cursor = cm.getCursor();
+            const range = { line: cursor.line, ch: cursor.ch - 1 };
+            const prevChar = cm.getRange(range, cursor);
+            if (prevChar === "-") {
+                change.update(range, cursor, ["—"]);
+            }
+        }
     });
 
     loadManuscript();
@@ -456,7 +678,15 @@ document.addEventListener('DOMContentLoaded', function() {
 function showEmptyState(category) {
     activeItemUuid = null;
     document.getElementById('editor-container').classList.add('d-none');
+    document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('empty-state').classList.remove('d-none');
+    document.getElementById('markdown-tips').classList.add('d-none');
+    document.getElementById('graph-container').classList.add('d-none');
+    document.getElementById('cards-grid-container').classList.add('d-none');
+    document.getElementById('gallery-container').classList.add('d-none');
+    
+    // Deactivate nav buttons
+    document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
     
     const icon = document.getElementById('empty-icon');
     const title = document.getElementById('empty-title');
@@ -609,9 +839,10 @@ function renderTreeNodes(nodes, container) {
         item.className = 'tree-item mb-1';
         item.dataset.uuid = node.uuid;
         item.dataset.type = node.type;
+        item.dataset.isSystem = node.is_system;
 
-        const icon = node.type === 'section' ? 'bi-folder2-open' : (node.type === 'chapter' ? 'bi-journal-bookmark' : 'bi-text-paragraph');
-        const colorClass = node.type === 'section' ? 'text-primary' : (node.type === 'chapter' ? 'text-info' : 'text-ghost-muted');
+        const icon = node.type === 'toc' ? 'bi-list-ul' : (node.type === 'section' ? 'bi-folder2-open' : (node.type === 'chapter' ? 'bi-journal-bookmark' : 'bi-text-paragraph'));
+        const colorClass = node.type === 'toc' ? 'text-accent' : (node.type === 'section' ? 'text-primary' : (node.type === 'chapter' ? 'text-info' : 'text-ghost-muted'));
 
         item.innerHTML = `
             <div class="d-flex justify-content-between align-items-center py-1 px-2 rounded node-row ${activeItemUuid === node.uuid ? 'bg-primary bg-opacity-10 shadow-sm' : ''}" onclick="openManuscriptItem('${node.uuid}')">
@@ -620,14 +851,16 @@ function renderTreeNodes(nodes, container) {
                     <span class="node-title text-truncate ${activeItemUuid === node.uuid ? 'text-primary fw-bold' : 'text-ghost-muted'}">${node.title}</span>
                 </div>
                 <div class="node-actions d-none gap-2">
-                    ${node.type !== 'scene' ? `
+                    ${!node.is_system && node.type !== 'scene' ? `
                         <button class="btn btn-link btn-sm p-0 text-primary" type="button" title="Adicionar Filho" onclick="event.preventDefault(); event.stopPropagation(); createNewItem('${node.type === 'section' ? 'chapter' : 'scene'}', '${node.uuid}')">
                             <i class="bi bi-plus"></i>
                         </button>
                     ` : ''}
+                    ${!node.is_system ? `
                     <button class="btn btn-link btn-sm p-0 text-danger" type="button" title="Excluir" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" onclick="event.preventDefault(); event.stopPropagation(); itemToDeleteUuid = '${node.uuid}'">
                         <i class="bi bi-trash"></i>
                     </button>
+                    ` : ''}
                 </div>
             </div>
             <div class="tree-children ms-3 mt-1" id="children-of-${node.uuid}"></div>
@@ -649,6 +882,11 @@ function initDraggable() {
             animation: 150,
             fallbackOnBody: true,
             swapThreshold: 0.65,
+            filter: '.is-system', // Prevent dragging system items
+            onMove: function (evt) {
+                // Prevent moving anything above a system item if it's the TOC
+                if (evt.related.dataset.type === 'toc') return false;
+            },
             onEnd: async function() {
                 const sortingData = [];
                 document.querySelectorAll('.tree-item').forEach((item, index) => {
@@ -684,26 +922,116 @@ async function createNewItem(type, parentUuid = null) {
 
 async function openManuscriptItem(uuid) {
     activeItemUuid = uuid;
+    activeCardCategory = null;
     activeItemType = 'manuscript';
+    manuscriptMode = 'writing'; // Reset to writing mode by default
     
+    // Reset Editor Styles
+    document.getElementById('editor-container').classList.remove('editor-planning-mode');
+    
+    // Update UI Toggles
+    const btnWriting = document.getElementById('btn-mode-writing');
+    const btnPlanning = document.getElementById('btn-mode-planning');
+    btnWriting.classList.add('active');
+    btnWriting.classList.replace('btn-outline-primary', 'btn-primary');
+    btnPlanning.classList.remove('active');
+    btnPlanning.classList.replace('btn-primary', 'btn-outline-secondary');
+    
+    document.getElementById('manuscript-mode-toggle').classList.remove('d-none');
     document.getElementById('empty-state').classList.add('d-none');
+    document.getElementById('bible-container').classList.add('d-none');
+    document.getElementById('graph-container').classList.add('d-none');
+    document.getElementById('cards-grid-container').classList.add('d-none');
+    document.getElementById('gallery-container').classList.add('d-none');
     document.getElementById('editor-container').classList.remove('d-none');
-    document.getElementById('delete-item-btn').classList.remove('d-none');
-    
-    const response = await fetch(`/projects/${projectUuid}/manuscript/${uuid}`);
-    const data = await response.json();
-    const item = data.item;
+    document.getElementById('card-connections-editor').classList.add('d-none');
 
-    document.getElementById('current-item-title').innerText = item.title;
-    document.getElementById('stat-type').innerText = item.type.charAt(0).toUpperCase() + item.type.slice(1);
-    document.getElementById('stat-word-count').innerText = item.word_count || 0;
+    try {
+        const response = await fetch(`/projects/${projectUuid}/manuscript/${uuid}`);
+        const data = await response.json();
+        const item = data.item;
+        
+        document.getElementById('current-item-title').innerText = item.title;
+        document.getElementById('stat-type').innerText = item.type.charAt(0).toUpperCase() + item.type.slice(1);
+        document.getElementById('stat-word-count').innerText = item.word_count || 0;
+        
+        const icons = { 'toc': 'bi-list-ul', 'section': 'bi-folder2-open', 'chapter': 'bi-journal-bookmark', 'scene': 'bi-text-paragraph' };
+        document.getElementById('editor-type-icon').innerHTML = `<i class="bi ${icons[item.type]}"></i>`;
+        
+        easyMDE.value(data.content);
+        
+        // TOC specific logic
+        if (item.type === 'toc') {
+            document.getElementById('manuscript-mode-toggle').classList.add('d-none');
+            easyMDE.codemirror.setOption("readOnly", true);
+            if (!easyMDE.isPreviewActive()) easyMDE.togglePreview();
+        } else {
+            easyMDE.codemirror.setOption("readOnly", false);
+            if (easyMDE.isPreviewActive()) easyMDE.togglePreview();
+        }
+
+        // Markdown Tips (Only for Chapters and Scenes)
+        const tips = document.getElementById('markdown-tips');
+        if (item.type === 'chapter' || item.type === 'scene') tips.classList.remove('d-none');
+        else tips.classList.add('d-none');
+
+        // Mark active in tree
+        document.querySelectorAll('.list-group-item').forEach(el => el.classList.remove('active'));
+        const activeEl = document.querySelector(`[onclick="openManuscriptItem('${uuid}')"]`);
+        if (activeEl) activeEl.closest('.list-group-item').classList.add('active');
+
+    } catch (error) {
+        console.error('Erro ao carregar item:', error);
+    }
+}
+
+function setManuscriptMode(mode) {
+    if (mode === manuscriptMode) return;
+    manuscriptMode = mode;
     
-    const icons = { 'section': 'bi-folder2-open', 'chapter': 'bi-journal-bookmark', 'scene': 'bi-text-paragraph' };
-    document.getElementById('editor-type-icon').innerHTML = `<i class="bi ${icons[item.type]}"></i>`;
+    const btnWriting = document.getElementById('btn-mode-writing');
+    const btnPlanning = document.getElementById('btn-mode-planning');
+    const editorContainer = document.getElementById('editor-container');
     
-    easyMDE.value(data.content);
-    loadManuscript();
-    showSaveStatus('Salvo', 'bi-check2-all');
+    if (mode === 'writing') {
+        btnWriting.classList.add('active');
+        btnWriting.classList.replace('btn-outline-primary', 'btn-primary');
+        btnPlanning.classList.remove('active');
+        btnPlanning.classList.replace('btn-primary', 'btn-outline-secondary');
+        editorContainer.classList.remove('editor-planning-mode');
+        loadManuscriptContent();
+    } else {
+        btnPlanning.classList.add('active');
+        btnPlanning.classList.replace('btn-outline-secondary', 'btn-primary');
+        btnWriting.classList.remove('active');
+        btnWriting.classList.replace('btn-primary', 'btn-outline-primary');
+        editorContainer.classList.add('editor-planning-mode');
+        loadManuscriptPlanning();
+    }
+}
+
+async function loadManuscriptContent() {
+    showSaveStatus('Carregando...', 'bi-arrow-repeat spin');
+    try {
+        const response = await fetch(`/projects/${projectUuid}/manuscript/${activeItemUuid}`);
+        const data = await response.json();
+        easyMDE.value(data.content);
+        showSaveStatus('Salvo', 'bi-check2-all');
+    } catch (error) {
+        showSaveStatus('Erro ao carregar', 'bi-exclamation-triangle text-danger');
+    }
+}
+
+async function loadManuscriptPlanning() {
+    showSaveStatus('Carregando...', 'bi-arrow-repeat spin');
+    try {
+        const response = await fetch(`/projects/${projectUuid}/manuscript/${activeItemUuid}/planning`);
+        const data = await response.json();
+        easyMDE.value(data.content || "# Planejamento da Cena\n\nDescreva aqui os pontos chaves, objetivos e conflitos desta seção.");
+        showSaveStatus('Salvo', 'bi-check2-all');
+    } catch (error) {
+        showSaveStatus('Erro ao carregar', 'bi-exclamation-triangle text-danger');
+    }
 }
 
 // --- Title Edit Logic ---
@@ -729,12 +1057,19 @@ async function saveTitleEdit() {
     if (newTitle === title.innerText) return;
     
     title.innerText = newTitle;
-    await fetch(`/projects/${projectUuid}/manuscript/${activeItemUuid}/title`, {
+    const endpoint = activeItemType === 'manuscript' ? `/projects/${projectUuid}/manuscript/${activeItemUuid}/title` : `/projects/${projectUuid}/cards/${activeItemUuid}/title`;
+    
+    await fetch(endpoint, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
         body: JSON.stringify({ title: newTitle })
     });
-    loadManuscript();
+
+    if (activeItemType === 'manuscript') {
+        loadManuscript();
+    } else {
+        loadCards(activeCardCategory);
+    }
 }
 
 // O modal é aberto via data-bs-toggle nos botões da árvore e barra lateral
@@ -792,6 +1127,7 @@ async function loadCards(type) {
     document.getElementById('editor-container').classList.add('d-none');
     document.getElementById('empty-state').classList.add('d-none');
     document.getElementById('gallery-container').classList.add('d-none');
+    document.getElementById('graph-container').classList.add('d-none');
     document.getElementById('cards-grid-container').classList.remove('d-none');
     
     // Update headers
@@ -970,6 +1306,7 @@ async function confirmDeleteCard() {
 }
 
 async function prepareGalleryPicker(cardUuid) {
+    currentGalleryMode = 'card';
     cardBeingEditedImageUuid = cardUuid;
     document.getElementById('gallery-picker-search').value = '';
     
@@ -978,6 +1315,23 @@ async function prepareGalleryPicker(cardUuid) {
     currentGalleryItems = await response.json();
     
     renderGalleryPicker(currentGalleryItems);
+    
+    // Mostra o modal via gatilho HTML (mais seguro contra erros de escopo JS)
+    document.getElementById('gallery-picker-trigger').click();
+}
+
+async function openGalleryPickerForEditor() {
+    currentGalleryMode = 'editor';
+    document.getElementById('gallery-picker-search').value = '';
+    
+    // Refresh current gallery items
+    const response = await fetch(`/projects/${projectUuid}/gallery`);
+    currentGalleryItems = await response.json();
+    
+    renderGalleryPicker(currentGalleryItems);
+    
+    // Mostra o modal via gatilho HTML (mais seguro contra erros de escopo JS)
+    document.getElementById('gallery-picker-trigger').click();
 }
 
 function renderGalleryPicker(items) {
@@ -993,10 +1347,17 @@ function renderGalleryPicker(items) {
         const col = document.createElement('div');
         col.className = 'col animate-fade-in';
         col.style.animationDelay = `${index * 0.02}s`;
+        
+        // Determina se deve usar a miniatura ou imagem completa
+        const thumbUrl = `/projects/${projectUuid}/gallery/${item.uuid}/image/thumb`;
+        
         col.innerHTML = `
-            <div class="card h-100 border-0 bg-secondary bg-opacity-10 shadow-sm hover-lift cp overflow-hidden" onclick="selectImageForCard('${item.uuid}')">
+            <div class="card h-100 border-0 bg-secondary bg-opacity-10 shadow-sm hover-lift cp overflow-hidden" onclick="selectImageFromPicker('${item.uuid}', '${item.name}')">
                 <div class="ratio ratio-1x1">
-                    <img src="/projects/${projectUuid}/gallery/${item.uuid}/image/thumb" class="card-img-top object-fit-cover" alt="${item.name}">
+                    <img src="${thumbUrl}" class="card-img-top object-fit-cover" alt="${item.name}">
+                </div>
+                <div class="card-body p-2 text-center">
+                    <p class="x-small text-truncate mb-0 fw-bold opacity-75">${item.name}</p>
                 </div>
             </div>
         `;
@@ -1010,21 +1371,38 @@ function filterGalleryPicker(query) {
     renderGalleryPicker(filtered);
 }
 
-async function selectImageForCard(imageUuid) {
+async function selectImageFromPicker(imageUuid, filename) {
+    if (currentGalleryMode === 'editor') {
+        const imageMarkdown = `\n\n![Ilustração](/projects/${projectUuid}/gallery/${imageUuid}/image)\n\n`;
+        const cm = easyMDE.codemirror;
+        const cursor = cm.getCursor();
+        cm.replaceRange(imageMarkdown, cursor);
+        
+        // Fecha o modal via botão de fechar nativo (seguro contra erros de biblioteca)
+        const modalEl = document.getElementById('galleryPickerModal');
+        const closeBtn = modalEl.querySelector('.btn-close');
+        if (closeBtn) closeBtn.click();
+        return;
+    }
+
     if (!cardBeingEditedImageUuid) return;
     
-    await fetch(`/projects/${projectUuid}/cards/${cardBeingEditedImageUuid}/image`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-        body: JSON.stringify({ image_uuid: imageUuid })
-    });
-    
-    // Fechar o modal via DOM (evita erro bootstrap is not defined)
-    const modalElement = document.getElementById('galleryPickerModal');
-    const closeBtn = modalElement.querySelector('.btn-close');
-    if (closeBtn) closeBtn.click();
-    
-    loadCards(activeCardCategory);
+    try {
+        await fetch(`/projects/${projectUuid}/cards/${cardBeingEditedImageUuid}/image`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ image_uuid: imageUuid })
+        });
+        
+        // Fecha o modal de forma segura
+        const modalEl = document.getElementById('galleryPickerModal');
+        const closeBtn = modalEl.querySelector('.btn-close');
+        if (closeBtn) closeBtn.click();
+        
+        loadCards(activeCardCategory);
+    } catch (error) {
+        console.error('Erro ao vincular imagem:', error);
+    }
 }
 
 // --- General Editor Logic ---
@@ -1039,7 +1417,21 @@ async function openItem(uuid, type) {
     document.getElementById('editor-container').classList.remove('d-none');
     document.getElementById('cards-grid-container').classList.add('d-none');
     document.getElementById('gallery-container').classList.add('d-none');
-    document.getElementById('delete-item-btn').classList.add('d-none');
+    document.getElementById('graph-container').classList.add('d-none');
+    
+    // Hide markdown help by default when opening a card
+    document.getElementById('markdown-tips').classList.add('d-none');
+    
+    const editorCon = document.getElementById('card-connections-editor');
+    if (type === 'card') {
+        editorCon.classList.remove('d-none');
+        // Fetch connections
+        const response = await fetch(`/projects/${projectUuid}/cards/${uuid}/connections`);
+        currentConnections = await response.json();
+        renderConnections();
+    } else {
+        editorCon.classList.add('d-none');
+    }
     
     // Highlight active button in world grid
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
@@ -1101,7 +1493,8 @@ function openGallery() {
     document.getElementById('empty-state').classList.add('d-none');
     document.getElementById('gallery-container').classList.remove('d-none');
     document.getElementById('cards-grid-container').classList.add('d-none');
-    document.getElementById('delete-item-btn').classList.add('d-none');
+    document.getElementById('graph-container').classList.add('d-none');
+    document.getElementById('markdown-tips').classList.add('d-none');
 
     // Highlight sidebar
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
@@ -1301,6 +1694,246 @@ async function confirmRenameGalleryItem() {
     } finally {
         btn.disabled = false;
         btn.innerText = originalText;
+    }
+}
+
+// --- Worldbuilding Graph & Connections ---
+
+let worldGraph = null;
+let currentConnections = [];
+
+function openGraph() {
+    activeItemUuid = null;
+    activeItemType = 'graph';
+    
+    document.getElementById('empty-state').classList.add('d-none');
+    document.getElementById('editor-container').classList.add('d-none');
+    document.getElementById('cards-grid-container').classList.add('d-none');
+    document.getElementById('gallery-container').classList.add('d-none');
+    document.getElementById('graph-container').classList.remove('d-none');
+    
+    document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
+    document.getElementById('nav-connections').classList.add('active');
+    
+    loadGraphData();
+}
+
+async function loadGraphData(force = false) {
+    const container = document.getElementById('graph-view');
+    const response = await fetch(`/projects/${projectUuid}/graph`);
+    const data = await response.json();
+    
+    // Adjust colors to be more vibrant
+    const colors = { 'character': '#22c55e', 'scenario': '#3b82f6', 'object': '#eab308' };
+    
+    const gData = {
+        nodes: data.nodes.map(n => ({ id: n.uuid, name: n.title, type: n.type, color: colors[n.type] || '#94a3b8' })),
+        links: data.links.map(l => ({ source: l.source, target: l.target }))
+    };
+    
+    if (!worldGraph) {
+        // Use 2D ForceGraph for Obsidian style and better performance/labels
+        worldGraph = ForceGraph()(container)
+            .graphData(gData)
+            .nodeLabel('name')
+            .nodeColor('color')
+            .width(container.clientWidth)
+            .height(container.clientHeight)
+            .backgroundColor('rgba(0,0,0,0)') 
+            .onNodeClick(node => {
+                openItem(node.id, 'card');
+            })
+            .nodeCanvasObject((node, ctx, globalScale) => {
+                const label = node.name;
+                const fontSize = 12 / globalScale;
+                ctx.font = `${fontSize}px Sans-Serif`;
+                
+                // Draw circle (node)
+                const size = 5;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
+                ctx.fillStyle = node.color;
+                ctx.fill();
+
+                // Draw label background
+                const textWidth = ctx.measureText(label).width;
+                const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
+
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2 + 12, ...bckgDimensions);
+
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = node.color;
+                ctx.fillText(label, node.x, node.y + 12);
+
+                node.__bckgDimensions = bckgDimensions; // to perform selection
+            })
+            .nodePointerAreaPaint((node, color, ctx) => {
+                ctx.fillStyle = color;
+                const bckgDimensions = node.__bckgDimensions;
+                bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2 + 10, ...bckgDimensions);
+            });
+            
+        // Initial zoom
+        worldGraph.zoom(3);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+             if (worldGraph) {
+                 worldGraph.width(container.clientWidth);
+                 worldGraph.height(container.clientHeight);
+             }
+        });
+    } else {
+        worldGraph.graphData(gData);
+    }
+}
+
+async function searchConnections(query) {
+    const resultsPanel = document.getElementById('connection-results');
+    if (!query || query.trim().length < 2) {
+        resultsPanel.classList.add('d-none');
+        return;
+    }
+    
+    try {
+        const params = new URLSearchParams();
+        params.append('q', query);
+        
+        // Anti-exclusão: não sugerir a própria ficha nem as já conectadas
+        const excludeUuids = [activeItemUuid, ...(currentConnections || []).map(c => c.uuid)];
+        excludeUuids.forEach(uuid => {
+            if (uuid) params.append('exclude[]', uuid);
+        });
+
+        const response = await fetch(`/projects/${projectUuid}/cards/search?${params.toString()}`);
+        if (!response.ok) throw new Error('Search failed');
+        
+        const cards = await response.json();
+        
+        if (cards.length === 0) {
+            resultsPanel.innerHTML = '<div class="p-2 text-body-secondary x-small italic text-center">Nenhum resultado</div>';
+        } else {
+            resultsPanel.innerHTML = cards.map(c => {
+                const escapedTitle = c.title.replace(/'/g, "\\'");
+                return `
+                    <div class="p-2 cp-sidebar-item small d-flex align-items-center border-bottom border-secondary border-opacity-10" onclick="addConnection('${c.uuid}', '${escapedTitle}', '${c.type}')">
+                        <i class="bi ${getIconForType(c.type)} me-2 text-primary opacity-75"></i> 
+                        <span class="text-truncate">${c.title}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        resultsPanel.classList.remove('d-none');
+    } catch (error) {
+        console.error('Erro na busca:', error);
+        resultsPanel.innerHTML = '<div class="p-2 text-danger x-small italic text-center">Erro na busca</div>';
+        resultsPanel.classList.remove('d-none');
+    }
+}
+
+function getIconForType(type) {
+    const icons = { 'character': 'bi-people', 'scenario': 'bi-geo-alt', 'object': 'bi-gem' };
+    return icons[type] || 'bi-file-text';
+}
+
+async function addConnection(uuid, title, type) {
+    currentConnections.push({ uuid, title, type });
+    document.getElementById('connection-results').classList.add('d-none');
+    document.getElementById('connection-search').value = '';
+    renderConnections();
+    saveConnections();
+}
+
+function removeConnection(uuid) {
+    currentConnections = currentConnections.filter(c => c.uuid !== uuid);
+    renderConnections();
+    saveConnections();
+}
+
+function renderConnections() {
+    const container = document.getElementById('active-connections');
+    if (currentConnections.length === 0) {
+        container.innerHTML = '<span class="text-body-secondary x-small italic">Sem conexões ainda.</span>';
+        return;
+    }
+    
+    const colors = { 'character': 'bg-success', 'scenario': 'bg-primary', 'object': 'bg-warning text-dark' };
+    
+    container.innerHTML = currentConnections.map(c => `
+        <span class="badge ${colors[c.type] || 'bg-secondary'} d-flex align-items-center gap-1">
+            ${c.title}
+            <i class="bi bi-x cp" onclick="removeConnection('${c.uuid}')"></i>
+        </span>
+    `).join('');
+}
+
+async function saveConnections() {
+    if (!activeItemUuid) return;
+    
+    await fetch(`/projects/${projectUuid}/cards/${activeItemUuid}/connections`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+        body: JSON.stringify({ related_uuids: currentConnections.map(c => c.uuid) })
+    });
+}
+
+// --- Project Bible Logic ---
+
+async function openBible() {
+    activeItemUuid = null;
+    activeCardCategory = null;
+    
+    // Update Navigation UI
+    document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
+    document.getElementById('nav-bible').classList.add('active');
+    
+    showEmptyState(null); // Clear other views
+    document.querySelectorAll('.sidebar-nav .nav-link').forEach(el => el.classList.remove('active'));
+    document.querySelector('[onclick="openBible()"]').classList.add('active');
+    
+    document.getElementById('bible-container').classList.remove('d-none');
+    document.getElementById('empty-state').classList.add('d-none');
+    
+    try {
+        const response = await fetch(`/projects/${projectUuid}/bible`);
+        const data = await response.json();
+        bibleEditor.value(data.content);
+        bibleSummaryEditor.value(data.summary || '');
+    } catch (error) {
+        console.error('Erro ao carregar bíblia:', error);
+    }
+}
+
+async function saveBibleContent() {
+    try {
+        await fetch(`/projects/${projectUuid}/bible`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ 
+                content: bibleEditor.value(),
+                summary: bibleSummaryEditor.value()
+            })
+        });
+        showBibleSaveStatus('Salvo', 'bi-check2-all');
+    } catch (error) {
+        showBibleSaveStatus('Erro ao salvar', 'bi-exclamation-triangle text-danger');
+    }
+}
+
+function syncBibleWithAI() {
+    // Placeholder para futura integração com IA
+    alert("Em breve: A IA processará todo o seu manuscrito e gerará um resumo narrativo atualizado automaticamente!");
+}
+
+function showBibleSaveStatus(text, iconClass) {
+    const status = document.getElementById('bible-save-status');
+    if (status) {
+        status.innerHTML = `<i class="bi ${iconClass} me-1"></i> ${text}`;
     }
 }
 </script>

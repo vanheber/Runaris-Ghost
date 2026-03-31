@@ -21,4 +21,14 @@ class Card extends Model
     protected $casts = [
         'metadata' => 'json',
     ];
+
+    /**
+     * Cards that are connected to this card.
+     */
+    public function connections()
+    {
+        return $this->belongsToMany(Card::class, 'card_connections', 'card_uuid', 'related_card_uuid', 'uuid', 'uuid')
+                    ->withPivot('metadata')
+                    ->withTimestamps();
+    }
 }

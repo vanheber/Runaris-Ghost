@@ -80,6 +80,20 @@ class CardController extends Controller
     }
 
     /**
+     * Update card title.
+     */
+    public function updateTitle(Request $request, $project_uuid, $card_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        
+        $card = Card::where('uuid', $card_uuid)->firstOrFail();
+        $updatedCard = $this->cardService->updateCardTitle($project, $card, $request->title);
+
+        return response()->json($updatedCard);
+    }
+
+    /**
      * Upload and link an image to a card.
      */
     public function uploadImage(Request $request, $project_uuid, $card_uuid)
@@ -149,6 +163,84 @@ class CardController extends Controller
         $card->update(['image_uuid' => $request->image_uuid]);
 
         return response()->json($card);
+    }
+
+    /**
+     * Get all cards and their connections for the graph view.
+     */
+    public function getGraphData($project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        
+        $cards = Card::select('uuid', 'title', 'type')->get();
+        $links = \DB::connection('sqlite_project')->table('card_connections')->select('card_uuid as source', 'related_card_uuid as target')->get();
+        
+        return response()->json([
+            'nodes' => $cards,
+            'links' => $links
+        ]);
+    }
+
+    /**
+     * Sync connections for a specific card.
+     */
+    public function syncConnections(Request $request, $project_uuid, $card_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        
+        $card = Card::where('uuid', $card_uuid)->firstOrFail();
+        $related_uuids = $request->input('related_uuids', []);
+        
+        // Bidirectional sync logic
+        $current_uuids = $card->connections()->pluck('related_card_uuid')->toArray();
+        $removed_uuids = array_diff($current_uuids, $related_uuids);
+        
+        $card->connections()->sync($related_uuids);
+        
+        foreach ($related_uuids as $ruuid) {
+            $other = Card::where('uuid', $ruuid)->first();
+            if ($other) $other->connections()->syncWithoutDetaching([$card->uuid]);
+        }
+        
+        foreach ($removed_uuids as $ruuid) {
+             $other = Card::where('uuid', $ruuid)->first();
+             if ($other) $other->connections()->detach($card->uuid);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Get connections for a single card.
+     */
+    public function getCardConnections($project_uuid, $card_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        
+        $card = Card::where('uuid', $card_uuid)->firstOrFail();
+        return response()->json($card->connections()->get(['cards.uuid', 'cards.title', 'cards.type']));
+    }
+
+    /**
+     * Search cards for relationship autocomplete.
+     */
+    public function searchCards(Request $request, $project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        
+        $query = $request->input('q');
+        $exclude = $request->input('exclude', []);
+
+        $cards = Card::where('title', 'like', "%{$query}%")
+                     ->whereNotIn('uuid', (array)$exclude)
+                     ->limit(15)
+                     ->get(['uuid', 'title', 'type']);
+                     
+        return response()->json($cards);
     }
 
     /**
