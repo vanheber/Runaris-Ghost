@@ -104,11 +104,17 @@ body {
     --bs-tertiary-bg-rgb: 30, 30, 30;
 }
 
+[data-bs-theme="light"] {
+    --bs-body-color: #212529;
+    --bs-emphasis-color: #000000;
+    --bs-secondary-color: #495057;
+}
+
 [data-bs-theme="solar-light"] {
     --bs-body-bg: #fdf6e3;
     --bs-body-bg-rgb: 253, 246, 227;
-    --bs-body-color: #657b83;
-    --bs-emphasis-color: #586e75;
+    --bs-body-color: #586e75;
+    --bs-emphasis-color: #073642;
     --bs-secondary-bg: #eee8d5;
     --bs-secondary-bg-rgb: 238, 232, 213;
     --bs-tertiary-bg: #eee8d5;
@@ -117,4 +123,10 @@ body {
     --bs-primary: #b58900;
     --bs-primary-rgb: 181, 137, 0;
     --bs-link-color: #b58900;
+    --bs-secondary-color: #657b83;
 }
+
+.text-project-title { color: var(--bs-emphasis-color); transition: color 0.2s; }
+.project-card:hover .text-project-title { color: var(--bs-primary); }
+.hover-danger { transition: all 0.2s; }
+.hover-danger:hover { color: var(--bs-danger) !important; opacity: 1 !important; transform: scale(1.1); }

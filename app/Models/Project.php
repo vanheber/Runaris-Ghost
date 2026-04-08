@@ -14,6 +14,12 @@ class Project extends Model
         'bible_content',
         'bible_summary',
         'cover_image_uuid',
+        'author',
+        'isbn',
+        'language',
+        'publisher',
+        'publication_date',
+        'copyright_info',
     ];
 
     protected $casts = [

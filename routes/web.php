@@ -11,6 +11,7 @@ Route::get('/', function () {
 Route::prefix('projects')->group(function () {
     Route::get('/', [ProjectController::class, 'index']);
     Route::post('/', [ProjectController::class, 'store']);
+    Route::delete('/{project_uuid}', [ProjectController::class, 'destroy']);
     
     // Group routes that require the project context
     Route::middleware(['project.context'])->group(function () {
@@ -51,11 +52,20 @@ Route::prefix('projects')->group(function () {
         Route::get('/{project_uuid}/gallery/{uuid}/image/{type?}', [\App\Http\Controllers\GalleryController::class, 'showImage']);
 
         // Project Settings & Export
+        Route::get('/{project_uuid}/settings', [ProjectController::class, 'settings']);
+        Route::put('/{project_uuid}', [ProjectController::class, 'update']);
+        Route::put('/{project_uuid}/metadata', [ProjectController::class, 'updateMetadata']);
         Route::patch('/{project_uuid}/cover', [\App\Http\Controllers\ProjectController::class, 'updateCover']);
         Route::get('/{project_uuid}/export/epub', [\App\Http\Controllers\ProjectController::class, 'exportEpub']);
+        Route::get('/{project_uuid}/export/pdf', [\App\Http\Controllers\ProjectController::class, 'exportPdf']);
+        Route::get('/{project_uuid}/export/html', [\App\Http\Controllers\ProjectController::class, 'exportHtml']);
+        Route::get('/{project_uuid}/export-state', [\App\Http\Controllers\ProjectController::class, 'getExportState']);
+        Route::post('/{project_uuid}/export-process', [\App\Http\Controllers\ProjectController::class, 'processBatchExport']);
 
         // Project Bible
         Route::get('/{project_uuid}/bible', [\App\Http\Controllers\BibleController::class, 'show']);
         Route::put('/{project_uuid}/bible', [\App\Http\Controllers\BibleController::class, 'update']);
     });
 });
+
+Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index']);

@@ -24,7 +24,7 @@
     <!-- Scripts -->
     @vite(['resources/js/app.js'])
 </head>
-<body class="antialiased">
+<body class="antialiased d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top py-3 bg-body-tertiary">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="{{ url('/projects') }}">
@@ -68,9 +68,36 @@
         </div>
     </nav>
 
-    <main>
+    <main class="flex-shrink-0">
         @yield('content')
     </main>
+
+    <footer class="py-2 bg-body-tertiary border-top mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <div class="col-md-4 d-flex align-items-center">
+                    <span class="text-body-secondary small">
+                        <i class="bi bi-ghost me-2"></i>
+                        &copy; {{ date('Y') }} Runaris Ghost.
+                    </span>
+                </div>
+                
+                <div class="col-md-4 d-flex justify-content-center">
+                    <span class="text-body-secondary small opacity-50">Sua jornada, suas regras.</span>
+                </div>
+
+                <ul class="nav col-md-4 justify-content-end list-unstyled d-flex mb-0">
+                    <li class="ms-3"><a class="text-body-secondary lh-1" href="#"><i class="bi bi-github"></i></a></li>
+                    <li class="ms-3"><a class="text-body-secondary lh-1" href="#"><i class="bi bi-discord"></i></a></li>
+                    <li class="ms-3">
+                        <a class="text-body-secondary lh-1" href="{{ url('/settings') }}" title="Configurações do Sistema">
+                            <i class="bi bi-gear-fill"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </footer>
 
     <!-- Global Theme Toggle Script -->
     <script>

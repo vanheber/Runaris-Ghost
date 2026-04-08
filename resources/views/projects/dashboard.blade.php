@@ -174,6 +174,9 @@
                     <a id="nav-bible" class="world-grid-btn nav-world" href="#" onclick="openBible()" title="Bíblia">
                         <i class="bi bi-book"></i> Bíblia
                     </a>
+                    <a id="nav-export" class="world-grid-btn nav-world" href="#" onclick="openExport()" title="Exportar">
+                        <i class="bi bi-cloud-download"></i> Exportar
+                    </a>
                 </div>
 
                 <hr class="border-secondary opacity-25 my-4">
@@ -279,6 +282,88 @@
                     </div>
                 </div>
 
+                <!-- Export Panel -->
+                <div id="export-container" class="card bg-body-tertiary border-0 shadow-sm p-5 h-100 d-none overflow-auto d-flex flex-column animate-fade-in">
+                    <div class="mb-5 text-center">
+                        <i class="bi bi-cloud-download display-1 text-primary opacity-25 mb-3 d-block"></i>
+                        <h2 class="fw-bold">Central de Exportação</h2>
+                        <p class="text-body-secondary">Preencha a folha de rosto e selecione os formatos desejados para gerar os arquivos do seu projeto.</p>
+                    </div>
+
+                    <!-- Export Metadata Form (Folha de Rosto e Metadados) -->
+                    <div class="card border-0 shadow-sm p-4 bg-body mb-5">
+                        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-file-person me-2"></i> Folha de Rosto e Metadados <span class="badge bg-primary bg-opacity-10 text-primary fw-normal small ms-2">Obrigatório para Lojas</span></h5>
+                        <form id="export-metadata-form" class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-body-secondary small text-uppercase fw-bold">Título da Obra</label>
+                                <input type="text" class="form-control" id="meta-title" value="{{ $project->name }}" onblur="saveExportMetadata()">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-body-secondary small text-uppercase fw-bold">Autor / Pseudônimo</label>
+                                <input type="text" class="form-control" id="meta-author" value="{{ $project->author }}" placeholder="Ex: J.R.R. Tolkien">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-body-secondary small text-uppercase fw-bold">ISBN</label>
+                                <input type="text" class="form-control" id="meta-isbn" value="{{ $project->isbn }}" placeholder="Opcional">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-body-secondary small text-uppercase fw-bold">Editora / Selo</label>
+                                <input type="text" class="form-control" id="meta-publisher" value="{{ $project->publisher }}" placeholder="Sua editora independente">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label text-body-secondary small text-uppercase fw-bold">Data de Publicação</label>
+                                <input type="text" class="form-control" id="meta-pubdate" value="{{ $project->publication_date }}" placeholder="Ex: 2026">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label text-body-secondary small text-uppercase fw-bold">Informações de Direitos Autorais</label>
+                                <textarea class="form-control" id="meta-copyright" rows="2" placeholder="Todos os direitos reservados...">{{ $project->copyright_info }}</textarea>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="row justify-content-center g-4 mb-5">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
+                                <i class="bi bi-book fs-1 text-primary mb-3"></i>
+                                <h5 class="fw-bold">Kindle (ePub)</h5>
+                                <p class="small text-body-secondary mb-4">Ideal para leitura em dispositivos e-reader.</p>
+                                <div class="form-check form-switch fs-4">
+                                    <input class="form-check-input" type="checkbox" id="export-epub" checked>
+                                </div>
+                                <div id="status-epub" class="mt-3 w-100"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
+                                <i class="bi bi-file-pdf fs-1 text-danger mb-3"></i>
+                                <h5 class="fw-bold">Impressão (PDF)</h5>
+                                <p class="small text-body-secondary mb-4">Formato clássico para leitura e impressão.</p>
+                                <div class="form-check form-switch fs-4">
+                                    <input class="form-check-input" type="checkbox" id="export-pdf" checked>
+                                </div>
+                                <div id="status-pdf" class="mt-3 w-100"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
+                                <i class="bi bi-browser-chrome fs-1 text-success mb-3"></i>
+                                <h5 class="fw-bold">Leitor Web (HTML)</h5>
+                                <p class="small text-body-secondary mb-4">Leitor interativo pronto para o navegador.</p>
+                                <div class="form-check form-switch fs-4">
+                                    <input class="form-check-input" type="checkbox" id="export-html" checked>
+                                </div>
+                                <div id="status-html" class="mt-3 w-100"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-auto py-4 border-top">
+                        <button id="btn-run-export" class="btn btn-primary btn-lg rounded-pill px-5 shadow" onclick="runExportBatch()">
+                            <i class="bi bi-gear-wide-connected me-2"></i> Gerar Arquivos Selecionados
+                        </button>
+                    </div>
+                </div>
+
                 <div id="graph-container" class="card bg-body-tertiary border-0 shadow-sm h-100 d-none overflow-hidden position-relative">
                     <div id="graph-view" style="width: 100%; height: 100%;"></div>
                     <div class="position-absolute top-0 end-0 p-3 z-2">
@@ -320,9 +405,7 @@
                                 <span class="input-group-text bg-transparent border-0 px-2"><i class="bi bi-search opacity-50"></i></span>
                                 <input type="text" id="cards-search" class="form-control border-0 bg-transparent ps-0" placeholder="Filtrar..." oninput="filterCards(this.value)">
                             </div>
-                            <button class="btn btn-outline-primary rounded-pill btn-sm px-3" onclick="exportProject()" title="Gerar ePub para Kindle">
-                                <i class="bi bi-cloud-download me-1"></i> Exportar
-                            </button>
+
                             <button class="btn btn-primary rounded-pill btn-sm px-3" onclick="createCard()">
                                 <i class="bi bi-plus-lg me-1"></i> Nova Ficha
                             </button>
@@ -679,6 +762,7 @@ function showEmptyState(category) {
     activeItemUuid = null;
     document.getElementById('editor-container').classList.add('d-none');
     document.getElementById('bible-container').classList.add('d-none');
+    document.getElementById('export-container').classList.add('d-none');
     document.getElementById('empty-state').classList.remove('d-none');
     document.getElementById('markdown-tips').classList.add('d-none');
     document.getElementById('graph-container').classList.add('d-none');
@@ -1128,6 +1212,8 @@ async function loadCards(type) {
     document.getElementById('empty-state').classList.add('d-none');
     document.getElementById('gallery-container').classList.add('d-none');
     document.getElementById('graph-container').classList.add('d-none');
+    document.getElementById('bible-container').classList.add('d-none');
+    document.getElementById('export-container').classList.add('d-none');
     document.getElementById('cards-grid-container').classList.remove('d-none');
     
     // Update headers
@@ -1418,6 +1504,8 @@ async function openItem(uuid, type) {
     document.getElementById('cards-grid-container').classList.add('d-none');
     document.getElementById('gallery-container').classList.add('d-none');
     document.getElementById('graph-container').classList.add('d-none');
+    document.getElementById('bible-container').classList.add('d-none');
+    document.getElementById('export-container').classList.add('d-none');
     
     // Hide markdown help by default when opening a card
     document.getElementById('markdown-tips').classList.add('d-none');
@@ -1494,6 +1582,8 @@ function openGallery() {
     document.getElementById('gallery-container').classList.remove('d-none');
     document.getElementById('cards-grid-container').classList.add('d-none');
     document.getElementById('graph-container').classList.add('d-none');
+    document.getElementById('bible-container').classList.add('d-none');
+    document.getElementById('export-container').classList.add('d-none');
     document.getElementById('markdown-tips').classList.add('d-none');
 
     // Highlight sidebar
@@ -1710,6 +1800,8 @@ function openGraph() {
     document.getElementById('editor-container').classList.add('d-none');
     document.getElementById('cards-grid-container').classList.add('d-none');
     document.getElementById('gallery-container').classList.add('d-none');
+    document.getElementById('bible-container').classList.add('d-none');
+    document.getElementById('export-container').classList.add('d-none');
     document.getElementById('graph-container').classList.remove('d-none');
     
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
@@ -1935,6 +2027,150 @@ function showBibleSaveStatus(text, iconClass) {
     if (status) {
         status.innerHTML = `<i class="bi ${iconClass} me-1"></i> ${text}`;
     }
+}
+
+// --- Advanced Export Logic ---
+
+async function openExport() {
+    activeItemUuid = null;
+    activeCardCategory = null;
+    activeItemType = 'export';
+
+    // UI state
+    document.getElementById('empty-state').classList.add('d-none');
+    document.getElementById('editor-container').classList.add('d-none');
+    document.getElementById('cards-grid-container').classList.add('d-none');
+    document.getElementById('gallery-container').classList.add('d-none');
+    document.getElementById('graph-container').classList.add('d-none');
+    document.getElementById('bible-container').classList.add('d-none');
+    document.getElementById('export-container').classList.remove('d-none');
+    document.getElementById('dynamic-context-panel').classList.add('d-none');
+    document.getElementById('markdown-tips').classList.add('d-none');
+
+    // Highlight sidebar
+    document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
+    if (document.getElementById('nav-export')) {
+        document.getElementById('nav-export').classList.add('active');
+    }
+
+    // Load current state
+    try {
+        const response = await fetch(`/projects/${projectUuid}/export-state`);
+        const state = await response.json();
+        renderExportResults(state);
+    } catch (error) {
+        console.error('Erro ao carregar estado de exportação:', error);
+    }
+}
+
+async function saveExportMetadata() {
+    const payload = {
+        name: document.getElementById('meta-title').value,
+        author: document.getElementById('meta-author').value,
+        isbn: document.getElementById('meta-isbn').value,
+        publisher: document.getElementById('meta-publisher').value,
+        publication_date: document.getElementById('meta-pubdate').value,
+        copyright_info: document.getElementById('meta-copyright').value,
+    };
+
+    try {
+        await fetch(`/projects/${projectUuid}/metadata`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify(payload)
+        });
+        
+        // Update Project Title in all UI locations
+        const newTitle = payload.name;
+        
+        // 1. Update the Main Header Title (if in Dashboard/Project Root)
+        const headerTitle = document.getElementById('current-item-title');
+        if (headerTitle && !activeItemUuid) {
+            headerTitle.innerText = newTitle;
+        }
+
+        // 2. Update Browser Tab Title
+        document.title = `${newTitle} - Workspace`;
+
+        // 3. Update the Project Card Title if we are on the project list but that's a different page.
+        // For the current page, we update any title-related elements.
+
+    } catch(e) {
+        console.error('Falha ao salvar metadados', e);
+    }
+}
+
+async function runExportBatch() {
+    await saveExportMetadata();
+
+    const formats = [];
+    if (document.getElementById('export-epub').checked) formats.push('epub');
+    if (document.getElementById('export-pdf').checked) formats.push('pdf');
+    if (document.getElementById('export-html').checked) formats.push('html');
+
+    if (formats.length === 0) {
+        alert('Selecione ao menos um formato para exportar.');
+        return;
+    }
+
+    const btn = document.getElementById('btn-run-export');
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Processando Exportação...';
+
+    // Clear previous status with a spinner
+    formats.forEach(f => {
+        document.getElementById(`status-${f}`).innerHTML = '<div class="p-2"><div class="spinner-border spinner-border-sm text-primary"></div></div>';
+    });
+
+    try {
+        const response = await fetch(`/projects/${projectUuid}/export-process`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ formats })
+        });
+        
+        if (!response.ok) throw new Error('Export failed');
+        
+        // Refresh state
+        const stateResponse = await fetch(`/projects/${projectUuid}/export-state`);
+        const state = await stateResponse.json();
+        renderExportResults(state);
+
+    } catch (error) {
+        console.error('Erro no processamento:', error);
+        alert('Ocorreu um erro ao gerar os arquivos.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+    }
+}
+
+function renderExportResults(state) {
+    const configs = {
+        epub: { label: 'Download ePub', icon: 'bi-download', class: 'btn-outline-primary', target: '' },
+        pdf: { label: 'Download PDF', icon: 'bi-file-earmark-pdf', class: 'btn-outline-danger', target: '' },
+        html: { label: 'Navegar Reader', icon: 'bi-eye', class: 'btn-outline-success', target: '_blank' }
+    };
+
+    ['epub', 'pdf', 'html'].forEach(f => {
+        const container = document.getElementById(`status-${f}`);
+        if (state[f]) {
+            const cfg = configs[f];
+            const ts = new Date(state[f].timestamp * 1000).toLocaleString();
+            container.innerHTML = `
+                <a href="${state[f].url}" class="btn ${cfg.class} btn-sm w-100 rounded-pill mb-1" ${cfg.target ? 'target="'+cfg.target+'"' : 'download'}>
+                    <i class="bi ${cfg.icon} me-1"></i> ${cfg.label}
+                </a>
+                <div class="x-small text-body-secondary opacity-50" style="font-size: 0.65rem;">Gerado em: ${ts}</div>
+            `;
+        } else {
+            container.innerHTML = '<span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 w-100 py-2">Não gerado</span>';
+        }
+    });
 }
 </script>
 

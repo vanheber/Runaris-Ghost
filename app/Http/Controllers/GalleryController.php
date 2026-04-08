@@ -36,31 +36,30 @@ class GalleryController extends Controller
 
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
         $file = $request->file('image');
-        $extension = $file->getClientOriginalExtension();
         $baseName = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-        $fileName = $baseName . '-' . time() . '.' . $extension;
+        $fileName = $baseName . '-' . time() . '.jpg';
         $thumbName = 'thumb-' . $fileName;
 
         $projectPath = "projects/{$project->uuid}/assets";
         Storage::disk('local')->makeDirectory($projectPath);
 
-        // Process Main Image (Kindle size: max 1200px longest side)
+        // Process Main Image (Standard Amazon KDP Size: 1600x2560 max bounding box)
         $img = $this->imageManager->decode($file->getRealPath());
         $width = $img->width();
         $height = $img->height();
         
-        if ($width > 1200 || $height > 1200) {
-            $img->scaleDown(1200, 1200);
+        if ($width > 1600 || $height > 2560) {
+            $img->scaleDown(1600, 2560);
         }
 
         $fullPath = storage_path("app/{$projectPath}/{$fileName}");
-        $img->save($fullPath);
+        $img->save($fullPath, 85);
 
-        // Process Thumbnail (200x200 cover)
+        // Process Thumbnail (200x240 relative proportions roughly)
         $thumb = $this->imageManager->decode($file->getRealPath());
-        $thumb->cover(200, 200);
+        $thumb->cover(200, 240);
         $thumbPath = storage_path("app/{$projectPath}/{$thumbName}");
-        $thumb->save($thumbPath);
+        $thumb->save($thumbPath, 85);
 
         $galleryItem = GalleryItem::create([
             'name' => $file->getClientOriginalName(),
