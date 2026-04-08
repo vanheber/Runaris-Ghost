@@ -65,7 +65,14 @@ Route::prefix('projects')->group(function () {
         // Project Bible
         Route::get('/{project_uuid}/bible', [\App\Http\Controllers\BibleController::class, 'show']);
         Route::put('/{project_uuid}/bible', [\App\Http\Controllers\BibleController::class, 'update']);
+        Route::post('/{project_uuid}/bible/sync', [\App\Http\Controllers\BibleController::class, 'syncBibleWithAI']);
+
+        // AI Magic Buttons
+        Route::post('/{project_uuid}/ai/card', [\App\Http\Controllers\AiController::class, 'suggestCard']);
+        Route::post('/{project_uuid}/ai/planning', [\App\Http\Controllers\AiController::class, 'generatePlanning']);
+        Route::post('/{project_uuid}/ai/scene', [\App\Http\Controllers\AiController::class, 'writeScene']);
     });
 });
 
 Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index']);
+Route::post('/settings/ai', [\App\Http\Controllers\SettingsController::class, 'updateAi']);

@@ -1,7 +1,7 @@
-# 🕯️ Runaris Ghost - Project Documentation
+# 🕯️ Runaris Ghost - v1.1.0 
 
 **Runaris Ghost** é uma plataforma de escrita criativa focada em imersão, organização e suporte de IA para escritores.  
-A interface é projetada para ser livre de distrações, com foco total na construção de mundos (worldbuilding) e na trama principal.
+A interface é projetada para ser livre de distrações, com foco total na construção de mundos (worldbuilding) e na trama principal. Agora com integração profunda com **Google Gemini AI**.
 
 ---
 
@@ -39,6 +39,12 @@ Regras fundamentais para qualquer manutenção visual:
 ### 3. Worldbuilding (Cards)
 *   Categorias: **Geografia/Cenários**, **Personagens** e **Objetos**.
 *   Fichas separadas do manuscrito para consulta rápida durante a escrita.
+*   **IA Suggest**: Geração de fichas baseadas no contexto da história.
+
+### 4. Inteligência Artificial (Magic Buttons)
+*   **Escritor Fantasma**: Redação literária de cenas baseada em planejamento e cards.
+*   **Sugerir Ideias**: Geração de bullet points e conflitos para estruturação de cenas.
+*   **Bíblia Automática**: Sincronização e resumo narrativo via IA para manter a coerência global.
 
 ---
 
@@ -53,12 +59,15 @@ Regras fundamentais para qualquer manutenção visual:
 
 ## 📌 Prompt de Retomada (Para Próxima Sessão)
 
-> "Olá! Estamos trabalhando no projeto **Runaris Ghost**. 
-> Acabamos de finalizar a estabilização da UI/UX usando **Pure Bootstrap 5.3**. O Manuscrito e o Worldbuilding estão operacionais com temas (Dark/Light/Solarized Light) estáveis.
+> "Olá! Estamos trabalhando no projeto **Runaris Ghost (v1.1.0)**. 
+> A interface está consolidada em **Pure Bootstrap 5.3** e o sistema de **IA via Google Gemini** está totalmente integrado.
 >
-> **Próximos Passos Sugeridos:**
-> 1.  **AI Integration**: Iniciar a injeção do contexto de Worldbuilding (Cards) no pipeline do Gemini para suporte à escrita.
-> 2.  **Export Engine**: Configurar o Pandoc para exportação em EPUB/PDF.
-> 3.  **Card Details**: Refinar os templates de fichas de personagens e cenários.
+> **Estado Atual:**
+> 1.  **AI Power**: Botões "Escritor Fantasma" e "Sugerir Ideias" operacionais no editor. 
+> 2.  **Export Engine**: Suporte a EPUB, PDF e HTML com metadados e folha de rosto.
+> 3.  **Bíblia & Worldbuilding**: Grafo de conexões e sincronização de lore funcional.
 >
-> Por favor, leia o `README.md` e o `resources/css/app.css` para entender o sistema de design antes de começar."
+> **Próximos Passos:**
+> 1.  **Análise de Sentimentos**: IA para avaliar o tom da cena (Alegre, Sombrio, etc).
+> 2.  **Timeline**: Visualização cronológica dos eventos da história.
+> 3.  **UI Polish**: Refinar micro-animações de transição entre estados de edição."

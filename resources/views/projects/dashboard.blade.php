@@ -142,6 +142,28 @@
         .editor-toolbar button.bi::before {
             vertical-align: middle;
         }
+        /* Magic Button Styling */
+        .btn-magic-ai {
+            background: linear-gradient(135deg, var(--bs-info), #0dcaf0);
+            color: white !important;
+            border: none !important;
+            box-shadow: 0 2px 10px rgba(13, 202, 240, 0.3);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-magic-ai:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(13, 202, 240, 0.5);
+            background: linear-gradient(135deg, #0dcaf0, #0aa2c0);
+        }
+        .btn-magic-ai:disabled {
+            background: #ccc;
+            opacity: 0.7;
+        }
+        #save-status {
+            min-width: 120px;
+            justify-content: flex-end;
+        }
     </style>
     <!-- Layout Principal -->
     <div id="main-layout" class="d-row d-flex vh-workspace mt-3">
@@ -215,8 +237,17 @@
                             </div>
                             <input type="text" id="title-edit-input" class="form-control form-control-lg bg-transparent border-0 text-body fw-bold d-none p-0 ms-2" style="font-size: 1.75rem;" onblur="saveTitleEdit()" onkeyup="if(event.key==='Enter') saveTitleEdit()">
                         </div>
-                        <div id="save-status" class="text-body-secondary small">
-                            <i class="bi bi-check2-all me-1"></i> Salvo
+                        <div id="save-status" class="text-body-secondary small d-flex align-items-center gap-3">
+                            <button id="btn-magic-planning" class="btn btn-outline-info rounded-pill btn-sm px-3 small d-none me-1" onclick="generateAiPlanning()" title="Sugerir ideias">
+                                <i class="bi bi-stars me-1"></i> Sugerir ideias
+                            </button>
+                            <button id="btn-magic-writing" class="btn btn-outline-info rounded-pill btn-sm px-3 small d-none me-1" onclick="writeAiScene()" title="Escritor Fantasma">
+                                <i class="bi bi-stars me-1"></i> Escritor Fantasma
+                            </button>
+                            <div id="save-status-container" class="d-flex align-items-center opacity-75">
+                                <i id="save-status-icon" class="bi bi-check2-all me-1"></i> 
+                                <span id="save-status-text">Salvo</span>
+                            </div>
                         </div>
                     </div>
                     <div class="flex-grow-1 overflow-auto custom-editor-area">
@@ -406,6 +437,10 @@
                                 <input type="text" id="cards-search" class="form-control border-0 bg-transparent ps-0" placeholder="Filtrar..." oninput="filterCards(this.value)">
                             </div>
 
+                             <button class="btn btn-outline-info rounded-pill btn-sm px-3 me-1" onclick="suggestAiCard()">
+                                <i class="bi bi-stars me-1"></i> Sugerir Ficha
+                            </button>
+
                             <button class="btn btn-primary rounded-pill btn-sm px-3" onclick="createCard()">
                                 <i class="bi bi-plus-lg me-1"></i> Nova Ficha
                             </button>
@@ -454,14 +489,6 @@
             </button>
 
             <div class="sidebar-content mt-4 overflow-auto scroll-custom h-100">
-                <div class="p-2 mb-4 border-primary border-opacity-25 rounded" style="background: rgba(var(--bs-primary-rgb), 0.03);">
-                    <h6 class="text-primary small text-uppercase fw-bold mb-2">IA Support</h6>
-                    <p class="x-small text-body-secondary mb-3 lh-sm">Worldbuilding context is injected automatically.</p>
-                    <button class="btn btn-sm btn-outline-primary w-100 disabled">
-                        <i class="bi bi-magic me-1"></i> Locked
-                    </button>
-                </div>
-
                 <h6 class="text-body-secondary small text-uppercase fw-bold mb-3">Item Details</h6>
                 <div id="item-stats" class="small text-body-secondary">
                     <div class="d-flex justify-content-between mb-2">
@@ -1011,24 +1038,43 @@ async function openManuscriptItem(uuid) {
     manuscriptMode = 'writing'; // Reset to writing mode by default
     
     // Reset Editor Styles
-    document.getElementById('editor-container').classList.remove('editor-planning-mode');
+    const editorContainer = document.getElementById('editor-container');
+    if (editorContainer) editorContainer.classList.remove('editor-planning-mode');
     
     // Update UI Toggles
     const btnWriting = document.getElementById('btn-mode-writing');
     const btnPlanning = document.getElementById('btn-mode-planning');
-    btnWriting.classList.add('active');
-    btnWriting.classList.replace('btn-outline-primary', 'btn-primary');
-    btnPlanning.classList.remove('active');
-    btnPlanning.classList.replace('btn-primary', 'btn-outline-secondary');
+    if (btnWriting) {
+        btnWriting.classList.add('active');
+        btnWriting.classList.replace('btn-outline-primary', 'btn-primary');
+    }
+    if (btnPlanning) {
+        btnPlanning.classList.remove('active');
+        btnPlanning.classList.replace('btn-primary', 'btn-outline-secondary');
+    }
     
-    document.getElementById('manuscript-mode-toggle').classList.remove('d-none');
-    document.getElementById('empty-state').classList.add('d-none');
-    document.getElementById('bible-container').classList.add('d-none');
-    document.getElementById('graph-container').classList.add('d-none');
-    document.getElementById('cards-grid-container').classList.add('d-none');
-    document.getElementById('gallery-container').classList.add('d-none');
-    document.getElementById('editor-container').classList.remove('d-none');
-    document.getElementById('card-connections-editor').classList.add('d-none');
+    const modeToggle = document.getElementById('manuscript-mode-toggle');
+    if (modeToggle) modeToggle.classList.remove('d-none');
+    
+    const emptyState = document.getElementById('empty-state');
+    if (emptyState) emptyState.classList.add('d-none');
+    
+    const bibleCon = document.getElementById('bible-container');
+    if (bibleCon) bibleCon.classList.add('d-none');
+    
+    const graphCon = document.getElementById('graph-container');
+    if (graphCon) graphCon.classList.add('d-none');
+    
+    const cardGridCon = document.getElementById('cards-grid-container');
+    if (cardGridCon) cardGridCon.classList.add('d-none');
+    
+    const galleryCon = document.getElementById('gallery-container');
+    if (galleryCon) galleryCon.classList.add('d-none');
+    
+    if (editorContainer) editorContainer.classList.remove('d-none');
+    
+    const connectionsEditor = document.getElementById('card-connections-editor');
+    if (connectionsEditor) connectionsEditor.classList.add('d-none');
 
     try {
         const response = await fetch(`/projects/${projectUuid}/manuscript/${uuid}`);
@@ -1046,18 +1092,42 @@ async function openManuscriptItem(uuid) {
         
         // TOC specific logic
         if (item.type === 'toc') {
-            document.getElementById('manuscript-mode-toggle').classList.add('d-none');
+            const modeToggle = document.getElementById('manuscript-mode-toggle');
+            if (modeToggle) modeToggle.classList.add('d-none');
+            
+            const btnMagicWriting = document.getElementById('btn-magic-writing');
+            if (btnMagicWriting) btnMagicWriting.classList.add('d-none');
+            
+            const btnMagicPlanning = document.getElementById('btn-magic-planning');
+            if (btnMagicPlanning) btnMagicPlanning.classList.add('d-none');
+
             easyMDE.codemirror.setOption("readOnly", true);
             if (!easyMDE.isPreviewActive()) easyMDE.togglePreview();
         } else {
+            const modeToggle = document.getElementById('manuscript-mode-toggle');
+            if (modeToggle) modeToggle.classList.remove('d-none');
+
+            const btnMagicWriting = document.getElementById('btn-magic-writing');
+            const btnMagicPlanning = document.getElementById('btn-magic-planning');
+
+            // AI Buttons
+            if (manuscriptMode === 'writing') {
+                if (btnMagicWriting) btnMagicWriting.classList.remove('d-none');
+                if (btnMagicPlanning) btnMagicPlanning.classList.add('d-none');
+            } else {
+                if (btnMagicPlanning) btnMagicPlanning.classList.remove('d-none');
+                if (btnMagicWriting) btnMagicWriting.classList.add('d-none');
+            }
             easyMDE.codemirror.setOption("readOnly", false);
             if (easyMDE.isPreviewActive()) easyMDE.togglePreview();
         }
 
         // Markdown Tips (Only for Chapters and Scenes)
         const tips = document.getElementById('markdown-tips');
-        if (item.type === 'chapter' || item.type === 'scene') tips.classList.remove('d-none');
-        else tips.classList.add('d-none');
+        if (tips) {
+            if (item.type === 'chapter' || item.type === 'scene') tips.classList.remove('d-none');
+            else tips.classList.add('d-none');
+        }
 
         // Mark active in tree
         document.querySelectorAll('.list-group-item').forEach(el => el.classList.remove('active'));
@@ -1078,18 +1148,40 @@ function setManuscriptMode(mode) {
     const editorContainer = document.getElementById('editor-container');
     
     if (mode === 'writing') {
-        btnWriting.classList.add('active');
-        btnWriting.classList.replace('btn-outline-primary', 'btn-primary');
-        btnPlanning.classList.remove('active');
-        btnPlanning.classList.replace('btn-primary', 'btn-outline-secondary');
-        editorContainer.classList.remove('editor-planning-mode');
+        if (btnWriting) {
+            btnWriting.classList.add('active');
+            btnWriting.classList.replace('btn-outline-primary', 'btn-primary');
+        }
+        if (btnPlanning) {
+            btnPlanning.classList.remove('active');
+            btnPlanning.classList.replace('btn-primary', 'btn-outline-secondary');
+        }
+        if (editorContainer) editorContainer.classList.remove('editor-planning-mode');
+        
+        // AI Buttons
+        const magicWriting = document.getElementById('btn-magic-writing');
+        const magicPlanning = document.getElementById('btn-magic-planning');
+        if (magicWriting) magicWriting.classList.remove('d-none');
+        if (magicPlanning) magicPlanning.classList.add('d-none');
+        
         loadManuscriptContent();
     } else {
-        btnPlanning.classList.add('active');
-        btnPlanning.classList.replace('btn-outline-secondary', 'btn-primary');
-        btnWriting.classList.remove('active');
-        btnWriting.classList.replace('btn-primary', 'btn-outline-primary');
-        editorContainer.classList.add('editor-planning-mode');
+        if (btnPlanning) {
+            btnPlanning.classList.add('active');
+            btnPlanning.classList.replace('btn-outline-secondary', 'btn-primary');
+        }
+        if (btnWriting) {
+            btnWriting.classList.remove('active');
+            btnWriting.classList.replace('btn-primary', 'btn-outline-primary');
+        }
+        if (editorContainer) editorContainer.classList.add('editor-planning-mode');
+        
+        // AI Buttons
+        const magicWriting = document.getElementById('btn-magic-writing');
+        const magicPlanning = document.getElementById('btn-magic-planning');
+        if (magicPlanning) magicPlanning.classList.remove('d-none');
+        if (magicWriting) magicWriting.classList.add('d-none');
+        
         loadManuscriptPlanning();
     }
 }
@@ -1565,8 +1657,12 @@ async function saveActiveItem() {
 }
 
 function showSaveStatus(text, iconClass) {
-    const status = document.getElementById('save-status');
-    status.innerHTML = `<i class="bi ${iconClass} me-1"></i> ${text}`;
+    const textEl = document.getElementById('save-status-text');
+    const iconEl = document.getElementById('save-status-icon');
+    if (textEl) textEl.innerText = text;
+    if (iconEl) {
+        iconEl.className = `bi ${iconClass} me-1`;
+    }
 }
 
 // --- Gallery Logic ---
@@ -2017,9 +2113,36 @@ async function saveBibleContent() {
     }
 }
 
-function syncBibleWithAI() {
-    // Placeholder para futura integração com IA
-    alert("Em breve: A IA processará todo o seu manuscrito e gerará um resumo narrativo atualizado automaticamente!");
+async function syncBibleWithAI() {
+    const btn = document.querySelector('[onclick="syncBibleWithAI()"]');
+    const originalHtml = btn.innerHTML;
+    
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Sincronizando...';
+        
+        const response = await fetch(`/projects/${projectUuid}/bible/sync`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.error) {
+            alert(data.error);
+        } else {
+            bibleSummaryEditor.value(data.summary);
+            showBibleSaveStatus('Sincronizado', 'bi-stars text-info');
+        }
+    } catch (error) {
+        console.error('Erro na sincronização:', error);
+        alert('Erro ao conectar com a IA.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHtml;
+    }
 }
 
 function showBibleSaveStatus(text, iconClass) {
@@ -2171,6 +2294,119 @@ function renderExportResults(state) {
             container.innerHTML = '<span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 w-100 py-2">Não gerado</span>';
         }
     });
+}
+
+// --- AI Magic Logic ---
+
+async function suggestAiCard() {
+    try {
+        const btn = document.querySelector('[onclick="suggestAiCard()"]');
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+        const response = await fetch(`/projects/${projectUuid}/ai/card`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            // Create it directly
+            const title = data.suggestion.title;
+            const content = data.suggestion.content;
+            const type = data.suggestion.type;
+            
+            const createRes = await fetch(`/projects/${projectUuid}/cards`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                body: JSON.stringify({ title, content, type })
+            });
+            await createRes.json();
+            loadCards(activeCardCategory || type); // refresh grid
+        } else {
+            alert(data.error || 'Erro ao sugerir ficha');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Erro na conexão com IA');
+    } finally {
+        const btn = document.querySelector('[onclick="suggestAiCard()"]');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-stars me-1"></i> Sugerir Ficha';
+        }
+    }
+}
+
+async function generateAiPlanning() {
+    if (!activeItemUuid) return;
+    const btn = document.getElementById('btn-magic-planning');
+    const originalHtml = btn.innerHTML;
+    
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        
+        const title = document.getElementById('current-item-title').innerText;
+        const response = await fetch(`/projects/${projectUuid}/ai/planning`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ title })
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            easyMDE.value(data.planning);
+            saveManuscriptContent(); 
+        } else {
+            alert(data.error);
+        }
+    } catch (e) {
+        alert('Erro ao gerar planejamento');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-stars me-1"></i> Sugerir ideias';
+    }
+}
+
+async function writeAiScene() {
+    if (!activeItemUuid) return;
+    const btn = document.getElementById('btn-magic-writing');
+    const originalHtml = btn.innerHTML;
+    
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+        
+        const title = document.getElementById('current-item-title').innerText;
+        
+        const planRes = await fetch(`/projects/${projectUuid}/manuscript/${activeItemUuid}/planning`);
+        const planData = await planRes.json();
+        
+        const response = await fetch(`/projects/${projectUuid}/ai/scene`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ title, planning: planData.content || '' })
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            if (!easyMDE.value().trim() || easyMDE.value().startsWith('# Planejamento')) {
+                easyMDE.value(data.content);
+            } else {
+                easyMDE.value(easyMDE.value() + "\n\n" + data.content);
+            }
+            saveManuscriptContent();
+        } else {
+            alert(data.error);
+        }
+    } catch (e) {
+        alert('Erro ao escrever cena');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-stars me-1"></i> Sugerir ideias';
+    }
 }
 </script>
 

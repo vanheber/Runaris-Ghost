@@ -27,9 +27,16 @@ O repositório central da "Verdade" do seu universo.
 ## 5. Galeria
 Central de ativos visuais. Todas as imagens inseridas no seu manuscrito ou associadas a fichas ficam armazenadas aqui.
 
-## 6. Exportação
+## 6. Inteligência Artificial (Botões Mágicos) 🌟
+O Runaris Ghost utiliza a tecnologia **Google Gemini** para atuar como seu co-autor:
+*   **Escritor Fantasma**: No modo *Escrita*, a IA redige parágrafos literários baseando-se no que você planejou e no lore do seu mundo.
+*   **Sugerir Ideias**: No modo *Planejamento*, a IA sugere pontos de conflito, objetivos e reviravoltas para estruturar sua cena.
+*   **Sugerir Ficha**: Na galeria de Worldbuilding, a IA pode criar novos personagens ou cenários que se encaixem organicamente na sua história.
+*   **Sincronização da Bíblia**: Na aba *Bíblia*, você pode solicitar que a IA leia todo o seu manuscrito e gere um resumo narrativo atualizado, garantindo que você nunca esqueça um detalhe plantado dez capítulos atrás.
+
+## 7. Exportação
 Gere versões prontas para leitura em múltiplos formatos:
-*   **ePub**: Estabilizado para leitura no Kindle e dispositivos móveis.
+*   **ePub**: Estabilizado para leitura no Kindle e dispositivos móveis (inclui metadados obrigatórios e folha de rosto).
 *   **PDF**: Pronto para revisão e impressão.
 *   **Leitor HTML**: Uma experiência web responsiva para leitura direta no navegador.
 

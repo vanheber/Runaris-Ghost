@@ -44,9 +44,28 @@
                 <div id="ai" class="card bg-body-tertiary border-0 shadow-sm p-4 pt-5 position-relative">
                     <div class="position-absolute top-0 start-0 w-100 h-2 bg-info opacity-50 rounded-top" style="height: 4px;"></div>
                     <h5 class="fw-bold mb-4 text-info"><i class="bi bi-magic"></i> Inteligência Artificial</h5>
-                    <div class="alert alert-info border-0 shadow-sm mb-0">
-                        <i class="bi bi-info-circle me-2"></i> Configurações de API e modelos de linguagem estarão disponíveis na próxima atualização.
-                    </div>
+                    @if(session('success'))
+                        <div class="alert alert-success border-0 shadow-sm mb-4">
+                            <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ url('/settings/ai') }}" method="POST">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="gemini_api_key" class="form-label text-body-secondary small text-uppercase fw-bold ls-wide">Google Gemini API Key</label>
+                            <input type="password" class="form-control bg-body border-secondary border-opacity-25 py-2" id="gemini_api_key" name="gemini_api_key" value="{{ $geminiApiKey }}" placeholder="AIzaSy...">
+                            <div class="form-text opacity-75 small mt-2">
+                                <i class="bi bi-info-circle"></i> Sua chave é armazenada com segurança no banco local (`system_settings`) e nunca será enviada para fora da sua máquina, exceto para os servidores do Google via API oficial.
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-info text-white px-4 rounded-pill shadow-sm">
+                                <i class="bi bi-save me-2"></i> Salvar API Key
+                            </button>
+                        </div>
+                    </form>
                 </div>
             @endif
 

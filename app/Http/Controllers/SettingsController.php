@@ -25,6 +25,22 @@ class SettingsController extends Controller
             }
         }
 
-        return view('settings.index', compact('tab', 'docContent'));
+        $geminiApiKey = \App\Models\SystemSetting::getSetting('gemini_api_key');
+
+        return view('settings.index', compact('tab', 'docContent', 'geminiApiKey'));
+    }
+
+    /**
+     * Update AI settings.
+     */
+    public function updateAi(Request $request)
+    {
+        $request->validate([
+            'gemini_api_key' => 'nullable|string'
+        ]);
+
+        \App\Models\SystemSetting::setSetting('gemini_api_key', $request->input('gemini_api_key'));
+
+        return redirect('/settings?tab=ai')->with('success', 'Configurações de IA salvas com sucesso.');
     }
 }
