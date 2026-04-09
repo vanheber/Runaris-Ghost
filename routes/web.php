@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/projects');
 });
 
 Route::prefix('projects')->group(function () {
@@ -59,6 +59,8 @@ Route::prefix('projects')->group(function () {
         Route::get('/{project_uuid}/export/epub', [\App\Http\Controllers\ProjectController::class, 'exportEpub']);
         Route::get('/{project_uuid}/export/pdf', [\App\Http\Controllers\ProjectController::class, 'exportPdf']);
         Route::get('/{project_uuid}/export/html', [\App\Http\Controllers\ProjectController::class, 'exportHtml']);
+        Route::get('/{project_uuid}/export/zip', [\App\Http\Controllers\ProjectController::class, 'exportZip']);
+        Route::get('/{project_uuid}/export/preview-html', [\App\Http\Controllers\ProjectController::class, 'previewHtml']);
         Route::get('/{project_uuid}/export-state', [\App\Http\Controllers\ProjectController::class, 'getExportState']);
         Route::post('/{project_uuid}/export-process', [\App\Http\Controllers\ProjectController::class, 'processBatchExport']);
 
@@ -74,5 +76,23 @@ Route::prefix('projects')->group(function () {
     });
 });
 
+// Authentication
+Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+
+// Initial Setup & Onboarding
+Route::get('/dev/reset', [\App\Http\Controllers\SetupController::class, 'factoryReset'])->name('dev.reset');
+Route::prefix('setup')->group(function () {
+    Route::get('/', [\App\Http\Controllers\SetupController::class, 'index'])->name('setup');
+    Route::post('/locale', [\App\Http\Controllers\SetupController::class, 'setLocale']);
+    Route::post('/license', [\App\Http\Controllers\SetupController::class, 'activateLicense']);
+    Route::post('/user', [\App\Http\Controllers\SetupController::class, 'createUser']);
+    Route::post('/ai', [\App\Http\Controllers\SetupController::class, 'saveAiKey']);
+});
+
 Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index']);
 Route::post('/settings/ai', [\App\Http\Controllers\SettingsController::class, 'updateAi']);
+Route::get('/settings/backup', [\App\Http\Controllers\SettingsController::class, 'fullBackup']);
+Route::post('/settings/factory-reset', [\App\Http\Controllers\SettingsController::class, 'factoryReset']);
+Route::get('/eula', [\App\Http\Controllers\SettingsController::class, 'showEula']);

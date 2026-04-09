@@ -5,8 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
+use App\Services\ProjectManager;
+
 class ProjectController extends Controller
 {
+    protected $projectManager;
+
+    public function __construct(ProjectManager $projectManager)
+    {
+        $this->projectManager = $projectManager;
+    }
+
     /**
      * Display a listing of projects.
      */
@@ -26,7 +35,7 @@ class ProjectController extends Controller
             'description' => 'nullable|string'
         ]);
 
-        $project = Project::create([
+        $project = $this->projectManager->createProject([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'last_opened_at' => now()
@@ -131,7 +140,7 @@ class ProjectController extends Controller
         $exporter = new \App\Services\ExporterService($project);
         $filePath = $exporter->generateEpub();
 
-        return response()->download($filePath)->deleteFileAfterSend(true);
+        return response()->download($filePath);
     }
 
     /**
@@ -143,7 +152,7 @@ class ProjectController extends Controller
         $exporter = new \App\Services\ExporterService($project);
         $filePath = $exporter->generatePdf();
 
-        return response()->download($filePath)->deleteFileAfterSend(true);
+        return response()->download($filePath);
     }
 
     /**
@@ -155,7 +164,30 @@ class ProjectController extends Controller
         $exporter = new \App\Services\ExporterService($project);
         $filePath = $exporter->generateHtml();
 
-        return response()->download($filePath)->deleteFileAfterSend(true);
+        return response()->download($filePath);
+    }
+
+    /**
+     * Preview project HTML in browser.
+     */
+    public function previewHtml($project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $exporter = new \App\Services\ExporterService($project);
+        $filePath = $exporter->generateHtml();
+
+        return response()->file($filePath);
+    }
+    /**
+     * Export project to HTML ZIP Package.
+     */
+    public function exportZip($project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $exporter = new \App\Services\ExporterService($project);
+        $filePath = $exporter->generateHtmlZip();
+
+        return response()->download($filePath);
     }
     /**
      * Get the current export state (existing files).
@@ -176,12 +208,15 @@ class ProjectController extends Controller
         $exporter = new \App\Services\ExporterService($project);
         $formats = $request->input('formats', []);
         
-        $results = [];
-        if (in_array('epub', $formats)) $results['epub'] = ['url' => $exporter->generateEpub()];
-        if (in_array('pdf', $formats)) $results['pdf'] = ['url' => $exporter->generatePdf()];
-        if (in_array('html', $formats)) $results['html'] = ['url' => $exporter->generateHtml()];
+        // Trigger generation
+        if (in_array('epub', $formats)) $exporter->generateEpub();
+        if (in_array('pdf', $formats)) $exporter->generatePdf();
+        if (in_array('html', $formats)) { 
+            $exporter->generateHtml(); 
+            $exporter->generateHtmlZip(); 
+        }
 
-        return response()->json($results);
+        return response()->json($exporter->getExistingExports());
     }
 
     /**

@@ -76,7 +76,7 @@ class ExporterService
         $this->buildOebps($zip);
 
         $zip->close();
-        return $this->getPublicUrl($fileName);
+        return $epubFile;
     }
 
     /**
@@ -97,7 +97,7 @@ class ExporterService
         }
 
         $pdf->save($filePath);
-        return $this->getPublicUrl($fileName);
+        return $filePath;
     }
 
     /**
@@ -118,7 +118,35 @@ class ExporterService
         }
 
         file_put_contents($filePath, $html);
-        return $this->getPublicUrl($fileName);
+        return $filePath;
+    }
+
+    /**
+     * Generate HTML ZIP package.
+     */
+    public function generateHtmlZip(): string
+    {
+        $safeName = Str::slug($this->project->name);
+        $fileName = "{$safeName}_Web_Package.zip";
+        $dir      = Storage::disk('public')->path($this->baseExportPath);
+        $zipFile  = "{$dir}/{$fileName}";
+
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new \Exception("Erro ao criar ZIP.");
+        }
+
+        // Prepare data with relative image paths
+        $data = $this->prepareFullManuscriptDataForWeb($zip);
+        $html = view('exports.html', $data)->render();
+
+        $zip->addFromString('index.html', $html);
+        $zip->addFromString('style.css', $this->getGlobalStyles());
+        
+        $zip->close();
+        return $zipFile;
     }
 
     /**
@@ -139,6 +167,7 @@ class ExporterService
             'epub' => "{$safeName}_Kindle.epub",
             'pdf'  => "{$safeName}.pdf",
             'html' => "{$safeName}_Reader.html",
+            'zip'  => "{$safeName}_Web_Package.zip",
         ];
 
         $results = [];
@@ -146,7 +175,7 @@ class ExporterService
             $path = "{$this->baseExportPath}/{$fileName}";
             if (Storage::disk('public')->exists($path)) {
                 $results[$type] = [
-                    'url'       => $this->getPublicUrl($fileName),
+                    'url'       => "/projects/{$this->project->uuid}/export/{$type}", // Route instead of direct URL
                     'timestamp' => Storage::disk('public')->lastModified($path),
                 ];
             }
@@ -192,8 +221,71 @@ class ExporterService
     }
 
     /**
-     * Build OEBPS structure inside the ZIP.
+     * Prepare data for Web Package (ZIP) keeping assets separate.
      */
+    protected function prepareFullManuscriptDataForWeb(ZipArchive $zip): array
+    {
+        $sections = ManuscriptItem::whereIn('type', ['section', 'chapter', 'scene'])
+            ->orderBy('order')
+            ->get();
+
+        $manuscript = $sections->map(function ($section) use ($zip) {
+            $raw = $this->getManuscriptContent($section->uuid);
+            return [
+                'title'   => $section->title,
+                'content' => $this->parseMarkdownForWeb($raw, $zip),
+                'type'    => $section->type,
+                'uuid'    => $section->uuid,
+            ];
+        });
+
+        $cards    = Card::orderBy('title')->get();
+        $appendix = $cards->map(function ($card) use ($zip) {
+            return [
+                'title'   => $card->title,
+                'type'    => $card->type,
+                'content' => $this->parseMarkdownForWeb($card->content ?? '', $zip),
+                'uuid'    => $card->uuid,
+            ];
+        });
+
+        return [
+            'project'    => $this->project,
+            'manuscript' => $manuscript,
+            'appendix'   => $appendix,
+            'css'        => 'style.css', // Relative path for the package
+        ];
+    }
+
+    /**
+     * Parse Markdown for Web (ZIP), adding images to the zip and using relative paths.
+     */
+    protected function parseMarkdownForWeb(string $text, ZipArchive $zip): string
+    {
+        $text = str_replace('---', '<div class="divider">***</div>', $text);
+
+        $text = preg_replace_callback(
+            '/!\[(.*?)\]\(\/projects\/[^\/]+\/gallery\/([^\/]+)\/image[^)]*\)/',
+            function ($matches) use ($zip) {
+                [$all, $alt, $imageUuid] = $matches;
+                $item = GalleryItem::where('uuid', $imageUuid)->first();
+                if ($item) {
+                    $filePath = ltrim($item->file_path, '/');
+                    $path = storage_path("app/{$filePath}");
+                    if (file_exists($path)) {
+                        $ext      = strtolower(pathinfo($item->file_path, PATHINFO_EXTENSION));
+                        $relPath  = "assets/img_{$imageUuid}.{$ext}";
+                        $zip->addFile($path, $relPath);
+                        return '<img src="' . $relPath . '" alt="' . htmlspecialchars($alt) . '" />';
+                    }
+                }
+                return '';
+            },
+            $text
+        );
+
+        return $this->parsedown->text($text);
+    }
     protected function buildOebps(ZipArchive $zip): void
     {
         $cf       = 'OEBPS'; // content folder alias

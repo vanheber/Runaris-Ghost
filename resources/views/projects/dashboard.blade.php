@@ -2284,12 +2284,27 @@ function renderExportResults(state) {
         if (state[f]) {
             const cfg = configs[f];
             const ts = new Date(state[f].timestamp * 1000).toLocaleString();
-            container.innerHTML = `
-                <a href="${state[f].url}" class="btn ${cfg.class} btn-sm w-100 rounded-pill mb-1" ${cfg.target ? 'target="'+cfg.target+'"' : 'download'}>
-                    <i class="bi ${cfg.icon} me-1"></i> ${cfg.label}
-                </a>
-                <div class="x-small text-body-secondary opacity-50" style="font-size: 0.65rem;">Gerado em: ${ts}</div>
-            `;
+            
+            if (f === 'html') {
+                container.innerHTML = `
+                    <div class="d-flex flex-column gap-1">
+                        <a href="/projects/${projectUuid}/export/preview-html" target="_blank" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                            <i class="bi bi-eye me-1"></i> Navegar Reader
+                        </a>
+                        <a href="/projects/${projectUuid}/export/zip" download class="btn btn-link btn-sm text-decoration-none x-small p-0 opacity-75">
+                            <i class="bi bi-file-zip me-1"></i> Baixar Pacote Web (ZIP)
+                        </a>
+                    </div>
+                    <div class="x-small text-body-secondary opacity-50 mt-1" style="font-size: 0.65rem;">Gerado em: ${ts}</div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <a href="${state[f].url}" class="btn ${cfg.class} btn-sm w-100 rounded-pill mb-1" ${cfg.target ? 'target="'+cfg.target+'"' : 'download'}>
+                        <i class="bi ${cfg.icon} me-1"></i> ${cfg.label}
+                    </a>
+                    <div class="x-small text-body-secondary opacity-50" style="font-size: 0.65rem;">Gerado em: ${ts}</div>
+                `;
+            }
         } else {
             container.innerHTML = '<span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 w-100 py-2">Não gerado</span>';
         }

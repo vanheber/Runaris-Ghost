@@ -84,6 +84,7 @@ class ManuscriptService
         if ($syncTOC && $item && !$item->is_system) {
             // No need to sync TOC on content save unless we want to update headings inside content
             // But usually TOC is based on items title.
+            $this->mirrorToDocuments($project, $item, $content);
         }
     }
     /**
@@ -155,6 +156,24 @@ class ManuscriptService
     {
         $extension = ($type === 'planning') ? 'beats.md' : 'md';
         return "projects/{$project->uuid}/manuscript/{$uuid}.{$extension}";
+    }
+
+    private function mirrorToDocuments(Project $project, ManuscriptItem $item, string $content)
+    {
+        try {
+            $docsPath = getenv('HOME') . '/Documents/RunarisGhost/' . Str::slug($project->name);
+            if (!is_dir($docsPath)) {
+                @mkdir($docsPath, 0777, true);
+            }
+            
+            $safeTitle = preg_replace('/[^A-Za-z0-9\- \_]+/', '', $item->title);
+            $orderPrefix = str_pad($item->order, 2, '0', STR_PAD_LEFT);
+            $filename = "{$orderPrefix} - {$safeTitle}.md";
+            
+            file_put_contents($docsPath . '/' . $filename, $content);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to mirror document: " . $e->getMessage());
+        }
     }
 
     public function deleteItem(Project $project, string $uuid)

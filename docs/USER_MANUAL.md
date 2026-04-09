@@ -1,6 +1,13 @@
-# Guia do Runaris Ghost
+# Guia do Runaris Ghost - v1.2.0
 
 O Runaris Ghost é um ambiente de escrita imersivo projetado para autores que buscam organizar o caos da criação literária em uma jornada estruturada.
+
+## 0. Primeiros Passos e Configuração
+Ao iniciar o aplicativo pela primeira vez, você passará pelo fluxo de Onboarding profissional:
+*   **Idioma**: Escolha entre Português (BR/PT), Inglês ou Espanhol para a interface.
+*   **Licença**: Valide sua chave de licença adquirida no Gumroad para desbloquear o app permanentemente.
+*   **Perfil e Segurança**: Defina seu nome de autor e escolha se deseja proteger seus manuscritos com uma senha local.
+*   **IA (Opcional)**: Configure sua chave da API do Google Gemini para habilitar as funções de co-autoria.
 
 ## 1. Gestão de Projetos
 Cada projeto representa uma obra única (livro ou série). Na tela principal, você pode gerenciar suas histórias e configurar a **Capa do Livro**.
@@ -24,21 +31,18 @@ O repositório central da "Verdade" do seu universo.
 *   **Lore**: Descrições profundas sobre as regras do seu mundo.
 *   **IA Recap**: Um resumo narrativo que a IA mantém atualizado para ajudar você a não perder o fio da meada em tramas longas.
 
-## 5. Galeria
-Central de ativos visuais. Todas as imagens inseridas no seu manuscrito ou associadas a fichas ficam armazenadas aqui.
+## 5. Exportação e Distribuição
+Gere versões prontas para leitura e backup:
+*   **ePub**: Estabilizado para leitura no Kindle e dispositivos móveis.
+*   **PDF**: Pronto para revisão e impressão.
+*   **Pacote Web (ZIP)**: Um conjunto estruturado de arquivos HTML para leitura no navegador ou hospedagem em site pessoal.
+*   **Backup Total**: Nas configurações de Sistema, você pode baixar um arquivo ZIP contendo **absolutamente tudo** (projetos, DB e imagens) para segurança máxima.
 
 ## 6. Inteligência Artificial (Botões Mágicos) 🌟
 O Runaris Ghost utiliza a tecnologia **Google Gemini** para atuar como seu co-autor:
 *   **Escritor Fantasma**: No modo *Escrita*, a IA redige parágrafos literários baseando-se no que você planejou e no lore do seu mundo.
 *   **Sugerir Ideias**: No modo *Planejamento*, a IA sugere pontos de conflito, objetivos e reviravoltas para estruturar sua cena.
-*   **Sugerir Ficha**: Na galeria de Worldbuilding, a IA pode criar novos personagens ou cenários que se encaixem organicamente na sua história.
-*   **Sincronização da Bíblia**: Na aba *Bíblia*, você pode solicitar que a IA leia todo o seu manuscrito e gere um resumo narrativo atualizado, garantindo que você nunca esqueça um detalhe plantado dez capítulos atrás.
-
-## 7. Exportação
-Gere versões prontas para leitura em múltiplos formatos:
-*   **ePub**: Estabilizado para leitura no Kindle e dispositivos móveis (inclui metadados obrigatórios e folha de rosto).
-*   **PDF**: Pronto para revisão e impressão.
-*   **Leitor HTML**: Uma experiência web responsiva para leitura direta no navegador.
+*   **Sincronização da Bíblia**: A IA lê seu manuscrito e gera resumos narrativos automáticos.
 
 ---
 *Nota: Este guia serve tanto como manual para usuários quanto como base de contexto para sistemas de inteligência artificial que auxiliem na escrita.*

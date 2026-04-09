@@ -78,7 +78,7 @@
                 <div class="col-md-4 d-flex align-items-center">
                     <span class="text-body-secondary small">
                         <i class="bi bi-ghost me-2"></i>
-                        &copy; {{ date('Y') }} Runaris Ghost.
+                        &copy; {{ date('Y') }} Runaris Ghost. | <a href="{{ url('/eula') }}" class="text-body-secondary text-decoration-none small opacity-75 hover-opacity-100">Termos e Licença</a>
                     </span>
                 </div>
                 

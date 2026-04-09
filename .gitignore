@@ -27,3 +27,14 @@ yarn-error.log
 .env.staging
 .env.local
 .env.*.local
+
+# NativePHP & Electron
+/dist
+/resources/js/node_modules
+/vendor/nativephp/electron/resources/js/node_modules
+
+# Local Data (Santuário)
+/storage/app/projects/*
+/storage/app/backups/*
+/storage/app/temp_restore/*
+!/storage/app/projects/.gitkeep

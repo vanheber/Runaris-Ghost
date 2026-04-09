@@ -1,7 +1,7 @@
-# 🕯️ Runaris Ghost - v1.1.0 
+# 🕯️ Runaris Ghost - v1.2.0 
 
 **Runaris Ghost** é uma plataforma de escrita criativa focada em imersão, organização e suporte de IA para escritores.  
-A interface é projetada para ser livre de distrações, com foco total na construção de mundos (worldbuilding) e na trama principal. Agora com integração profunda com **Google Gemini AI**.
+A interface é projetada para ser livre de distrações, com foco total na construção de mundos (worldbuilding) e na trama principal. Agora com integração profunda com **Google Gemini AI** e pronto para distribuição comercial.
 
 ---
 
@@ -15,31 +15,28 @@ Regras fundamentais para qualquer manutenção visual:
 3.  **No Local Styles**: Evite blocos `<style>` dentro de arquivos Blade. Todas as customizações (como Split.js gutters e EasyMDE overrides) devem estar centralizadas em `resources/css/app.css`.
 4.  **Tema Reativo**: O sistema suporta **Dark, Light e Solarized Light**. 
     *   As cores são controladas via variáveis de CSS (`--bs-body-bg`, etc.) no atributo `data-bs-theme` da tag `<html>`.
-5.  **Z-Index**:
-    *   Modais e Dropdowns: Padrão Bootstrap (> 1050).
-    *   Botões de Toggle lateral: `z-index: 10`.
+5.  **Aesthetica Premium**: Uso de Glassmorphism, gradientes suaves e tipografia moderna (Outfit/Inter).
 
 ---
 
 ## 🚀 Funcionalidades Atuais
 
-### 1. Workspace (Painel Principal)
+### 1. Onboarding & Distribuição (v1.2.0)
+*   **Fluxo de Configuração**: Configuração inicial elegante com seleção de idioma, validação de licença e setup de IA.
+*   **Suporte a Idiomas**: Totalmente localizado em **Português (BR/PT)**, **Inglês** e **Espanhol**.
+*   **Segurança Comercial**: Integração com a API do **Gumroad** para validação de chaves de licença.
+*   **Administração do Santuário**: Painel para **Backup Total (ZIP)** e **Reset de Fábrica** protegido por senha.
+*   **Auto-Update**: Infraestrutura pronta para atualizações automáticas via GitHub Releases.
+
+### 2. Workspace & Editor
 *   **Split Sidebars**: Barras laterais redimensionáveis via `Split.js`.
-*   **Modo Sem Distração**: Botões de recolhimento que escondem as barras laterais para foco total no editor.
+*   **Modo Sem Distração**: Foco total no editor com um clique.
 *   **Editor Markdown**: Integrado com `EasyMDE`, com auto-salvamento a cada 1.5s de inatividade.
 
-### 2. Manuscrito (Trama)
-*   **Árvore Hierárquica**: Organização em Seções, Capítulos e Cenas.
-*   **CRUD Completo**: 
-    *   Criação de novos itens via botão global ou "+" individual na árvore.
-    *   Exclusão segura via **Modal do Bootstrap** com confirmação de segurança.
-    *   Edição de títulos "inline" clicando diretamente no nome do item.
-*   **Drag & Drop**: Reordenamento da árvore via `SortableJS` (integrado com o banco de dados).
-
-### 3. Worldbuilding (Cards)
-*   Categorias: **Geografia/Cenários**, **Personagens** e **Objetos**.
-*   Fichas separadas do manuscrito para consulta rápida durante a escrita.
-*   **IA Suggest**: Geração de fichas baseadas no contexto da história.
+### 3. Manuscrito & Trama
+*   **Árvore Hierárquica**: Organização em Seções, Capítulos e Cenas com Drag & Drop (`SortableJS`).
+*   **CRUD Completo**: Gestão segura de conteúdo com confirmações visuais.
+*   **Export Engine**: Geração de **EPUB, PDF, HTML** e pacotes **Web ZIP** estruturados.
 
 ### 4. Inteligência Artificial (Magic Buttons)
 *   **Escritor Fantasma**: Redação literária de cenas baseada em planejamento e cards.
@@ -50,8 +47,8 @@ Regras fundamentais para qualquer manutenção visual:
 
 ## 🛠️ Stack Tecnológica
 *   **Backend**: Laravel 11.
-*   **Frontend**: JS Vanilla + Blade.
-*   **CSS**: Bootstrap 5.3 + Custom App.css.
+*   **Desktop App**: NativePHP + Electron.
+*   **Frontend**: JS Vanilla + Blade + Bootstrap 5.3.
 *   **Editor**: EasyMDE.
 *   **Layout**: Split.js.
 
@@ -59,15 +56,15 @@ Regras fundamentais para qualquer manutenção visual:
 
 ## 📌 Prompt de Retomada (Para Próxima Sessão)
 
-> "Olá! Estamos trabalhando no projeto **Runaris Ghost (v1.1.0)**. 
-> A interface está consolidada em **Pure Bootstrap 5.3** e o sistema de **IA via Google Gemini** está totalmente integrado.
+> "Olá! Estamos trabalhando no projeto **Runaris Ghost (v1.2.0)**. 
+> O sistema está pronto para distribuição comercial, com **Onboarding multilíngue** e validação de licença **Gumroad**.
 >
 > **Estado Atual:**
-> 1.  **AI Power**: Botões "Escritor Fantasma" e "Sugerir Ideias" operacionais no editor. 
-> 2.  **Export Engine**: Suporte a EPUB, PDF e HTML com metadados e folha de rosto.
-> 3.  **Bíblia & Worldbuilding**: Grafo de conexões e sincronização de lore funcional.
+> 1.  **Commercial Ready**: Sistema de setup, proteção por senha e reset de fábrica operacionais.
+> 2.  **i18n**: Interface disponível em PT-BR, PT-PT, EN e ES.
+> 3.  **Desktop Ops**: Build de .dmg configurada com ícone premium e sistema de auto-update via GitHub.
 >
 > **Próximos Passos:**
-> 1.  **Análise de Sentimentos**: IA para avaliar o tom da cena (Alegre, Sombrio, etc).
-> 2.  **Timeline**: Visualização cronológica dos eventos da história.
-> 3.  **UI Polish**: Refinar micro-animações de transição entre estados de edição."
+> 1.  **Testes de Licenciamento**: Validar integração final com chaves reais do Gumroad.
+> 2.  **Análise de Sentimentos**: IA para avaliar o tom da cena (Alegre, Sombrio, etc).
+> 3.  **Timeline**: Visualização cronológica dos eventos da história."

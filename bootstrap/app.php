@@ -13,6 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'project.context' => \App\Http\Middleware\ProjectContextMiddleware::class,
+            'app.setup' => \App\Http\Middleware\EnsureAppIsSetup::class,
+        ]);
+
+        $middleware->appendToGroup('web', [
+            'app.setup'
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

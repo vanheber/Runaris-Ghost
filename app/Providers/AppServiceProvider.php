@@ -19,6 +19,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('system_settings')) {
+                $locale = \App\Models\SystemSetting::getSetting('system_locale', 'pt_BR');
+                app()->setLocale($locale);
+            }
+        } catch (\Exception $e) {
+            // Silently ignore if DB is not ready
+        }
     }
 }

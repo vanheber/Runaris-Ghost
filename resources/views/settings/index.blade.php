@@ -18,6 +18,12 @@
                 <a href="{{ url('/settings?tab=docs') }}" class="list-group-item list-group-item-action py-3 px-4 {{ $tab === 'docs' ? 'active' : '' }} border-0">
                     <i class="bi bi-book me-2"></i> Documentação
                 </a>
+                <a href="{{ url('/settings?tab=system') }}" class="list-group-item list-group-item-action py-3 px-4 {{ $tab === 'system' ? 'active' : '' }} border-0">
+                    <i class="bi bi-shield-lock me-2"></i> Sistema
+                </a>
+                <a href="{{ url('/eula') }}" class="list-group-item list-group-item-action py-3 px-4 border-0">
+                    <i class="bi bi-file-earmark-text me-2"></i> Licença (EULA)
+                </a>
             </div>
             
             <div class="mt-4 px-2">
@@ -66,6 +72,76 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            @endif
+
+            @if($tab === 'system')
+                <div id="system" class="card bg-body-tertiary border-0 shadow-sm p-4 pt-5 position-relative">
+                    <div class="position-absolute top-0 start-0 w-100 h-2 bg-danger opacity-50 rounded-top" style="height: 4px;"></div>
+                    <h5 class="fw-bold mb-4 text-danger"><i class="bi bi-shield-exclamation"></i> Administração do Santuário</h5>
+                    
+                    <div class="mb-5 p-4 rounded-4 border border-info border-opacity-10 bg-info bg-opacity-10">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-cloud-download fs-2 text-info me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Backup Total do Sistema</h6>
+                                <p class="text-body-secondary small mb-0">Baixe um arquivo ZIP contendo todos os seus projetos, manuscritos, imagens e o banco de dados.</p>
+                            </div>
+                        </div>
+                        <a href="{{ url('/settings/backup') }}" class="btn btn-info text-white rounded-pill px-4">
+                            <i class="bi bi-download me-2"></i> Baixar Tudo como ZIP
+                        </a>
+                    </div>
+
+                    <hr class="my-5 opacity-10">
+
+                    <div class="p-4 rounded-4 border border-danger border-opacity-10 bg-danger bg-opacity-10">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-fire fs-2 text-danger me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">Reset de Fábrica</h6>
+                                <p class="text-body-secondary small mb-0">CUIDADO: Isso irá apagar PERMANENTEMENTE todos os seus projetos, usuários e configurações. Esta ação não pode ser desfeita.</p>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline-danger rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#resetModal">
+                            <i class="bi bi-trash-fill me-2"></i> Redefinir Aplicativo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modal de Confirmação de Reset -->
+                <div class="modal fade" id="resetModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold text-danger">Você tem certeza?</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body py-4">
+                                <p class="mb-4">Esta operação irá apagar tudo. <br>Recomendamos fortemente que você <strong>baixe o backup ZIP</strong> antes de continuar.</p>
+                                
+                                <form action="{{ url('/settings/factory-reset') }}" method="POST">
+                                    @csrf
+                                    @if(\App\Models\SystemSetting::getSetting('use_local_password', 'true') === 'true')
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold text-uppercase opacity-50">Confirme sua senha</label>
+                                            <input type="password" name="password" class="form-control" required>
+                                        </div>
+                                    @endif
+                                    
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ url('/settings/backup') }}" class="btn btn-outline-info rounded-pill">
+                                            <i class="bi bi-download me-2"></i> Baixar Backup antes de apagar
+                                        </a>
+                                        <button type="submit" class="btn btn-danger rounded-pill py-2 fw-bold">
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i> APAGAR TUDO PERMANENTEMENTE
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endif
 
