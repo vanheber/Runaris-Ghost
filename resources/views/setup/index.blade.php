@@ -17,7 +17,8 @@
         }
         body {
             font-family: 'Outfit', sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            background: url("{{ asset('bg-app.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             color: #f8fafc;
             overflow: hidden;
@@ -58,6 +59,11 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
         .brand-logo {
             font-weight: 800;
@@ -133,7 +139,12 @@
     <div class="setup-container">
         <div class="glass-card">
             
-            <span class="brand-logo">Runaris Ghost</span>
+            <!-- Header com Logo -->
+            <div class="text-center mb-5">
+                <img src="{{ asset('ghost-icon-transparent.png') }}" alt="Runaris Ghost" class="mb-3" style="width: 80px; filter: drop-shadow(0 0 20px rgba(111, 66, 193, 0.4)); animation: float 6s ease-in-out infinite;">
+                <span class="brand-logo mb-0">Runaris <span class="opacity-50">Ghost</span></span>
+                <p class="text-secondary small ls-wide text-uppercase" style="letter-spacing: 2px;">{{ __('The Digital Sanctuary for Authors') }}</p>
+            </div>
 
             <!-- Step 0: Language Selection -->
             <div id="step-0" class="step active text-center">

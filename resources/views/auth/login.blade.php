@@ -16,7 +16,8 @@
         }
         body {
             font-family: 'Outfit', sans-serif;
-            background: radial-gradient(circle at top right, #1e1b4b, #0f172a);
+            background: url("{{ asset('bg-app.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -74,7 +75,10 @@
 <body>
 
     <div class="glass-card">
-        <span class="brand-logo">Runaris Ghost</span>
+        <div class="text-center mb-4">
+            <img src="{{ asset('ghost-icon-transparent.png') }}" alt="Runaris Ghost" class="mb-3" style="width: 70px; filter: drop-shadow(0 0 15px rgba(111, 66, 193, 0.3));">
+            <span class="brand-logo mb-0">Runaris <span class="opacity-50">Ghost</span></span>
+        </div>
         
         <form method="POST" action="/login">
             @csrf

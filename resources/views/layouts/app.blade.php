@@ -27,9 +27,9 @@
 <body class="antialiased d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top py-3 bg-body-tertiary">
         <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="{{ url('/projects') }}">
-                <i class="bi bi-ghost me-2 text-primary"></i>
-                <span>Runaris <span class="text-body-secondary">Ghost</span></span>
+            <a class="navbar-brand d-flex align-items-center" href="{{ url('/projects') }}">
+                <img src="{{ asset('logo-ghost-color.png') }}" alt="Runaris Ghost" class="logo-light" style="width: 250px;">
+                <img src="{{ asset('logo-ghost-inverted.png') }}" alt="Runaris Ghost" class="logo-dark" style="width: 250px;">
             </a>
             
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -76,10 +76,13 @@
         <div class="container-fluid px-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <div class="col-md-4 d-flex align-items-center">
-                    <span class="text-body-secondary small">
-                        <i class="bi bi-ghost me-2"></i>
+                    <span class="text-body-secondary small me-3">
                         &copy; {{ date('Y') }} Runaris Ghost. | <a href="{{ url('/eula') }}" class="text-body-secondary text-decoration-none small opacity-75 hover-opacity-100">Termos e Licença</a>
                     </span>
+                    <a href="https://runaris.com.br" target="_blank" class="opacity-50 hover-opacity-100">
+                        <img src="{{ asset('lg-runaris-hz.svg') }}" alt="Desenvolvido por Runaris" class="logo-light" style="height: 15px;">
+                        <img src="{{ asset('lg-runaris-hz-inverted.svg') }}" alt="Desenvolvido por Runaris" class="logo-dark" style="height: 15px;">
+                    </a>
                 </div>
                 
                 <div class="col-md-4 d-flex justify-content-center">
@@ -160,5 +163,15 @@
             </div>
         </div>
     </div>
+    <style>
+        [data-bs-theme="dark"] .logo-light { display: none; }
+        [data-bs-theme="light"] .logo-dark { display: none; }
+        [data-bs-theme="solar-light"] .logo-dark { display: none; }
+        
+        .logo-light, .logo-dark {
+            object-fit: contain;
+            transition: opacity 0.3s ease;
+        }
+    </style>
 </body>
 </html>
