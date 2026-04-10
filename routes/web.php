@@ -94,5 +94,8 @@ Route::prefix('setup')->group(function () {
 Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index']);
 Route::post('/settings/ai', [\App\Http\Controllers\SettingsController::class, 'updateAi']);
 Route::get('/settings/backup', [\App\Http\Controllers\SettingsController::class, 'fullBackup']);
-Route::post('/settings/factory-reset', [\App\Http\Controllers\SettingsController::class, 'factoryReset']);
+Route::post('/settings/factory-reset', [\App\Http\Controllers\SettingsController::class, 'showResetProgress']);
+Route::post('/settings/factory-reset/step-files', [\App\Http\Controllers\SettingsController::class, 'stepCleanFiles']);
+Route::post('/settings/factory-reset/step-database', [\App\Http\Controllers\SettingsController::class, 'stepCleanDatabase']);
+Route::post('/settings/factory-reset/step-finalize', [\App\Http\Controllers\SettingsController::class, 'stepFinalize']);
 Route::get('/eula', [\App\Http\Controllers\SettingsController::class, 'showEula']);

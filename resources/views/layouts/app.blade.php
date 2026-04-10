@@ -60,9 +60,14 @@
                             <i class="bi bi-plus-lg me-1"></i> Novo Projeto
                         </button>
                     </li>
-                    <li class="nav-item ms-3">
-                        <a href="{{ url('/') }}" class="nav-link px-0 text-danger">Sair</a>
-                    </li>
+                    @if(\App\Models\SystemSetting::getSetting('use_local_password', 'true') === 'true')
+                        <li class="nav-item ms-lg-3">
+                            <form action="{{ route('logout') }}" method="POST" id="logout-form" class="d-none">@csrf</form>
+                            <a href="#" class="nav-link px-0 text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="bi bi-box-arrow-right me-1"></i> Sair
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

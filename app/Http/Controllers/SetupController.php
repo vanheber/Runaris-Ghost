@@ -23,16 +23,21 @@ class SetupController extends Controller
      */
     public function index()
     {
-        // Ensure database is migrated on first load of setup
+        // 1. SILENT MIGRATION: Ensure DB is ready without crashing
         try {
             \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Setup Migration Error: " . $e->getMessage());
         }
 
-        // If already setup, go to dashboard
-        if (User::exists() && $this->gumroad->isLicensedLocally()) {
-            return redirect('/');
+        // 2. NO CHECKS: After a reset, we want the user to see the setup.
+        // We only redirect to dashboard if we are 100% sure everything is fine.
+        try {
+            if (\App\Models\User::exists()) {
+                 return redirect('/');
+            }
+        } catch (\Exception $e) {
+            // Silence is golden - just show the view
         }
 
         return view('setup.index');
@@ -67,21 +72,22 @@ class SetupController extends Controller
     public function createUser(Request $request)
     {
         try {
-            $request->validate([
+            $rules = [
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|max:255',
-                'password' => 'nullable|string|min:8|confirmed',
                 'use_password' => 'required'
-            ]);
+            ];
 
-            if ($request->use_password && empty($request->password)) {
-                return response()->json(['status' => false, 'message' => 'A senha é obrigatória se você optar por proteger o app.'], 422);
+            if ($request->use_password == 1) {
+                $rules['password'] = 'required|string|min:8|confirmed';
             }
+
+            $request->validate($rules);
 
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => $request->use_password ? Hash::make($request->password) : Hash::make('no-password-' . str()->random(16)),
+                'password' => ($request->use_password == 1) ? Hash::make($request->password) : Hash::make('no-password-' . str()->random(16)),
             ]);
 
             // Mark that setup is finished
@@ -116,10 +122,12 @@ class SetupController extends Controller
     {
         if (config('app.env') !== 'local') return abort(404);
 
+        // Logout before wipe
+        auth()->logout();
+
         \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true]);
         
-        // Clear session and logout
-        auth()->logout();
+        // Clear session
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 

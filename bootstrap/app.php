@@ -19,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('web', [
             'app.setup'
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'settings/factory-reset/step-*'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

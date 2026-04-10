@@ -83,25 +83,81 @@ class SettingsController extends Controller
     }
 
     /**
-     * Factory reset the application (Wipe out all data).
+     * Show the full reset progress page.
      */
-    public function factoryReset(Request $request)
+    public function showResetProgress(Request $request)
     {
         // Require password confirmation if user has one
         if (\App\Models\SystemSetting::getSetting('use_local_password', 'true') === 'true') {
             $request->validate(['password' => 'required|current_password']);
         }
 
-        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', ['--force' => true]);
-        
-        // Clear all projects in storage
-        \Illuminate\Support\Facades\Storage::disk('local')->deleteDirectory('projects');
-        \Illuminate\Support\Facades\Storage::disk('local')->deleteDirectory('backups');
+        return view('settings.reset_progress');
+    }
 
-        auth()->logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
+    /**
+     * Step 1: Clean Projects and Backup Files
+     */
+    public function stepCleanFiles()
+    {
+        try {
+            auth()->logout();
+            \Illuminate\Support\Facades\Storage::disk('local')->deleteDirectory('projects');
+            \Illuminate\Support\Facades\Storage::disk('local')->deleteDirectory('backups');
+            return response()->json(['status' => true, 'next' => 'database']);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Erro ao limpar arquivos: ' . $e->getMessage()], 500);
+        }
+    }
 
-        return redirect('/setup')->with('success', 'Santuário resetado com sucesso.');
+    /**
+     * Step 2: Reconstruct Database (Aggressive File Cleanup)
+     */
+    public function stepCleanDatabase()
+    {
+        try {
+            \Illuminate\Support\Facades\DB::disconnect();
+
+            $dbConnection = config('database.default');
+            $dbPath = config("database.connections.{$dbConnection}.database");
+            $dbDir = database_path();
+
+            // targets all possible locations for the sqlite files
+            $targets = array_unique([$dbPath, $dbDir . '/database.sqlite', $dbDir . '/nativephp.sqlite']);
+
+            foreach ($targets as $target) {
+                if (empty($target)) continue;
+                
+                $files = [$target, $target . '-wal', $target . '-shm'];
+                foreach ($files as $file) {
+                    if (file_exists($file)) {
+                        unlink($file);
+                    }
+                }
+            }
+
+            return response()->json(['status' => true, 'next' => 'finalize']);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Factory Reset - DB Cleanup Error: " . $e->getMessage());
+            return response()->json(['status' => false, 'message' => 'Erro ao limpar banco: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Step 3: Finalize Environment
+     */
+    public function stepFinalize()
+    {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('cache:clear');
+            \Illuminate\Support\Facades\Artisan::call('view:clear');
+
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+
+            return response()->json(['status' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Erro na finalização: ' . $e->getMessage()], 500);
+        }
     }
 }
