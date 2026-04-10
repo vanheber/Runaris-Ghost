@@ -184,8 +184,8 @@
             <div id="step-1" class="step text-center">
                 <i class="bi bi-rocket-takeoff display-4 text-primary mb-4 d-block"></i>
                 <h2 class="fw-bold mb-3">{{ __('Welcome, Writer.') }}</h2>
-                <p class="text-secondary mb-5">{{ __('We are about to set up your creative sanctuary. Before we begin, we need to validate your license.') }}</p>
-                <button type="button" class="btn btn-brand btn-lg" onclick="nextStep(2)">{{ __('Start Now') }}</button>
+                <p class="text-secondary mb-5">{{ __('We are about to set up your creative sanctuary. Let\'s prepare your workspace!') }}</p>
+                <button type="button" class="btn btn-brand btn-lg" onclick="nextStep(3)">{{ __('Start Now') }}</button>
             </div>
 
             <!-- Step 2: License Key -->

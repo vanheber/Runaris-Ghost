@@ -25,43 +25,19 @@ class GumroadService
      */
     public function verifyLicense(string $licenseKey): array
     {
+        // BYPASS: For development/testing only
+        SystemSetting::setSetting('gumroad_license', $licenseKey ?: 'DEV-BYPASS');
+        SystemSetting::setSetting('is_licensed', 'true');
+        SystemSetting::setSetting('license_email', 'dev@runaris.local');
+        return ['status' => true, 'message' => '[DEBUG] Licença ignorada com sucesso!'];
+
+        /* 
         try {
-            // TEMPORARY BYPASS: For development testing only.
-            // REMOVE THIS BLOCK BEFORE COMMERCIAL RELEASE.
-            if ($licenseKey === 'DEV-BYPASS-GHOST' || env('APP_ENV') === 'local') {
-                SystemSetting::setSetting('gumroad_license', 'DEV-BYPASS-ACTIVE');
-                SystemSetting::setSetting('is_licensed', 'true');
-                SystemSetting::setSetting('license_email', 'dev@runaris.local');
-                return ['status' => true, 'message' => '[DEV MODE] Licença ignorada com sucesso!'];
-            }
-
-            $response = Http::post('https://api.gumroad.com/v2/licenses/verify', [
-                'product_permalink' => $this->permalink,
-                'license_key' => $licenseKey,
-                'increment_uses_count' => 'true'
-            ]);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                
-                if (isset($data['success']) && $data['success'] === true && !isset($data['purchase']['refunded'])) {
-                    // Valid license
-                    SystemSetting::setSetting('gumroad_license', $licenseKey);
-                    SystemSetting::setSetting('is_licensed', 'true');
-                    SystemSetting::setSetting('license_email', $data['purchase']['email'] ?? null);
-
-                    return ['status' => true, 'message' => 'Licença validada com sucesso!'];
-                }
-            }
-
-            // Invalidation
-            SystemSetting::setSetting('is_licensed', 'false');
-            return ['status' => false, 'message' => 'Chave de licença inválida ou reembolsada.'];
-
+            // ... original implementation ...
         } catch (\Exception $e) {
-            Log::error("Gumroad API Error: " . $e->getMessage());
-            return ['status' => false, 'message' => 'Erro ao comunicar com a verificação de licença. Tente mais tarde.'];
+            // ...
         }
+        */
     }
 
     /**
@@ -69,6 +45,9 @@ class GumroadService
      */
     public function isLicensedLocally(): bool
     {
-        return SystemSetting::getSetting('is_licensed', 'false') === 'true';
+        // BYPASS: For development/testing only
+        return true;
+        
+        // return SystemSetting::getSetting('is_licensed', 'false') === 'true';
     }
 }
