@@ -81,7 +81,19 @@ Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLogin'])
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
 Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
-// Initial Setup & Onboarding
+// Web Installer (First-time server setup wizard)
+Route::prefix('install')->group(function () {
+    Route::get('/', [\App\Http\Controllers\InstallController::class, 'index'])->name('install');
+    Route::get('/requirements', [\App\Http\Controllers\InstallController::class, 'checkRequirements']);
+    Route::post('/license', [\App\Http\Controllers\InstallController::class, 'validateLicense']);
+    Route::post('/database/test', [\App\Http\Controllers\InstallController::class, 'testDatabase']);
+    Route::post('/database/configure', [\App\Http\Controllers\InstallController::class, 'configureDatabase']);
+    Route::post('/admin', [\App\Http\Controllers\InstallController::class, 'createAdmin']);
+    Route::post('/ai', [\App\Http\Controllers\InstallController::class, 'saveAiKey']);
+    Route::post('/finalize', [\App\Http\Controllers\InstallController::class, 'finalize']);
+});
+
+// Initial Setup & Onboarding (post-install, handled by EnsureAppIsSetup)
 Route::get('/dev/reset', [\App\Http\Controllers\SetupController::class, 'factoryReset'])->name('dev.reset');
 Route::prefix('setup')->group(function () {
     Route::get('/', [\App\Http\Controllers\SetupController::class, 'index'])->name('setup');

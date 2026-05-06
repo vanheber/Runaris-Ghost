@@ -16,7 +16,7 @@ class EnsureAppIsSetup
     public function handle(Request $request, Closure $next): Response
     {
         // Skip for setup/auth routes and static assets
-        if ($request->is('setup*') || $request->is('login*') || $request->is('_debugbar*') || $request->is('api*') || $request->is('up') || $request->is('settings/factory-reset*')) {
+        if ($request->is('setup*') || $request->is('install*') || $request->is('login*') || $request->is('_debugbar*') || $request->is('api*') || $request->is('up') || $request->is('settings/factory-reset*')) {
             return $next($request);
         }
 

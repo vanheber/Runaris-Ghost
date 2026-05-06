@@ -14,14 +14,17 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'project.context' => \App\Http\Middleware\ProjectContextMiddleware::class,
             'app.setup' => \App\Http\Middleware\EnsureAppIsSetup::class,
+            'app.installed' => \App\Http\Middleware\EnsureAppIsInstalled::class,
         ]);
 
         $middleware->appendToGroup('web', [
-            'app.setup'
+            'app.installed',
+            'app.setup',
         ]);
 
         $middleware->validateCsrfTokens(except: [
-            'settings/factory-reset/step-*'
+            'install/*',
+            'settings/factory-reset/step-*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

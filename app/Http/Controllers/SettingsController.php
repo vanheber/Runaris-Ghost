@@ -152,6 +152,16 @@ class SettingsController extends Controller
             \Illuminate\Support\Facades\Artisan::call('cache:clear');
             \Illuminate\Support\Facades\Artisan::call('view:clear');
 
+            // Remove install lock so the wizard can run again
+            $lockFile = storage_path('install.lock');
+            if (file_exists($lockFile)) {
+                unlink($lockFile);
+            }
+
+            // Unlock .env for re-configuration
+            $envWriter = new \App\Services\EnvWriter();
+            $envWriter->unlockEnvFile();
+
             request()->session()->invalidate();
             request()->session()->regenerateToken();
 
