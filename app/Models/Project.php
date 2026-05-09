@@ -37,7 +37,7 @@ class Project extends Model
 
     public function getStoragePath(string $subpath = '')
     {
-        return storage_path("app/projects/{$this->uuid}/" . ltrim($subpath, '/'));
+        return storage_path("app/private/projects/{$this->uuid}/" . ltrim($subpath, '/'));
     }
 
     public function getDatabasePath()

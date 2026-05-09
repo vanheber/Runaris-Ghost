@@ -9,6 +9,7 @@
     <!-- Graph Visualization Lib -->
     <script src="//unpkg.com/force-graph"></script>
     <style>
+
         .card-ficha {
             cursor: pointer;
             border-radius: 12px;
@@ -151,6 +152,23 @@
             font-weight: 600;
             transition: all 0.3s ease;
         }
+
+        /* Ajustes para Scroll da Bíblia e Editores */
+        #bible-container .CodeMirror {
+            height: calc(100vh - 350px) !important;
+            min-height: 450px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            background: var(--bs-body-bg) !important;
+        }
+        #bible-container .CodeMirror-scroll {
+            min-height: 450px;
+        }
+        .custom-editor-area {
+            border: 1px solid rgba(var(--bs-primary-rgb), 0.1) !important;
+            border-radius: 8px;
+            overflow: hidden;
+        }
         .btn-magic-ai:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(13, 202, 240, 0.5);
@@ -166,7 +184,7 @@
         }
     </style>
     <!-- Layout Principal -->
-    <div id="main-layout" class="d-row d-flex vh-workspace mt-3">
+    <div id="main-layout" class="d-row d-flex vh-workspace mt-1">
         
         <!-- Sidebar Esquerda -->
         <div id="left-sidebar" class="split-pane card bg-body-tertiary border-0 shadow-sm p-4 pt-5 position-relative">
@@ -183,6 +201,9 @@
                     </a>
                     <a id="nav-character" class="world-grid-btn nav-world" href="#" onclick="loadCards('character')" title="Personagens">
                         <i class="bi bi-people"></i> Personagens
+                    </a>
+                    <a id="nav-lore" class="world-grid-btn nav-world" href="#" onclick="loadCards('lore')" title="Lore">
+                        <i class="bi bi-mortarboard"></i> Lore
                     </a>
                     <a id="nav-object" class="world-grid-btn nav-world" href="#" onclick="loadCards('object')" title="Objetos">
                         <i class="bi bi-gem"></i> Objetos
@@ -266,6 +287,15 @@
                                     <i class="bi bi-search"></i>
                                 </span>
                                 <input type="text" id="connection-search" class="form-control bg-transparent border-secondary border-opacity-25" placeholder="Adicionar relação (digite o nome...)" onkeyup="searchConnections(this.value)">
+                                <button class="btn btn-outline-primary border-secondary border-opacity-25" type="button" onclick="suggestAIConnections()" title="Sugerir conexões via IA">
+                                    <i class="bi bi-magic"></i>
+                                </button>
+                            </div>
+                            <div id="ai-suggestion-loading" class="mt-2 d-none">
+                                <div class="d-flex align-items-center gap-2 text-primary x-small italic animate-pulse">
+                                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                                    O Fantasma está analisando conexões...
+                                </div>
                             </div>
                             <div id="connection-results" class="position-absolute w-100 bg-body-tertiary border border-primary border-opacity-50 rounded mt-1 shadow-lg d-none" style="z-index: 10000; max-height: 200px; overflow-y: auto;">
                                 <!-- Resultados da busca -->
@@ -291,23 +321,20 @@
                         </div>
                     </div>
 
-                    <div class="flex-grow-1 overflow-hidden d-flex flex-column gap-4">
-                        <!-- Duas seções: Lore (Manual) e Resumo (IA) -->
-                        <div class="row h-100 g-4">
-                            <div class="col-md-7 d-flex flex-column">
-                                <h6 class="text-primary small text-uppercase fw-bold mb-2 ls-wide">DNA & Lore do Mundo</h6>
-                                <div class="flex-grow-1 overflow-auto custom-editor-area">
-                                    <textarea id="bible-editor"></textarea>
-                                </div>
+                    <div class="flex-grow-1 overflow-hidden d-flex flex-column">
+                        <!-- Seção Única: Resumo (IA) -->
+                        <div class="d-flex flex-column h-100">
+                            <h6 class="text-accent small text-uppercase fw-bold mb-3 ls-wide d-flex align-items-center">
+                                <i class="bi bi-stars me-2"></i> Resumo Narrativo & Cronologia 
+                                <span class="badge bg-secondary bg-opacity-10 text-body-secondary fw-normal ms-2" style="font-size: 0.65rem;">IA RECAP</span>
+                            </h6>
+                            <div class="flex-grow-1 overflow-hidden border border-secondary border-opacity-10 rounded shadow-sm bg-body custom-editor-area">
+                                <textarea id="bible-summary-editor"></textarea>
                             </div>
-                            <div class="col-md-5 d-flex flex-column border-start border-secondary border-opacity-10 ps-4">
-                                <h6 class="text-accent small text-uppercase fw-bold mb-2 ls-wide">
-                                    Resumo Narrativo 
-                                    <span class="badge bg-secondary bg-opacity-10 text-body-secondary fw-normal ms-1" style="font-size: 0.6rem;">IA RECAP</span>
-                                </h6>
-                                <div class="flex-grow-1 overflow-auto custom-editor-area">
-                                    <textarea id="bible-summary-editor"></textarea>
-                                </div>
+                            
+                            <!-- Editor de Lore Oculto para compatibilidade de dados -->
+                            <div class="d-none">
+                                <textarea id="bible-editor"></textarea>
                             </div>
                         </div>
                     </div>
@@ -315,10 +342,39 @@
 
                 <!-- Export Panel -->
                 <div id="export-container" class="card bg-body-tertiary border-0 shadow-sm p-5 h-100 d-none overflow-auto d-flex flex-column animate-fade-in">
-                    <div class="mb-5 text-center">
-                        <i class="bi bi-cloud-download display-1 text-primary opacity-25 mb-3 d-block"></i>
-                        <h2 class="fw-bold">Central de Exportação</h2>
-                        <p class="text-body-secondary">Preencha a folha de rosto e selecione os formatos desejados para gerar os arquivos do seu projeto.</p>
+                    <!-- Project Cover Management -->
+                    <div class="card border-0 shadow-sm p-4 bg-body mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-image me-2"></i> Capa do Projeto</h5>
+                            <button class="btn btn-outline-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#galleryPickerModal" onclick="openGalleryPickerForProjectCover()">
+                                <i class="bi bi-collection me-1"></i> Escolher da Galeria
+                            </button>
+                        </div>
+                        
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <div id="project-cover-preview" class="ratio ratio-3x4 bg-secondary bg-opacity-10 rounded border border-primary border-opacity-10 overflow-hidden shadow-sm" style="max-width: 180px;">
+                                    @if($project->cover_image_uuid)
+                                        <img src="{{ url('/projects/'.$project->uuid.'/gallery/'.$project->cover_image_uuid.'/image/thumb') }}" class="object-fit-cover w-100 h-100" id="project-cover-img">
+                                    @else
+                                        <div class="d-flex flex-column align-items-center justify-content-center text-body-secondary opacity-50" id="project-cover-placeholder">
+                                            <i class="bi bi-image fs-1 mb-2"></i>
+                                            <span class="x-small">Sem Capa</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <p class="text-body-secondary small mb-3">
+                                    A capa é essencial para a geração de ePubs e PDFs profissionais. 
+                                    Recomendamos o formato <strong>1600x2560px</strong> para melhor compatibilidade com o Kindle.
+                                </p>
+                                <div class="alert alert-primary bg-primary bg-opacity-10 border-0 d-flex align-items-center py-2 px-3 small">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <span>Você pode enviar novas imagens na aba <strong>Galeria</strong> e depois selecioná-las aqui.</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Export Metadata Form (Folha de Rosto e Metadados) -->
@@ -353,37 +409,48 @@
                     </div>
 
                     <div class="row justify-content-center g-4 mb-5">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
                                 <i class="bi bi-book fs-1 text-primary mb-3"></i>
                                 <h5 class="fw-bold">Kindle (ePub)</h5>
-                                <p class="small text-body-secondary mb-4">Ideal para leitura em dispositivos e-reader.</p>
+                                <p class="small text-body-secondary mb-4">Dispositivos e-reader.</p>
                                 <div class="form-check form-switch fs-4">
                                     <input class="form-check-input" type="checkbox" id="export-epub" checked>
                                 </div>
                                 <div id="status-epub" class="mt-3 w-100"></div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
                                 <i class="bi bi-file-pdf fs-1 text-danger mb-3"></i>
                                 <h5 class="fw-bold">Impressão (PDF)</h5>
-                                <p class="small text-body-secondary mb-4">Formato clássico para leitura e impressão.</p>
+                                <p class="small text-body-secondary mb-4">Leitura e impressão.</p>
                                 <div class="form-check form-switch fs-4">
                                     <input class="form-check-input" type="checkbox" id="export-pdf" checked>
                                 </div>
                                 <div id="status-pdf" class="mt-3 w-100"></div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
                                 <i class="bi bi-browser-chrome fs-1 text-success mb-3"></i>
                                 <h5 class="fw-bold">Leitor Web (HTML)</h5>
-                                <p class="small text-body-secondary mb-4">Leitor interativo pronto para o navegador.</p>
+                                <p class="small text-body-secondary mb-4">Leitor interativo.</p>
                                 <div class="form-check form-switch fs-4">
                                     <input class="form-check-input" type="checkbox" id="export-html" checked>
                                 </div>
                                 <div id="status-html" class="mt-3 w-100"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
+                                <i class="bi bi-markdown fs-1 text-info mb-3"></i>
+                                <h5 class="fw-bold">Manuscrito (.md)</h5>
+                                <p class="small text-body-secondary mb-4">Fontes organizadas.</p>
+                                <div class="form-check form-switch fs-4">
+                                    <input class="form-check-input" type="checkbox" id="export-markdown" checked>
+                                </div>
+                                <div id="status-markdown" class="mt-3 w-100"></div>
                             </div>
                         </div>
                     </div>
@@ -420,6 +487,7 @@
                     </p>
                     <div id="empty-actions" class="d-flex gap-3">
                         <button class="btn btn-primary" onclick="loadCards('scenario')">Geografia</button>
+                        <button class="btn btn-primary" onclick="loadCards('lore')">Lore</button>
                         <button class="btn btn-outline-secondary border-secondary border-opacity-50" onclick="showEmptyState('manuscript')">Manuscrito</button>
                     </div>
                 </div>
@@ -664,6 +732,21 @@
 <!-- Gatilho invisível para o Modal da Galeria (evita erros de biblioteca undefined) -->
 <button id="gallery-picker-trigger" class="d-none" data-bs-toggle="modal" data-bs-target="#galleryPickerModal"></button>
 
+<!-- Modal de Sugestões de IA -->
+<div class="modal fade" id="aiConnectionsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-body-tertiary border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-primary ls-wide">Sugestões do Fantasma</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="ai-suggestions-list" class="modal-body py-4">
+                <!-- Sugestões aqui -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- EasyMDE & SortableJS & Split.js -->
 <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
 <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
@@ -675,7 +758,7 @@ let easyMDE;
 let bibleEditor;
 let bibleSummaryEditor;
 let activeItemUuid = null;
-let activeCardCategory = null; // 'scenario', 'character', 'object'
+let activeCardCategory = null; // 'scenario', 'character', 'lore', 'object'
 let itemToDeleteUuid = null;
 let galleryItemToDeleteUuid = null;
 let galleryItemToRenameUuid = null;
@@ -740,12 +823,20 @@ document.addEventListener('DOMContentLoaded', function() {
         autosave: { enabled: false },
         status: false,
         autoDownloadFontAwesome: false,
+        minHeight: "450px",
         placeholder: "O resumo narrativo será gerado aqui...",
         toolbar: [
             { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: "Negrito" },
             { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: "Itálico" },
             "|",
-            { name: "preview", action: EasyMDE.togglePreview, className: "bi bi-eye", title: "Visualizar" }
+            { name: "preview", action: EasyMDE.togglePreview, className: "bi bi-eye", title: "Visualizar" },
+            "|",
+            { 
+                name: "sync", 
+                action: syncBibleWithAI, 
+                className: "bi bi-arrow-repeat", 
+                title: "Sincronizar com Manuscrito" 
+            }
         ]
     });
 
@@ -822,6 +913,12 @@ function showEmptyState(category) {
             title: 'Artefatos e Itens',
             desc: 'Espadas lendárias, cartas perdidas ou relíquias antigas. Registre os objetos que movem a trama.',
             btn: `<button class="btn btn-ghost-primary" onclick="createCard('object')">Novo Objeto</button>`
+        },
+        'lore': {
+            icon: 'bi-mortarboard',
+            title: 'Lore e Cultura',
+            desc: 'Mitos, religiões, eventos históricos ou sistemas de magia. Documente o conhecimento que molda o mundo.',
+            btn: `<button class="btn btn-ghost-primary" onclick="createCard('lore')">Nova Lore</button>`
         },
         'manuscript': {
             icon: 'bi-diagram-3',
@@ -1309,8 +1406,8 @@ async function loadCards(type) {
     document.getElementById('cards-grid-container').classList.remove('d-none');
     
     // Update headers
-    const titles = { 'scenario': 'Geografia / Cenários', 'character': 'Personagens / Elenco', 'object': 'Itens / Objetos' };
-    const icons = { 'scenario': 'bi-geo-alt', 'character': 'bi-people', 'object': 'bi-gem' };
+    const titles = { 'scenario': 'Geografia / Cenários', 'character': 'Personagens / Elenco', 'lore': 'Lore / Conhecimento', 'object': 'Itens / Objetos' };
+    const icons = { 'scenario': 'bi-geo-alt', 'character': 'bi-people', 'lore': 'bi-mortarboard', 'object': 'bi-gem' };
     document.getElementById('cards-grid-title').innerText = titles[type] || 'Fichas';
     document.getElementById('cards-grid-icon').className = `bi ${icons[type]} me-2 text-primary fs-4`;
 
@@ -1321,7 +1418,7 @@ async function loadCards(type) {
 }
 
 function updateRightPanelForCards(type, cards) {
-    const titles = { 'scenario': 'Cenários', 'character': 'Personagens', 'object': 'Itens' };
+    const titles = { 'scenario': 'Cenários', 'character': 'Personagens', 'lore': 'Lore', 'object': 'Itens' };
     
     // Only hide item-stats if nothing is being edited
     if (!activeItemUuid) {
@@ -1353,7 +1450,7 @@ function renderCards(cards) {
 
     if (cards.length === 0) {
         const type = activeCardCategory;
-        const emptyIcons = { 'scenario': 'bi-map', 'character': 'bi-person-plus', 'object': 'bi-box-seam' };
+        const emptyIcons = { 'scenario': 'bi-map', 'character': 'bi-person-plus', 'lore': 'bi-mortarboard', 'object': 'bi-box-seam' };
         grid.innerHTML = `<div class="col-12 text-center py-5 text-body-secondary animate-fade-in"><i class="bi ${emptyIcons[type] || 'bi-plus-circle'} display-1 opacity-10 d-block mb-3"></i> Nenhuma ficha encontrada.</div>`;
         return;
     }
@@ -1364,7 +1461,7 @@ function renderCards(cards) {
         col.className = 'col animate-fade-in';
         col.style.animationDelay = `${index * 0.05}s`;
         
-        const placeholders = { 'scenario': 'Mapa', 'character': 'Personagem', 'object': 'Item' };
+        const placeholders = { 'scenario': 'Mapa', 'character': 'Personagem', 'lore': 'Lore', 'object': 'Item' };
         const label = placeholders[card.type] || 'Ficha';
         const thumbUrl = card.image_uuid ? `/projects/${projectUuid}/gallery/${card.image_uuid}/image/thumb` : `https://placehold.co/400x400/1e1e2e/6272a4?text=${label}`;
 
@@ -1512,6 +1609,20 @@ async function openGalleryPickerForEditor() {
     document.getElementById('gallery-picker-trigger').click();
 }
 
+async function openGalleryPickerForProjectCover() {
+    currentGalleryMode = 'project_cover';
+    document.getElementById('gallery-picker-search').value = '';
+    
+    // Refresh current gallery items
+    const response = await fetch(`/projects/${projectUuid}/gallery`);
+    currentGalleryItems = await response.json();
+    
+    renderGalleryPicker(currentGalleryItems);
+    
+    // Mostra o modal via gatilho HTML (mais seguro contra erros de escopo JS)
+    document.getElementById('gallery-picker-trigger').click();
+}
+
 function renderGalleryPicker(items) {
     const grid = document.getElementById('gallery-picker-grid');
     grid.innerHTML = '';
@@ -1557,6 +1668,15 @@ async function selectImageFromPicker(imageUuid, filename) {
         cm.replaceRange(imageMarkdown, cursor);
         
         // Fecha o modal via botão de fechar nativo (seguro contra erros de biblioteca)
+        const modalEl = document.getElementById('galleryPickerModal');
+        const closeBtn = modalEl.querySelector('.btn-close');
+        if (closeBtn) closeBtn.click();
+        return;
+    }
+
+    if (currentGalleryMode === 'project_cover') {
+        setProjectCover(imageUuid);
+        // Fecha o modal
         const modalEl = document.getElementById('galleryPickerModal');
         const closeBtn = modalEl.querySelector('.btn-close');
         if (closeBtn) closeBtn.click();
@@ -1749,6 +1869,9 @@ function renderGallery(items) {
                 <div class="card-body p-2 d-flex justify-content-between align-items-center flex-wrap gap-1">
                     <span class="small text-truncate text-body-secondary fw-bold flex-grow-1" style="max-width: 100px;" title="${item.name}">${displayName}</span>
                     <div class="d-flex gap-1">
+                        <button class="btn btn-link btn-sm text-warning p-0" title="Definir como Capa" onclick="setProjectCover('${item.uuid}')">
+                            <i class="bi bi-bookmark-star-fill"></i>
+                        </button>
                         <button class="btn btn-link btn-sm text-primary p-0" title="Renomear" data-bs-toggle="modal" data-bs-target="#galleryRenameModal" onclick="prepareRenameImage('${item.uuid}', '${displayName.replace(/'/g, "\\'")}', '${extension}')">
                             <i class="bi bi-pencil-square"></i>
                         </button>
@@ -2026,12 +2149,14 @@ function getIconForType(type) {
     return icons[type] || 'bi-file-text';
 }
 
-async function addConnection(uuid, title, type) {
-    currentConnections.push({ uuid, title, type });
+async function addConnection(uuid, title, type, metadata = null) {
+    if (!currentConnections.some(c => c.uuid === uuid)) {
+        currentConnections.push({ uuid, title, type, metadata });
+        renderConnections();
+        saveConnections();
+    }
     document.getElementById('connection-results').classList.add('d-none');
     document.getElementById('connection-search').value = '';
-    renderConnections();
-    saveConnections();
 }
 
 function removeConnection(uuid) {
@@ -2049,12 +2174,23 @@ function renderConnections() {
     
     const colors = { 'character': 'bg-success', 'scenario': 'bg-primary', 'object': 'bg-warning text-dark' };
     
-    container.innerHTML = currentConnections.map(c => `
-        <span class="badge ${colors[c.type] || 'bg-secondary'} d-flex align-items-center gap-1">
-            ${c.title}
-            <i class="bi bi-x cp" onclick="removeConnection('${c.uuid}')"></i>
-        </span>
-    `).join('');
+    container.innerHTML = currentConnections.map(c => {
+        const reason = (c.metadata && c.metadata.reason) ? c.metadata.reason : null;
+        return `
+            <div class="d-flex align-items-start justify-content-between p-2 bg-secondary bg-opacity-10 rounded mb-2 border border-secondary border-opacity-10 hover-lift">
+                <div class="d-flex flex-column gap-1 overflow-hidden">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge ${colors[c.type] || 'bg-secondary'} x-small fw-normal">${c.type}</span>
+                        <span class="fw-bold small text-truncate" title="${c.title}">${c.title}</span>
+                    </div>
+                    ${reason ? `<div class="x-small text-body-secondary italic opacity-75 mt-1" style="line-height: 1.4;">${reason}</div>` : ''}
+                </div>
+                <button class="btn btn-link btn-sm text-body-secondary p-0 ms-2 hover-danger" onclick="removeConnection('${c.uuid}')">
+                    <i class="bi bi-x-circle"></i>
+                </button>
+            </div>
+        `;
+    }).join('');
 }
 
 async function saveConnections() {
@@ -2063,7 +2199,12 @@ async function saveConnections() {
     await fetch(`/projects/${projectUuid}/cards/${activeItemUuid}/connections`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-        body: JSON.stringify({ related_uuids: currentConnections.map(c => c.uuid) })
+        body: JSON.stringify({ 
+            connections: currentConnections.map(c => ({ 
+                uuid: c.uuid, 
+                metadata: c.metadata 
+            })) 
+        })
     });
 }
 
@@ -2186,6 +2327,38 @@ async function openExport() {
     }
 }
 
+async function setProjectCover(imageUuid) {
+    try {
+        const response = await fetch(`/projects/${projectUuid}/cover`, {
+            method: 'PATCH',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+            },
+            body: JSON.stringify({ image_uuid: imageUuid })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Update UI Cover
+            activeProjectCoverUuid = imageUuid;
+            
+            const previewContainer = document.getElementById('project-cover-preview');
+            if (previewContainer) {
+                previewContainer.innerHTML = `<img src="${data.cover_url}" class="object-fit-cover w-100 h-100" id="project-cover-img">`;
+            }
+            
+            console.log('Capa do projeto atualizada com sucesso.');
+        } else {
+            alert('Falha ao atualizar capa: ' + (data.message || 'Erro desconhecido'));
+        }
+    } catch (error) {
+        console.error('Erro ao definir capa:', error);
+        alert('Erro ao definir capa do projeto.');
+    }
+}
+
 async function saveExportMetadata() {
     const payload = {
         name: document.getElementById('meta-title').value,
@@ -2230,6 +2403,7 @@ async function runExportBatch() {
     if (document.getElementById('export-epub').checked) formats.push('epub');
     if (document.getElementById('export-pdf').checked) formats.push('pdf');
     if (document.getElementById('export-html').checked) formats.push('html');
+    if (document.getElementById('export-markdown').checked) formats.push('markdown');
 
     if (formats.length === 0) {
         alert('Selecione ao menos um formato para exportar.');
@@ -2276,10 +2450,11 @@ function renderExportResults(state) {
     const configs = {
         epub: { label: 'Download ePub', icon: 'bi-download', class: 'btn-outline-primary', target: '' },
         pdf: { label: 'Download PDF', icon: 'bi-file-earmark-pdf', class: 'btn-outline-danger', target: '' },
-        html: { label: 'Navegar Reader', icon: 'bi-eye', class: 'btn-outline-success', target: '_blank' }
+        html: { label: 'Navegar Reader', icon: 'bi-eye', class: 'btn-outline-success', target: '_blank' },
+        markdown: { label: 'Baixar Fontes (.md)', icon: 'bi-file-zip', class: 'btn-outline-info', target: '' }
     };
 
-    ['epub', 'pdf', 'html'].forEach(f => {
+    ['epub', 'pdf', 'html', 'markdown'].forEach(f => {
         const container = document.getElementById(`status-${f}`);
         if (state[f]) {
             const cfg = configs[f];
@@ -2422,6 +2597,108 @@ async function writeAiScene() {
         btn.disabled = false;
         btn.innerHTML = '<i class="bi bi-stars me-1"></i> Sugerir ideias';
     }
+}
+
+async function suggestAIConnections() {
+    if (!activeItemUuid) return;
+    const loading = document.getElementById('ai-suggestion-loading');
+    loading.classList.remove('d-none');
+    
+    try {
+        const response = await fetch(`/projects/${projectUuid}/cards/${activeItemUuid}/suggest`);
+        const suggestions = await response.json();
+        
+        if (suggestions.error) {
+            alert(suggestions.error);
+            return;
+        }
+        
+        renderAISuggestions(suggestions);
+    } catch (error) {
+        console.error('Erro ao buscar sugestões:', error);
+        alert('Falha ao obter sugestões da IA.');
+    } finally {
+        loading.classList.add('d-none');
+    }
+}
+
+function renderAISuggestions(suggestions) {
+    const list = document.getElementById('ai-suggestions-list');
+    const modalEl = document.getElementById('aiConnectionsModal');
+    const modal = new bootstrap.Modal(modalEl);
+    
+    if (!suggestions || suggestions.length === 0) {
+        list.innerHTML = '<div class="text-center py-3 text-body-secondary italic small">O Fantasma não encontrou novas conexões baseadas nas descrições atuais.</div>';
+    } else {
+        list.innerHTML = `
+            <div id="ai-suggestions-container">
+                ${suggestions.map((s, idx) => `
+                    <div class="p-3 bg-secondary bg-opacity-10 rounded mb-3 border border-secondary border-opacity-10 hover-lift d-flex gap-3">
+                        <div class="pt-1">
+                            <input type="checkbox" class="form-check-input ai-suggestion-check" 
+                                   data-uuid="${s.uuid}" 
+                                   data-title="${s.title.replace(/'/g, "\\'")}" 
+                                   data-type="${s.type}" 
+                                   data-reason="${s.reason.replace(/'/g, "\\'")}"
+                                   id="sug-${idx}">
+                        </div>
+                        <label class="flex-grow-1 cp" for="sug-${idx}">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div class="d-flex align-items-center">
+                                     <i class="bi bi-link-45deg me-2 text-primary"></i>
+                                     <h6 class="mb-0 fw-bold small text-uppercase ls-wide">${s.title}</h6>
+                                </div>
+                                <span class="badge bg-primary bg-opacity-10 text-primary x-small">${s.type}</span>
+                            </div>
+                            <p class="x-small text-body-secondary mb-0 italic" style="line-height: 1.4;">"${s.reason}"</p>
+                        </label>
+                    </div>
+                `).join('')}
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-end">
+                    <button class="btn btn-primary rounded-pill px-4 fw-bold" onclick="applySelectedAISuggestions()">Vincular Selecionados</button>
+                </div>
+            </div>
+        `;
+    }
+    modal.show();
+}
+
+async function applySelectedAISuggestions() {
+    const checks = document.querySelectorAll('.ai-suggestion-check:checked');
+    if (checks.length === 0) return;
+    
+    checks.forEach(check => {
+        const uuid = check.dataset.uuid;
+        const title = check.dataset.title;
+        const type = check.dataset.type;
+        const reason = check.dataset.reason;
+        
+        // Evita duplicados
+        if (!currentConnections.some(c => c.uuid === uuid)) {
+            currentConnections.push({ uuid, title, type, metadata: { reason } });
+        }
+    });
+    
+    renderConnections();
+    await saveConnections();
+    
+    // Fecha o modal
+    const modalEl = document.getElementById('aiConnectionsModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+}
+
+function applyAISuggestion(uuid, title, type) {
+    // Mantido por compatibilidade se necessário, mas o novo fluxo usa checkboxes
+    if (!currentConnections.some(c => c.uuid === uuid)) {
+        currentConnections.push({ uuid, title, type });
+        renderConnections();
+        saveConnections();
+    }
+    
+    const modalEl = document.getElementById('aiConnectionsModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
 }
 </script>
 

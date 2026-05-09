@@ -53,7 +53,7 @@
 
     <!-- Header -->
     <div class="text-center mb-4">
-        <img src="{{ asset('ghost-icon-transparent.png') }}" alt="Runaris Ghost" style="width:64px;filter:drop-shadow(0 0 16px rgba(111,66,193,.4));animation:float 6s ease-in-out infinite" class="mb-2">
+        <img src="{{ Vite::asset('resources/assets/images/ghost-icon-transparent.png') }}" alt="Runaris Ghost" style="width:64px;filter:drop-shadow(0 0 16px rgba(111,66,193,.4));animation:float 6s ease-in-out infinite" class="mb-2">
         <span class="brand-logo d-block">Runaris <span class="opacity-50">Ghost</span></span>
         <p class="text-secondary small text-uppercase mb-0" style="letter-spacing:2px">Web Installer</p>
     </div>

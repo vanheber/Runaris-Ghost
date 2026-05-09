@@ -68,23 +68,29 @@ class ManuscriptService
      */
     public function saveContent(Project $project, string $uuid, string $content, bool $syncTOC = true)
     {
-        $path = $this->getFilePath($project, $uuid);
-        Storage::put($path, $content);
-        
-        // Update word count and timestamp in SQLite
         $item = ManuscriptItem::where('uuid', $uuid)->first();
+        $slug = ($item && $item->title) ? Str::slug($item->title) : 'document';
+        if (empty($slug)) $slug = 'document';
+        
+        $idealPath = "projects/{$project->uuid}/manuscript/{$slug}_{$uuid}.md";
+        $existingPath = $this->findExistingPath($project, $uuid, 'content');
+
+        if ($existingPath && $existingPath !== $idealPath) {
+            Storage::move($existingPath, $idealPath);
+        }
+
+        Storage::put($idealPath, $content);
+        
         if ($item) {
             $wordCount = str_word_count(strip_tags($content));
             $item->update([
                 'word_count' => $wordCount,
                 'content_updated_at' => now(),
             ]);
-        }
-
-        if ($syncTOC && $item && !$item->is_system) {
-            // No need to sync TOC on content save unless we want to update headings inside content
-            // But usually TOC is based on items title.
-            $this->mirrorToDocuments($project, $item, $content);
+            
+            if ($syncTOC && !$item->is_system) {
+                $this->mirrorToDocuments($project, $item, $content);
+            }
         }
     }
     /**
@@ -104,10 +110,19 @@ class ManuscriptService
      */
     public function savePlanning(Project $project, string $uuid, string $content)
     {
-        $path = $this->getFilePath($project, $uuid, 'planning');
-        Storage::put($path, $content);
-        
         $item = ManuscriptItem::where('uuid', $uuid)->first();
+        $slug = ($item && $item->title) ? Str::slug($item->title) : 'document';
+        if (empty($slug)) $slug = 'document';
+
+        $idealPath = "projects/{$project->uuid}/manuscript/{$slug}_{$uuid}.beats.md";
+        $existingPath = $this->findExistingPath($project, $uuid, 'planning');
+
+        if ($existingPath && $existingPath !== $idealPath) {
+            Storage::move($existingPath, $idealPath);
+        }
+
+        Storage::put($idealPath, $content);
+        
         if ($item) {
             $item->update([
                 'has_planning' => true,
@@ -155,7 +170,41 @@ class ManuscriptService
     private function getFilePath(Project $project, string $uuid, string $type = 'content'): string
     {
         $extension = ($type === 'planning') ? 'beats.md' : 'md';
-        return "projects/{$project->uuid}/manuscript/{$uuid}.{$extension}";
+        $directory = "projects/{$project->uuid}/manuscript";
+
+        // 1. Try to find an existing file that ends with _{$uuid}.{$extension}
+        $existing = $this->findExistingPath($project, $uuid, $type);
+        if ($existing) {
+            return $existing;
+        }
+
+        // 2. If not found, generate a new path based on title
+        $item = ManuscriptItem::where('uuid', $uuid)->first();
+        $slug = $item ? Str::slug($item->title) : 'document';
+        if (empty($slug)) $slug = 'document';
+
+        return "{$directory}/{$slug}_{$uuid}.{$extension}";
+    }
+
+    private function findExistingPath(Project $project, string $uuid, string $type = 'content'): ?string
+    {
+        $extension = ($type === 'planning') ? 'beats.md' : 'md';
+        $directory = "projects/{$project->uuid}/manuscript";
+        
+        if (!Storage::exists($directory)) {
+            return null;
+        }
+
+        $files = Storage::files($directory);
+        foreach ($files as $file) {
+            $basename = basename($file);
+            // Match slug_UUID.md or legacy UUID.md
+            if (str_ends_with($basename, "_{$uuid}.{$extension}") || $basename === "{$uuid}.{$extension}") {
+                return $file;
+            }
+        }
+
+        return null;
     }
 
     private function mirrorToDocuments(Project $project, ManuscriptItem $item, string $content)

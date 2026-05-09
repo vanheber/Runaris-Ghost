@@ -8,10 +8,42 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-.vh-workspace { height: calc(100vh - 120px); }
-.ls-wide { letter-spacing: 0.1em; }
-.cp { cursor: pointer; }
-.cp-title:hover { color: var(--bs-primary) !important; }
+.vh-workspace {
+    height: calc(100vh - 145px) !important;
+}
+
+/* Layout Z-Indexing */
+.navbar {
+    z-index: 1030 !important;
+    /* Header mais alto */
+}
+
+footer {
+    position: relative;
+    z-index: 1029 !important;
+    /* Um a menos que o header */
+}
+
+/* Custom Portrait Ratios for Project Covers */
+.ratio-3x4 {
+    --bs-aspect-ratio: 133.3333333333%;
+}
+
+.ratio-2x3 {
+    --bs-aspect-ratio: 150%;
+}
+
+.ls-wide {
+    letter-spacing: 0.1em;
+}
+
+.cp {
+    cursor: pointer;
+}
+
+.cp-title:hover {
+    color: var(--bs-primary) !important;
+}
 
 /* 2. Ghost Interactive Elements */
 .btn-ghost-card {
@@ -27,14 +59,22 @@ body {
     transition: all 0.2s;
     z-index: 10;
 }
-.btn-ghost-card:hover { 
+
+.btn-ghost-card:hover {
     color: var(--bs-emphasis-color);
     border-color: var(--bs-primary);
     transform: scale(1.05);
 }
 
-.toggle-btn-left { top: 12px; right: 12px; }
-.toggle-btn-right { top: 12px; left: 12px; }
+.toggle-btn-left {
+    top: 12px;
+    right: 12px;
+}
+
+.toggle-btn-right {
+    top: 12px;
+    left: 12px;
+}
 
 /* 3. Split.js Gutter */
 .gutter {
@@ -42,57 +82,145 @@ body {
     cursor: col-resize;
     transition: background-color 0.2s;
 }
-.gutter:hover { background-color: var(--bs-primary); opacity: 0.2; }
-.gutter.gutter-horizontal { width: 8px; }
+
+.gutter:hover {
+    background-color: var(--bs-primary);
+    opacity: 0.2;
+}
+
+.gutter.gutter-horizontal {
+    width: 8px;
+}
 
 /* 4. Custom Scrollbar (Stealth) */
-.scroll-custom::-webkit-scrollbar { width: 6px; }
-.scroll-custom::-webkit-scrollbar-track { background: transparent; }
+.scroll-custom::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scroll-custom::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 .scroll-custom::-webkit-scrollbar-thumb {
     background: var(--bs-border-color);
     border-radius: 10px;
 }
-.scroll-custom:hover::-webkit-scrollbar-thumb { background: var(--bs-primary); }
-.scroll-custom { scrollbar-width: thin; scrollbar-color: var(--bs-border-color) transparent; }
+
+.scroll-custom:hover::-webkit-scrollbar-thumb {
+    background: var(--bs-primary);
+}
+
+.scroll-custom {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bs-border-color) transparent;
+}
 
 /* 5. EasyMDE Theme Integrations */
-.EasyMDEContainer .CodeMirror { 
-    background: var(--bs-tertiary-bg) !important; 
-    color: var(--bs-body-color) !important; 
-    border-color: var(--bs-border-color) !important; 
-    border-radius: 8px !important; 
+.EasyMDEContainer .CodeMirror {
+    background: var(--bs-tertiary-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-border-color) !important;
+    border-radius: 8px !important;
     font-size: 1.1rem;
     padding: 10px;
 }
-.editor-toolbar { 
-    background: var(--bs-tertiary-bg) !important; 
+
+.editor-toolbar {
+    background: var(--bs-tertiary-bg) !important;
     border-color: var(--bs-border-color) !important;
     border-radius: 8px 8px 0 0;
 }
-.editor-toolbar button { color: var(--bs-body-color) !important; }
-.editor-toolbar button.active, .editor-toolbar button:hover { background: rgba(var(--bs-primary-rgb), 0.1) !important; }
+
+.editor-toolbar button {
+    color: var(--bs-body-color) !important;
+}
+
+.editor-toolbar button.active,
+.editor-toolbar button:hover {
+    background: rgba(var(--bs-primary-rgb), 0.1) !important;
+}
 
 /* 6. Animations (Ambient & UI) */
-@keyframes moveBg { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
-@keyframes float { 0%, 100% { transform: translateY(0) rotate(5deg); } 50% { transform: translateY(-40px) rotate(-5deg); } }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes moveBg {
+    0% {
+        transform: scale(1);
+    }
 
-.animate-ambient { animation: moveBg 20s ease infinite alternate; }
-.animate-float { animation: float 10s ease-in-out infinite; }
-.spin { animation: spin 1s linear infinite; display: inline-block; }
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(5deg);
+    }
+
+    50% {
+        transform: translateY(-40px) rotate(-5deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-ambient {
+    animation: moveBg 20s ease infinite alternate;
+}
+
+.animate-float {
+    animation: float 10s ease-in-out infinite;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
 
 .ambient-bg {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
     background: radial-gradient(circle at 20% 30%, rgba(var(--bs-primary-rgb), 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(var(--bs-primary-rgb), 0.1) 0%, transparent 40%);
+        radial-gradient(circle at 80% 70%, rgba(var(--bs-primary-rgb), 0.1) 0%, transparent 40%);
 }
 
 /* 7. Utility Overrides */
-.split-pane { height: 100%; transition: width 0.3s ease; }
-.sidebar-content { opacity: 1; transition: opacity 0.2s; }
-.collapsed .sidebar-content { opacity: 0; pointer-events: none; }
-.node-row:hover { background: rgba(var(--bs-primary-rgb), 0.05) !important; cursor: pointer; }
-.node-row:hover .node-actions { display: flex !important; }
+.split-pane {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.sidebar-content {
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+.collapsed .sidebar-content {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.node-row:hover {
+    background: rgba(var(--bs-primary-rgb), 0.05) !important;
+    cursor: pointer;
+}
+
+.node-row:hover .node-actions {
+    display: flex !important;
+}
 
 /* 8. Theme Overrides (Place last for maximum specificity) */
 
@@ -126,7 +254,21 @@ body {
     --bs-secondary-color: #657b83;
 }
 
-.text-project-title { color: var(--bs-emphasis-color); transition: color 0.2s; }
-.project-card:hover .text-project-title { color: var(--bs-primary); }
-.hover-danger { transition: all 0.2s; }
-.hover-danger:hover { color: var(--bs-danger) !important; opacity: 1 !important; transform: scale(1.1); }
+.text-project-title {
+    color: var(--bs-emphasis-color);
+    transition: color 0.2s;
+}
+
+.project-card:hover .text-project-title {
+    color: var(--bs-primary);
+}
+
+.hover-danger {
+    transition: all 0.2s;
+}
+
+.hover-danger:hover {
+    color: var(--bs-danger) !important;
+    opacity: 1 !important;
+    transform: scale(1.1);
+}

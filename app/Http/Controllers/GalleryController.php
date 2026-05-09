@@ -40,7 +40,7 @@ class GalleryController extends Controller
         $fileName = $baseName . '-' . time() . '.jpg';
         $thumbName = 'thumb-' . $fileName;
 
-        $projectPath = "projects/{$project->uuid}/assets";
+        $projectPath = "private/projects/{$project->uuid}/assets";
         Storage::disk('local')->makeDirectory($projectPath);
 
         // Process Main Image (Standard Amazon KDP Size: 1600x2560 max bounding box)

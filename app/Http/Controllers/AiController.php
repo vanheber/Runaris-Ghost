@@ -23,7 +23,7 @@ class AiController extends Controller
                       '{"title": "Nome sugerido", "type": "character", "content": "Descrição rica em detalhes, motivações e importância para o cenário."}' . "\n\n" .
                       "Nota: 'type' deve ser obrigatoriamente um destes: character, scenario, object.";
 
-            $response = $gemini->generate($prompt, 'gemini-3.0-flash');
+            $response = $gemini->generate($prompt, 'gemini-3.1-flash-lite');
             
             // Clean markdown code blocks if the model insists
             $jsonStr = trim(preg_replace('/^```json\s*|\s*```$/i', '', $response));
@@ -58,7 +58,7 @@ class AiController extends Controller
                       "SUA TAREFA: Escreva 5 a 7 bullet points (em Markdown) traçando os acontecimentos sugeridos para esta cena. " .
                       "Foque em conflito, avanços de plot e revelações. Vá direto ao ponto, não explique suas escolhas.";
 
-            $planningMarkdown = $gemini->generate($prompt, 'gemini-3.0-flash');
+            $planningMarkdown = $gemini->generate($prompt, 'gemini-3.1-flash-lite');
 
             return response()->json([
                 'success' => true,

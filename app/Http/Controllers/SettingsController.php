@@ -123,7 +123,7 @@ class SettingsController extends Controller
             $dbDir = database_path();
 
             // targets all possible locations for the sqlite files
-            $targets = array_unique([$dbPath, $dbDir . '/database.sqlite', $dbDir . '/nativephp.sqlite']);
+            $targets = array_unique([$dbPath, $dbDir . '/database.sqlite']);
 
             foreach ($targets as $target) {
                 if (empty($target)) continue;

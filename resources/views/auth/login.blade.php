@@ -16,7 +16,7 @@
         }
         body {
             font-family: 'Outfit', sans-serif;
-            background: url("{{ asset('bg-app.jpg') }}") no-repeat center center fixed;
+            background: url("{{ Vite::asset('resources/assets/images/bg-app.jpg') }}") no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             display: flex;
@@ -76,7 +76,7 @@
 
     <div class="glass-card">
         <div class="text-center mb-4">
-            <img src="{{ asset('ghost-icon-transparent.png') }}" alt="Runaris Ghost" class="mb-3" style="width: 70px; filter: drop-shadow(0 0 15px rgba(111, 66, 193, 0.3));">
+            <img src="{{ Vite::asset('resources/assets/images/ghost-icon-transparent.png') }}" alt="Runaris Ghost" class="mb-3" style="width: 70px; filter: drop-shadow(0 0 15px rgba(111, 66, 193, 0.3));">
             <span class="brand-logo mb-0">Runaris <span class="opacity-50">Ghost</span></span>
         </div>
         

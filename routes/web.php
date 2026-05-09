@@ -35,6 +35,7 @@ Route::prefix('projects')->group(function () {
         Route::get('/{project_uuid}/cards', [\App\Http\Controllers\CardController::class, 'index']);
         Route::post('/{project_uuid}/cards', [\App\Http\Controllers\CardController::class, 'store']);
         Route::get('/{project_uuid}/cards/{card_uuid}', [\App\Http\Controllers\CardController::class, 'show']);
+        Route::get('/{project_uuid}/cards/{card_uuid}/suggest', [\App\Http\Controllers\CardController::class, 'suggest']);
         Route::put('/{project_uuid}/cards/{card_uuid}', [\App\Http\Controllers\CardController::class, 'update']);
         Route::patch('/{project_uuid}/cards/{card_uuid}/title', [\App\Http\Controllers\CardController::class, 'updateTitle']);
         Route::post('/{project_uuid}/cards/{card_uuid}/image', [\App\Http\Controllers\CardController::class, 'uploadImage']);
@@ -47,9 +48,9 @@ Route::prefix('projects')->group(function () {
         // Gallery
         Route::get('/{project_uuid}/gallery', [\App\Http\Controllers\GalleryController::class, 'index']);
         Route::post('/{project_uuid}/gallery', [\App\Http\Controllers\GalleryController::class, 'store']);
-        Route::put('/{project_uuid}/gallery/{uuid}', [\App\Http\Controllers\GalleryController::class, 'update']);
-        Route::delete('/{project_uuid}/gallery/{uuid}', [\App\Http\Controllers\GalleryController::class, 'destroy']);
-        Route::get('/{project_uuid}/gallery/{uuid}/image/{type?}', [\App\Http\Controllers\GalleryController::class, 'showImage']);
+        Route::put('/{project_uuid}/gallery/{item_uuid}', [\App\Http\Controllers\GalleryController::class, 'update']);
+        Route::delete('/{project_uuid}/gallery/{item_uuid}', [\App\Http\Controllers\GalleryController::class, 'destroy']);
+        Route::get('/{project_uuid}/gallery/{item_uuid}/image/{type?}', [\App\Http\Controllers\GalleryController::class, 'showImage']);
 
         // Project Settings & Export
         Route::get('/{project_uuid}/settings', [ProjectController::class, 'settings']);
@@ -60,6 +61,7 @@ Route::prefix('projects')->group(function () {
         Route::get('/{project_uuid}/export/pdf', [\App\Http\Controllers\ProjectController::class, 'exportPdf']);
         Route::get('/{project_uuid}/export/html', [\App\Http\Controllers\ProjectController::class, 'exportHtml']);
         Route::get('/{project_uuid}/export/zip', [\App\Http\Controllers\ProjectController::class, 'exportZip']);
+        Route::get('/{project_uuid}/export/markdown', [\App\Http\Controllers\ProjectController::class, 'exportMarkdown']);
         Route::get('/{project_uuid}/export/preview-html', [\App\Http\Controllers\ProjectController::class, 'previewHtml']);
         Route::get('/{project_uuid}/export-state', [\App\Http\Controllers\ProjectController::class, 'getExportState']);
         Route::post('/{project_uuid}/export-process', [\App\Http\Controllers\ProjectController::class, 'processBatchExport']);

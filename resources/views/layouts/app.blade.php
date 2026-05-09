@@ -25,11 +25,11 @@
     @vite(['resources/js/app.js'])
 </head>
 <body class="antialiased d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg border-bottom sticky-top py-3 bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg border-bottom sticky-top py-2 bg-body-tertiary">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/projects') }}">
-                <img src="{{ asset('logo-ghost-color.png') }}" alt="Runaris Ghost" class="logo-light" style="width: 250px;">
-                <img src="{{ asset('logo-ghost-inverted.png') }}" alt="Runaris Ghost" class="logo-dark" style="width: 250px;">
+                <img src="{{ Vite::asset('resources/assets/images/logo-ghost-color.png') }}" alt="Runaris Ghost" class="logo-light" style="width: 160px;">
+                <img src="{{ Vite::asset('resources/assets/images/logo-ghost-inverted.png') }}" alt="Runaris Ghost" class="logo-dark" style="width: 160px;">
             </a>
             
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -39,12 +39,12 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link px-3 {{ Request::is('projects') ? 'active' : '' }}" href="{{ url('/projects') }}">Projetos</a>
+                        <a class="nav-link px-2 {{ Request::is('projects') ? 'active' : '' }}" href="{{ url('/projects') }}">Projetos</a>
                     </li>
                     
                     <!-- Theme Switcher -->
                     <li class="nav-item dropdown ms-lg-3">
-                        <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center px-3" id="bd-theme" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
+                        <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center px-2" id="bd-theme" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
                             <i class="bi bi-palette2 me-2"></i>
                             <span class="d-lg-none">Tema</span>
                         </button>
@@ -56,7 +56,7 @@
                     </li>
 
                     <li class="nav-item ms-lg-3">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createProjectModal">
                             <i class="bi bi-plus-lg me-1"></i> Novo Projeto
                         </button>
                     </li>
@@ -85,8 +85,8 @@
                         &copy; {{ date('Y') }} Runaris Ghost. | <a href="{{ url('/eula') }}" class="text-body-secondary text-decoration-none small opacity-75 hover-opacity-100">Termos e Licença</a>
                     </span>
                     <a href="https://runaris.com.br" target="_blank" class="opacity-50 hover-opacity-100">
-                        <img src="{{ asset('lg-runaris-hz.svg') }}" alt="Desenvolvido por Runaris" class="logo-light" style="height: 15px;">
-                        <img src="{{ asset('lg-runaris-hz-inverted.svg') }}" alt="Desenvolvido por Runaris" class="logo-dark" style="height: 15px;">
+                        <img src="{{ Vite::asset('resources/assets/images/lg-runaris-hz.svg') }}" alt="Desenvolvido por Runaris" class="logo-light" style="height: 15px;">
+                        <img src="{{ Vite::asset('resources/assets/images/lg-runaris-hz-inverted.svg') }}" alt="Desenvolvido por Runaris" class="logo-dark" style="height: 15px;">
                     </a>
                 </div>
                 

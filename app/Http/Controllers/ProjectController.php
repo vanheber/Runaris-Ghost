@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 use App\Services\ProjectManager;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -118,7 +120,11 @@ class ProjectController extends Controller
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
         
         $request->validate([
-            'image_uuid' => 'required|uuid|exists:gallery_items,uuid'
+            'image_uuid' => [
+                'required',
+                'uuid',
+                Rule::exists('sqlite_project.gallery_items', 'uuid')
+            ]
         ]);
 
         $project->update([
@@ -126,8 +132,10 @@ class ProjectController extends Controller
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => 'Capa atualizada com sucesso.',
-            'cover_image_uuid' => $project->cover_image_uuid
+            'cover_image_uuid' => $project->cover_image_uuid,
+            'cover_url' => url("/projects/{$project->uuid}/gallery/{$project->cover_image_uuid}/image/thumb")
         ]);
     }
 
@@ -178,6 +186,7 @@ class ProjectController extends Controller
 
         return response()->file($filePath);
     }
+
     /**
      * Export project to HTML ZIP Package.
      */
@@ -189,6 +198,19 @@ class ProjectController extends Controller
 
         return response()->download($filePath);
     }
+
+    /**
+     * Export project to Markdown ZIP.
+     */
+    public function exportMarkdown($project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $exporter = new \App\Services\ExporterService($project);
+        $zipPath = $exporter->generateMarkdownZip();
+        $filename = Str::slug($project->name) . '-markdown.zip';
+        return response()->download($zipPath, $filename)->deleteFileAfterSend(true);
+    }
+
     /**
      * Get the current export state (existing files).
      */
@@ -202,7 +224,7 @@ class ProjectController extends Controller
     /**
      * Process multiple exports.
      */
-    public function processBatchExport(\Illuminate\Http\Request $request, $project_uuid)
+    public function processBatchExport(Request $request, $project_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
         $exporter = new \App\Services\ExporterService($project);
@@ -215,6 +237,7 @@ class ProjectController extends Controller
             $exporter->generateHtml(); 
             $exporter->generateHtmlZip(); 
         }
+        if (in_array('markdown', $formats)) $exporter->generateMarkdownZip();
 
         return response()->json($exporter->getExistingExports());
     }
@@ -232,6 +255,6 @@ class ProjectController extends Controller
         
         $project->delete();
 
-        return response()->json(['success' => true, 'message' => 'Projeto destruído permanentemente.']);
+        return response()->json(['success' => true, 'message' => 'Projeto destruido permanentemente.']);
     }
 }

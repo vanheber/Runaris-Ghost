@@ -11,7 +11,7 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 class CardService
 {
     /**
-     * Create a new card (character, scenario, object).
+     * Create a new card (character, scenario, object, lore).
      */
     public function createCard(Project $project, string $title, string $type): Card
     {

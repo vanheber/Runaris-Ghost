@@ -69,7 +69,7 @@ class BibleController extends Controller
                       "TEXTO BRUTO:\n" . $fullText;
 
             // Usa Flash para resumo rápido de grande volume
-            $newSummary = $gemini->generate($prompt, 'gemini-3.0-flash', [
+            $newSummary = $gemini->generate($prompt, 'gemini-3.1-flash-lite', [
                 "Você é um editor literário implacável encarregado de organizar a cronologia de eventos."
             ]);
 

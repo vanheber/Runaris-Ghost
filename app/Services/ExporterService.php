@@ -150,6 +150,75 @@ class ExporterService
     }
 
     /**
+     * Generate a ZIP package with human-readable Markdown files.
+     */
+    public function generateMarkdownZip(): string
+    {
+        $safeName = Str::slug($this->project->name);
+        $fileName = "{$safeName}_Markdown_Source.zip";
+        $dir      = Storage::disk('public')->path($this->baseExportPath);
+        $zipFile  = "{$dir}/{$fileName}";
+
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new \Exception("Erro ao criar ZIP de Markdown.");
+        }
+
+        $items = ManuscriptItem::orderBy('order')->get();
+        $tree = $this->buildItemTreeForExport($items);
+
+        $this->addMarkdownToZip($zip, $tree, "");
+
+        $zip->close();
+        return $zipFile;
+    }
+
+    protected function buildItemTreeForExport($items, $parentUuid = null)
+    {
+        $branch = [];
+        foreach ($items as $item) {
+            if ($item->parent_uuid == $parentUuid) {
+                $children = $this->buildItemTreeForExport($items, $item->uuid);
+                $branch[] = [
+                    'item' => $item,
+                    'children' => $children
+                ];
+            }
+        }
+        return $branch;
+    }
+
+    protected function addMarkdownToZip(ZipArchive $zip, $nodes, $currentPath)
+    {
+        foreach ($nodes as $index => $node) {
+            $item = $node['item'];
+            $orderPrefix = str_pad($index + 1, 2, '0', STR_PAD_LEFT);
+            $safeTitle = preg_replace('/[^A-Za-z0-9\- \_]+/', '', $item->title);
+            $name = "{$orderPrefix} - {$safeTitle}";
+
+            if ($item->type === 'scene' || empty($node['children'])) {
+                // It's a file
+                $content = $this->getManuscriptContent($item->uuid);
+                $zip->addFromString($currentPath . $name . ".md", $content);
+            } else {
+                // It's a folder (Section or Chapter with children)
+                $newPath = $currentPath . $name . "/";
+                $zip->addEmptyDir($newPath);
+                
+                // Also add a "README" or index for the folder if it has content
+                $content = $this->getManuscriptContent($item->uuid);
+                if (trim(strip_tags($content)) !== "" && !Str::contains($content, "Comece sua escrita aqui")) {
+                    $zip->addFromString($newPath . "_index.md", $content);
+                }
+
+                $this->addMarkdownToZip($zip, $node['children'], $newPath);
+            }
+        }
+    }
+
+    /**
      * Return the public URL for a given export file.
      */
     public function getPublicUrl(string $fileName): string
@@ -168,6 +237,7 @@ class ExporterService
             'pdf'  => "{$safeName}.pdf",
             'html' => "{$safeName}_Reader.html",
             'zip'  => "{$safeName}_Web_Package.zip",
+            'markdown' => "{$safeName}_Markdown_Source.zip",
         ];
 
         $results = [];

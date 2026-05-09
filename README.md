@@ -37,7 +37,7 @@ cp .env.example .env
 php artisan key:generate
 php artisan migrate
 npm run dev
-php artisan native:serve
+php artisan serve
 ```
 
 *Nota: Não oferecemos suporte para problemas de ambiente ou compilação manual. Se encontrar um **bug técnico real** no código, abra uma Issue.*
@@ -63,7 +63,7 @@ php artisan native:serve
 ---
 
 ## 🛠️ Stack Tecnológica
-*   **Core**: Laravel 11 + NativePHP (Electron).
+*   **Core**: Laravel 12.
 *   **Frontend**: Vanilla JS + Bootstrap 5.3 (Strict Design).
 *   **Database**: SQLite.
 *   **IA**: Google Gemini Cloud (via API Key local).

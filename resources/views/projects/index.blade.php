@@ -3,8 +3,8 @@
 @section('title', 'Meus Projetos - Runaris Ghost')
 
 @section('content')
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-end mb-5">
+<div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-end mb-4">
         <div>
             <h1 class="fw-bold mb-2">Suas Histórias</h1>
             <p class="text-body-secondary mb-0">Continue sua jornada literária ou comece uma nova aventura.</p>
@@ -202,7 +202,7 @@
     async function selectCoverFromGallery(imageUuid) {
         try {
             await fetch(`/projects/${currentProjectUuid}/cover`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 
                     'Content-Type': 'application/json', 
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -236,7 +236,7 @@
             if (galleryItem && galleryItem.uuid) {
                 // Link gallery UUID to project Cover UUID
                 await fetch(`/projects/${currentProjectUuid}/cover`, {
-                    method: 'PUT',
+                    method: 'PATCH',
                     headers: { 
                         'Content-Type': 'application/json', 
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')

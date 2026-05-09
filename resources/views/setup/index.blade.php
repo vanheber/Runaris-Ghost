@@ -17,7 +17,7 @@
         }
         body {
             font-family: 'Outfit', sans-serif;
-            background: url("{{ asset('bg-app.jpg') }}") no-repeat center center fixed;
+            background: url("{{ Vite::asset('resources/assets/images/bg-app.jpg') }}") no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             color: #f8fafc;
@@ -141,7 +141,7 @@
             
             <!-- Header com Logo -->
             <div class="text-center mb-5">
-                <img src="{{ asset('ghost-icon-transparent.png') }}" alt="Runaris Ghost" class="mb-3" style="width: 80px; filter: drop-shadow(0 0 20px rgba(111, 66, 193, 0.4)); animation: float 6s ease-in-out infinite;">
+                <img src="{{ Vite::asset('resources/assets/images/ghost-icon-transparent.png') }}" alt="Runaris Ghost" class="mb-3" style="width: 80px; filter: drop-shadow(0 0 20px rgba(111, 66, 193, 0.4)); animation: float 6s ease-in-out infinite;">
                 <span class="brand-logo mb-0">Runaris <span class="opacity-50">Ghost</span></span>
                 <p class="text-secondary small ls-wide text-uppercase" style="letter-spacing: 2px;">{{ __('The Digital Sanctuary for Authors') }}</p>
             </div>

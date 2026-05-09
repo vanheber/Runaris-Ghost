@@ -112,7 +112,7 @@ class CardController extends Controller
         $fileName = $baseName . '-' . time() . '.' . $extension;
         $thumbName = 'thumb-' . $fileName;
 
-        $projectPath = "projects/{$project->uuid}/assets";
+        $projectPath = "private/projects/{$project->uuid}/assets";
         \Illuminate\Support\Facades\Storage::disk('local')->makeDirectory($projectPath);
 
         $imageManager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
@@ -191,17 +191,34 @@ class CardController extends Controller
         $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
-        $related_uuids = $request->input('related_uuids', []);
+        $input_connections = $request->input('connections', []);
+        $sync_data = [];
+        
+        if (empty($input_connections)) {
+            $related_uuids = $request->input('related_uuids', []);
+            foreach ($related_uuids as $ruuid) {
+                $sync_data[$ruuid] = ['metadata' => null];
+            }
+        } else {
+            foreach ($input_connections as $conn) {
+                $sync_data[$conn['uuid']] = [
+                    'metadata' => isset($conn['metadata']) ? (is_string($conn['metadata']) ? $conn['metadata'] : json_encode($conn['metadata'])) : null
+                ];
+            }
+        }
         
         // Bidirectional sync logic
         $current_uuids = $card->connections()->pluck('related_card_uuid')->toArray();
+        $related_uuids = array_keys($sync_data);
         $removed_uuids = array_diff($current_uuids, $related_uuids);
         
-        $card->connections()->sync($related_uuids);
+        $card->connections()->sync($sync_data);
         
-        foreach ($related_uuids as $ruuid) {
+        foreach ($sync_data as $ruuid => $pivot) {
             $other = Card::where('uuid', $ruuid)->first();
-            if ($other) $other->connections()->syncWithoutDetaching([$card->uuid]);
+            if ($other) {
+                $other->connections()->syncWithoutDetaching([$card->uuid => $pivot]);
+            }
         }
         
         foreach ($removed_uuids as $ruuid) {
@@ -221,7 +238,14 @@ class CardController extends Controller
         $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
-        return response()->json($card->connections()->get(['cards.uuid', 'cards.title', 'cards.type']));
+        return response()->json($card->connections->map(function($c) {
+            return [
+                'uuid' => $c->uuid,
+                'title' => $c->title,
+                'type' => $c->type,
+                'metadata' => $c->pivot->metadata ? json_decode($c->pivot->metadata) : null
+            ];
+        }));
     }
 
     /**
@@ -241,6 +265,30 @@ class CardController extends Controller
                      ->get(['uuid', 'title', 'type']);
                      
         return response()->json($cards);
+    }
+
+    /**
+     * Use AI to suggest connections for the card.
+     */
+    public function suggest(Request $request, $project_uuid, $card_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        
+        $card = Card::where('uuid', $card_uuid)->firstOrFail();
+        $content = $this->cardService->getMarkdownBody($project, $card);
+        
+        // Fetch other cards to compare
+        $otherCards = Card::where('uuid', '!=', $card_uuid)->get(['uuid', 'title', 'type']);
+        
+        try {
+            $gemini = new \App\Services\GeminiService($project);
+            $suggestions = $gemini->suggestConnections($card, $content, $otherCards);
+            
+            return response()->json($suggestions);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
