@@ -22,14 +22,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <!-- Scripts -->
-    @vite(['resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="antialiased d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top py-2 bg-body-tertiary">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center" href="{{ url('/projects') }}">
-                <img src="{{ Vite::asset('resources/assets/images/logo-ghost-color.png') }}" alt="Runaris Ghost" class="logo-light" style="width: 160px;">
-                <img src="{{ Vite::asset('resources/assets/images/logo-ghost-inverted.png') }}" alt="Runaris Ghost" class="logo-dark" style="width: 160px;">
+                <img src="{{ Vite::asset('resources/assets/images/logo-ghost-color.png') }}" alt="Runaris Ghost" class="logo-light navbar-logo">
+                <img src="{{ Vite::asset('resources/assets/images/logo-ghost-inverted.png') }}" alt="Runaris Ghost" class="logo-dark navbar-logo">
             </a>
             
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

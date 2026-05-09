@@ -11,10 +11,17 @@ Este documento define o conjunto de diretrizes operacionais e metodológicas par
 | Componente | Especificação | Notas de Implementação |
 | :--- | :--- | :--- |
 | **Backend** | Laravel 12 | Manter aderência aos padrões de Service Layer e Repository Pattern. |
-| **Frontend** | Bootstrap 5.3 (Vanilla) | Uso *exclusivo* de classes utilitárias nativas do Bootstrap 5.3. **Tailwind CSS é estritamente proibido.** | 
+| **Frontend** | Bootstrap 5.3 (Vanilla) | Uso exclusivo de classes nativas do Bootstrap 5.3. **Tailwind CSS é proibido.** |
 | **Lógica Cliente** | Vanilla JavaScript | Evitar frameworks complexos desnecessários no frontend. A lógica deve ser o mais direta possível. |
 | **Banco de Dados** | SQLite | Configuração otimizada para operação *offline* e baixo consumo de recursos. |
 | **Modelo de Negócio** | Free Code, Paid Convenience | A base de código (o *free*) deve ser robusta, limpa e livre de funcionalidades de rastreamento. A receita deve vir da conveniência paga. |
+
+#### 📐 Regras de Ouro do Frontend (Design System)
+*   **Sem Styles Inline:** Proibido o uso do atributo `style` em tags HTML.
+*   **Sem `!important`:** Proibido o uso de `!important` no CSS. Use especificidade.
+*   **Bootstrap First:** Usar estritamente as classes utilitárias nativas do Bootstrap 5.3.
+*   **app.css:** Criar classes customizadas apenas para o que o Bootstrap 5.3 não resolve.
+*   **Ícones:** Uso exclusivo da biblioteca **Bootstrap Icons**.
 
 ### ⚙️ Fluxo de Trabalho de Desenvolvimento (SKILL Protocol)
 

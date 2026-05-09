@@ -8,181 +8,6 @@
 <div class="container-fluid px-4 mt-2">
     <!-- Graph Visualization Lib -->
     <script src="//unpkg.com/force-graph"></script>
-    <style>
-
-        .card-ficha {
-            cursor: pointer;
-            border-radius: 12px;
-            border: 1px solid rgba(var(--bs-primary-rgb), 0.1) !important;
-        }
-        .hover-lift:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
-        }
-        .backdrop-blur {
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .btn-ghost-card {
-            color: var(--bs-body-color);
-            opacity: 0.6;
-            transition: all 0.2s;
-        }
-        .btn-ghost-card:hover {
-            opacity: 1;
-            background: rgba(var(--bs-primary-rgb), 0.1);
-        }
-        .card-ficha .card-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-        }
-        /* Grid de Worldbuilding na Sidebar */
-        .world-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-        .world-grid-btn.full-width {
-            grid-column: span 2;
-        }
-        .world-grid-btn {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 4px;
-            border-radius: 10px;
-            background: rgba(var(--bs-primary-rgb), 0.02);
-            border: 1px solid rgba(var(--bs-primary-rgb), 0.05);
-            color: var(--bs-body-color);
-            text-decoration: none;
-            transition: all 0.2s linear;
-            font-size: 0.62rem;
-            text-transform: uppercase;
-            font-weight: bold;
-            text-align: center;
-            opacity: 0.8;
-            white-space: nowrap;
-        }
-        .world-grid-btn:hover {
-            background: rgba(var(--bs-primary-rgb), 0.08);
-            border-color: rgba(var(--bs-primary-rgb), 0.2);
-            color: var(--bs-primary);
-            opacity: 1;
-            transform: translateY(-1px);
-        }
-        .world-grid-btn.active {
-            background: var(--bs-primary);
-            color: white !important;
-            border-color: var(--bs-primary);
-            opacity: 1;
-            box-shadow: 0 4px 10px rgba(var(--bs-primary-rgb), 0.3);
-        }
-        .world-grid-btn i {
-            display: inline-block;
-            font-size: 1.1rem;
-            margin-right: 6px;
-        }
-        .ls-wide { letter-spacing: 0.05em; }
-        /* Badge de Extensão na Galeria */
-        .gallery-badge {
-            position: absolute;
-            top: 8px !important;
-            right: 8px !important;
-            left: auto !important;
-            bottom: auto !important;
-            width: auto !important;
-            height: auto !important;
-            font-size: 0.55rem;
-            padding: 3px 6px !important;
-            border-radius: 4px;
-            background: rgba(var(--bs-primary-rgb), 0.9);
-            color: white;
-            font-weight: 800;
-            backdrop-filter: blur(4px);
-            z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            pointer-events: none;
-            line-height: 1;
-        }
-        /* Animações de Grade */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-        .cp-sidebar-item {
-            cursor: pointer;
-            transition: all 0.2sease;
-            border-radius: 4px;
-            padding: 2px 5px;
-        }
-        .cp-sidebar-item:hover {
-            background: rgba(var(--bs-primary-rgb), 0.1);
-            color: var(--bs-primary);
-        }
-        /* Planejamento Mode Highlights */
-        .btn-planning.active {
-            background-color: #fd7e14 !important;
-            border-color: #fd7e14 !important;
-            color: white !important;
-            box-shadow: 0 0 10px rgba(253, 126, 20, 0.4);
-        }
-        .editor-planning-mode {
-            border: 2px solid rgba(253, 126, 20, 0.5) !important;
-            transition: border 0.3s ease;
-        }
-        /* Unificar Toolbar com Bootstrap Icons */
-        .editor-toolbar button.bi {
-            font-family: "bootstrap-icons" !important;
-            font-style: normal;
-        }
-        .editor-toolbar button.bi::before {
-            vertical-align: middle;
-        }
-        /* Magic Button Styling */
-        .btn-magic-ai {
-            background: linear-gradient(135deg, var(--bs-info), #0dcaf0);
-            color: white !important;
-            border: none !important;
-            box-shadow: 0 2px 10px rgba(13, 202, 240, 0.3);
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        /* Ajustes para Scroll da Bíblia e Editores */
-        #bible-container .CodeMirror {
-            height: calc(100vh - 350px) !important;
-            min-height: 450px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            background: var(--bs-body-bg) !important;
-        }
-        #bible-container .CodeMirror-scroll {
-            min-height: 450px;
-        }
-        .custom-editor-area {
-            border: 1px solid rgba(var(--bs-primary-rgb), 0.1) !important;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .btn-magic-ai:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(13, 202, 240, 0.5);
-            background: linear-gradient(135deg, #0dcaf0, #0aa2c0);
-        }
-        .btn-magic-ai:disabled {
-            background: #ccc;
-            opacity: 0.7;
-        }
-        #save-status {
-            min-width: 120px;
-            justify-content: flex-end;
-        }
-    </style>
     <!-- Layout Principal -->
     <div id="main-layout" class="d-row d-flex vh-workspace mt-1">
         
@@ -252,18 +77,18 @@
                             <div class="d-flex flex-column">
                                 <h3 id="current-item-title" class="fw-bold mb-0 cp-title" onclick="enableTitleEdit()">Título</h3>
                                 <div id="manuscript-mode-toggle" class="d-flex gap-2 mt-1 d-none">
-                                    <button id="btn-mode-writing" class="btn btn-xs btn-outline-primary active py-0 px-2 small" onclick="setManuscriptMode('writing')" style="font-size: 0.65rem;">ESCRITA</button>
-                                    <button id="btn-mode-planning" class="btn btn-xs btn-outline-secondary btn-planning py-0 px-2 small" onclick="setManuscriptMode('planning')" style="font-size: 0.65rem;">PLANEJAMENTO</button>
+                                    <button id="btn-mode-writing" class="btn btn-xs btn-outline-primary active py-0 px-2 small fs-xs" onclick="setManuscriptMode('writing')">ESCRITA</button>
+                                    <button id="btn-mode-planning" class="btn btn-xs btn-outline-secondary btn-planning py-0 px-2 small fs-xs" onclick="setManuscriptMode('planning')">PLANEJAMENTO</button>
                                 </div>
                             </div>
-                            <input type="text" id="title-edit-input" class="form-control form-control-lg bg-transparent border-0 text-body fw-bold d-none p-0 ms-2" style="font-size: 1.75rem;" onblur="saveTitleEdit()" onkeyup="if(event.key==='Enter') saveTitleEdit()">
+                            <input type="text" id="title-edit-input" class="form-control form-control-lg bg-transparent border-0 text-body fw-bold d-none p-0 ms-2 fs-author-title" onblur="saveTitleEdit()" onkeyup="if(event.key==='Enter') saveTitleEdit()">
                         </div>
                         <div id="save-status" class="text-body-secondary small d-flex align-items-center gap-3">
-                            <button id="btn-magic-planning" class="btn btn-outline-info rounded-pill btn-sm px-3 small d-none me-1" onclick="generateAiPlanning()" title="Sugerir ideias">
-                                <i class="bi bi-stars me-1"></i> Sugerir ideias
+                            <button id="btn-magic-planning" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="generateAiPlanning()" title="Sugerir ideias">
+                                <i class="bi bi-stars"></i>
                             </button>
-                            <button id="btn-magic-writing" class="btn btn-outline-info rounded-pill btn-sm px-3 small d-none me-1" onclick="writeAiScene()" title="Escritor Fantasma">
-                                <i class="bi bi-stars me-1"></i> Escritor Fantasma
+                            <button id="btn-magic-writing" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="writeAiScene()" title="Escritor Fantasma">
+                                <i class="bi bi-magic"></i>
                             </button>
                             <div id="save-status-container" class="d-flex align-items-center opacity-75">
                                 <i id="save-status-icon" class="bi bi-check2-all me-1"></i> 
@@ -297,7 +122,7 @@
                                     O Fantasma está analisando conexões...
                                 </div>
                             </div>
-                            <div id="connection-results" class="position-absolute w-100 bg-body-tertiary border border-primary border-opacity-50 rounded mt-1 shadow-lg d-none" style="z-index: 10000; max-height: 200px; overflow-y: auto;">
+                            <div id="connection-results" class="position-absolute w-100 bg-body-tertiary border border-primary border-opacity-50 rounded mt-1 shadow-lg d-none connection-results-dropdown">
                                 <!-- Resultados da busca -->
                             </div>
                         </div>
@@ -312,8 +137,8 @@
                             <h3 class="fw-bold mb-0">Bíblia do Projeto</h3>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <button id="btn-sync-bible" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm" onclick="syncBibleWithAI()" title="A IA lerá seu manuscrito e atualizará o resumo.">
-                                <i class="bi bi-stars me-1 text-warning"></i> Sincronizar Bíblia
+                            <button id="btn-sync-bible" class="btn btn-outline-primary btn-icon-round shadow-sm" onclick="syncBibleWithAI()" title="Sincronizar Bíblia: A IA lerá seu manuscrito e atualizará o resumo.">
+                                <i class="bi bi-stars text-warning"></i>
                             </button>
                             <div id="bible-save-status" class="text-body-secondary small">
                                 <i class="bi bi-check2-all me-1"></i> Salvo
@@ -326,7 +151,7 @@
                         <div class="d-flex flex-column h-100">
                             <h6 class="text-accent small text-uppercase fw-bold mb-3 ls-wide d-flex align-items-center">
                                 <i class="bi bi-stars me-2"></i> Resumo Narrativo & Cronologia 
-                                <span class="badge bg-secondary bg-opacity-10 text-body-secondary fw-normal ms-2" style="font-size: 0.65rem;">IA RECAP</span>
+                                <span class="badge bg-secondary bg-opacity-10 text-body-secondary fw-normal ms-2 fs-xs">IA RECAP</span>
                             </h6>
                             <div class="flex-grow-1 overflow-hidden border border-secondary border-opacity-10 rounded shadow-sm bg-body custom-editor-area">
                                 <textarea id="bible-summary-editor"></textarea>
@@ -353,7 +178,7 @@
                         
                         <div class="row align-items-center">
                             <div class="col-md-3">
-                                <div id="project-cover-preview" class="ratio ratio-3x4 bg-secondary bg-opacity-10 rounded border border-primary border-opacity-10 overflow-hidden shadow-sm" style="max-width: 180px;">
+                                <div id="project-cover-preview" class="ratio ratio-3x4 bg-secondary bg-opacity-10 rounded border border-primary border-opacity-10 overflow-hidden shadow-sm project-cover-preview-container">
                                     @if($project->cover_image_uuid)
                                         <img src="{{ url('/projects/'.$project->uuid.'/gallery/'.$project->cover_image_uuid.'/image/thumb') }}" class="object-fit-cover w-100 h-100" id="project-cover-img">
                                     @else
@@ -463,7 +288,7 @@
                 </div>
 
                 <div id="graph-container" class="card bg-body-tertiary border-0 shadow-sm h-100 d-none overflow-hidden position-relative">
-                    <div id="graph-view" style="width: 100%; height: 100%;"></div>
+                    <div id="graph-view" class="w-100 h-100"></div>
                     <div class="position-absolute top-0 end-0 p-3 z-2">
                         <button class="btn btn-sm btn-ghost-card backdrop-blur" onclick="loadGraphData(true)" title="Atualizar Grafo">
                             <i class="bi bi-arrow-clockwise"></i>
@@ -471,7 +296,7 @@
                     </div>
                     <!-- Navigation Help Overlay -->
                     <div class="position-absolute bottom-0 start-0 p-3 z-2">
-                        <div class="badge bg-dark bg-opacity-50 backdrop-blur p-2 small border border-secondary border-opacity-25" style="pointer-events: none;">
+                        <div class="badge bg-dark bg-opacity-50 backdrop-blur p-2 small border border-secondary border-opacity-25 pe-none">
                             <i class="bi bi-mouse me-2"></i> Scroll: Zoom | <i class="bi bi-arrows-move mx-2"></i> Arraste: Mover | <i class="bi bi-hand-index mx-2"></i> Clique: Abrir
                         </div>
                     </div>
@@ -500,17 +325,17 @@
                             <h3 id="cards-grid-title" class="fw-bold mb-0">Personagens</h3>
                         </div>
                         <div class="d-flex gap-2 align-items-center">
-                            <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-25" style="width: 150px;">
+                            <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-25 search-input-w-sm">
                                 <span class="input-group-text bg-transparent border-0 px-2"><i class="bi bi-search opacity-50"></i></span>
                                 <input type="text" id="cards-search" class="form-control border-0 bg-transparent ps-0" placeholder="Filtrar..." oninput="filterCards(this.value)">
                             </div>
 
-                             <button class="btn btn-outline-info rounded-pill btn-sm px-3 me-1" onclick="suggestAiCard()">
-                                <i class="bi bi-stars me-1"></i> Sugerir Ficha
+                             <button class="btn btn-outline-info btn-icon-round me-1" onclick="suggestAiCard()" title="Sugerir Ficha">
+                                <i class="bi bi-stars"></i>
                             </button>
 
-                            <button class="btn btn-primary rounded-pill btn-sm px-3" onclick="createCard()">
-                                <i class="bi bi-plus-lg me-1"></i> Nova Ficha
+                            <button class="btn btn-primary btn-icon-round" onclick="createCard()" title="Nova Ficha">
+                                <i class="bi bi-plus-lg"></i>
                             </button>
                         </div>
                     </div>
@@ -530,7 +355,7 @@
                             <h3 class="fw-bold mb-0">Galeria do Projeto</h3>
                         </div>
                         <div class="d-flex gap-2 align-items-center">
-                            <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-25" style="width: 200px;">
+                            <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-25 search-input-w-md">
                                 <span class="input-group-text bg-transparent border-0 px-2"><i class="bi bi-search opacity-50"></i></span>
                                 <input type="text" id="gallery-search" class="form-control border-0 bg-transparent ps-0" placeholder="Buscar arte..." oninput="filterGallery(this.value)">
                             </div>
@@ -716,7 +541,7 @@
             </div>
             <div class="modal-body py-4">
                 <div class="mb-4">
-                    <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-50" style="max-width: 300px; margin: 0 auto;">
+                    <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-50 search-input-w-lg">
                         <span class="input-group-text bg-transparent border-0 px-2"><i class="bi bi-search opacity-50"></i></span>
                         <input type="text" id="gallery-picker-search" class="form-control border-0 bg-transparent ps-0" placeholder="Procurar na galeria..." oninput="filterGalleryPicker(this.value)">
                     </div>
@@ -2524,7 +2349,7 @@ async function suggestAiCard() {
         const btn = document.querySelector('[onclick="suggestAiCard()"]');
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="bi bi-stars me-1"></i> Sugerir Ficha';
+            btn.innerHTML = '<i class="bi bi-stars"></i>';
         }
     }
 }
@@ -2556,7 +2381,7 @@ async function generateAiPlanning() {
         alert('Erro ao gerar planejamento');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-stars me-1"></i> Sugerir ideias';
+        btn.innerHTML = '<i class="bi bi-stars"></i>';
     }
 }
 
@@ -2595,7 +2420,7 @@ async function writeAiScene() {
         alert('Erro ao escrever cena');
     } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-stars me-1"></i> Sugerir ideias';
+        btn.innerHTML = '<i class="bi bi-magic"></i>';
     }
 }
 
