@@ -71,7 +71,7 @@
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
-        ],
+        ]
 
     },
     "extra": {
