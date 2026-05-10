@@ -94,6 +94,20 @@ class CardController extends Controller
     }
 
     /**
+     * Update card type.
+     */
+    public function updateType(Request $request, $project_uuid, $card_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $this->projectManager->switchToProject($project);
+        
+        $card = Card::where('uuid', $card_uuid)->firstOrFail();
+        $updatedCard = $this->cardService->updateCardType($project, $card, $request->type);
+
+        return response()->json($updatedCard);
+    }
+
+    /**
      * Upload and link an image to a card.
      */
     public function uploadImage(Request $request, $project_uuid, $card_uuid)

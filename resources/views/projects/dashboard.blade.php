@@ -360,8 +360,8 @@
                                 <input type="text" id="gallery-search" class="form-control border-0 bg-transparent ps-0" placeholder="Buscar arte..." oninput="filterGallery(this.value)">
                             </div>
                             <input type="file" id="gallery-upload-input" class="d-none" accept="image/*" onchange="uploadImage(this)">
-                            <button class="btn btn-primary rounded-pill btn-sm px-3" onclick="document.getElementById('gallery-upload-input').click()">
-                                <i class="bi bi-upload me-1"></i> Upload
+                            <button class="btn btn-primary btn-icon-round" title="Upload" onclick="document.getElementById('gallery-upload-input').click()">
+                                <i class="bi bi-upload"></i>
                             </button>
                         </div>
                     </div>
@@ -1054,7 +1054,10 @@ async function openManuscriptItem(uuid) {
         // Mark active in tree
         document.querySelectorAll('.list-group-item').forEach(el => el.classList.remove('active'));
         const activeEl = document.querySelector(`[onclick="openManuscriptItem('${uuid}')"]`);
-        if (activeEl) activeEl.closest('.list-group-item').classList.add('active');
+        if (activeEl) {
+            const parent = activeEl.closest('.list-group-item');
+            if (parent) parent.classList.add('active');
+        }
 
     } catch (error) {
         console.error('Erro ao carregar item:', error);
@@ -1283,6 +1286,7 @@ function renderCards(cards) {
     cards.forEach((card, index) => {
         // Center Grid
         const col = document.createElement('div');
+        col.id = `grid-card-${card.uuid}`;
         col.className = 'col animate-fade-in';
         col.style.animationDelay = `${index * 0.05}s`;
         
@@ -1314,8 +1318,22 @@ function renderCards(cards) {
                         <button class="btn btn-ghost-card btn-sm p-1" title="Upload Nova Imagem" onclick="document.getElementById('card-upload-${card.uuid}').click()">
                             <i class="bi bi-upload"></i>
                         </button>
+
+                        <!-- Mover Categoria -->
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-ghost-card btn-sm p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Mover para...">
+                                <i class="bi bi-arrow-left-right"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark shadow border-0 backdrop-blur" style="font-size: 0.8rem;">
+                                <li><h6 class="dropdown-header text-uppercase opacity-50" style="font-size: 0.65rem;">Mover para:</h6></li>
+                                ${card.type !== 'scenario' ? `<li><a class="dropdown-item py-1" href="#" onclick="moveCard('${card.uuid}', 'scenario')"><i class="bi bi-geo-alt me-2 text-primary"></i> Geografia</a></li>` : ''}
+                                ${card.type !== 'character' ? `<li><a class="dropdown-item py-1" href="#" onclick="moveCard('${card.uuid}', 'character')"><i class="bi bi-people me-2 text-primary"></i> Personagens</a></li>` : ''}
+                                ${card.type !== 'lore' ? `<li><a class="dropdown-item py-1" href="#" onclick="moveCard('${card.uuid}', 'lore')"><i class="bi bi-mortarboard me-2 text-primary"></i> Lore</a></li>` : ''}
+                                ${card.type !== 'object' ? `<li><a class="dropdown-item py-1" href="#" onclick="moveCard('${card.uuid}', 'object')"><i class="bi bi-gem me-2 text-primary"></i> Objetos</a></li>` : ''}
+                            </ul>
+                        </div>
                         
-                        <button class="btn btn-link btn-sm text-danger p-1" title="Excluir Ficha" data-bs-toggle="modal" data-bs-target="#cardDeleteModal" onclick="cardToDeleteUuid = '${card.uuid}'">
+                        <button class="btn btn-ghost-card btn-sm text-danger p-1" title="Excluir Ficha" data-bs-toggle="modal" data-bs-target="#cardDeleteModal" onclick="cardToDeleteUuid = '${card.uuid}'">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -1335,6 +1353,37 @@ async function createCard() {
     });
     const card = await response.json();
     await loadCards(activeCardCategory);
+}
+
+async function moveCard(cardUuid, newType) {
+    if (!confirm(`Deseja mover esta ficha para a categoria ${newType}?`)) return;
+    
+    try {
+        const response = await fetch(`/projects/${projectUuid}/cards/${cardUuid}/type`, {
+            method: 'PATCH',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+            },
+            body: JSON.stringify({ type: newType })
+        });
+        
+        if (response.ok) {
+            toast('Ficha movida com sucesso!', 'success');
+            
+            // Immediate UI removal for smoothness
+            const cardEl = document.getElementById(`grid-card-${cardUuid}`);
+            if (cardEl) cardEl.remove();
+            
+            const sidebarEl = document.getElementById(`sidebar-card-${cardUuid}`);
+            if (sidebarEl) sidebarEl.remove();
+            
+            await loadCards(activeCardCategory); // Full refresh
+        }
+    } catch (error) {
+        console.error('Erro ao mover ficha:', error);
+        toast('Erro ao mover ficha.', 'error');
+    }
 }
 
 async function uploadCardImage(cardUuid, input) {
@@ -1659,10 +1708,19 @@ function updateRightPanelForGallery() {
 }
 
 async function loadGallery() {
-    const response = await fetch(`/projects/${projectUuid}/gallery`);
-    currentGalleryItems = await response.json();
-    renderGallery(currentGalleryItems);
-    updateRightPanelForGallery(); // Refreshes stats after load
+    try {
+        const response = await fetch(`/projects/${projectUuid}/gallery`);
+        if (!response.ok) throw new Error('Falha ao carregar galeria');
+        currentGalleryItems = await response.json();
+        renderGallery(currentGalleryItems);
+        updateRightPanelForGallery();
+    } catch (error) {
+        console.error('Erro na galeria:', error);
+        const galleryItemsEl = document.getElementById('gallery-items');
+        if (galleryItemsEl) {
+            galleryItemsEl.innerHTML = '<div class="col-12 text-center text-muted p-5">Erro ao carregar galeria. Tente novamente.</div>';
+        }
+    }
 }
 
 function renderGallery(items) {
@@ -1683,8 +1741,8 @@ function renderGallery(items) {
         col.style.animationDelay = `${index * 0.03}s`;
         col.innerHTML = `
             <div class="card h-100 border-0 bg-secondary bg-opacity-10 shadow-sm position-relative group overflow-hidden gallery-card text-start">
+                <span class="badge bg-primary gallery-badge">${extension}</span>
                 <div class="ratio ratio-1x1 position-relative">
-                    <span class="gallery-badge">${extension}</span>
                     <img src="/projects/${projectUuid}/gallery/${item.uuid}/image/thumb" class="card-img-top object-fit-cover" alt="${displayName}">
                     <!-- Overlay de zoom/view -->
                     <a href="/projects/${projectUuid}/gallery/${item.uuid}/image" target="_blank" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 opacity-0 transition-opacity text-white text-decoration-none gallery-overlay" style="pointer-events: none;">
@@ -1694,13 +1752,10 @@ function renderGallery(items) {
                 <div class="card-body p-2 d-flex justify-content-between align-items-center flex-wrap gap-1">
                     <span class="small text-truncate text-body-secondary fw-bold flex-grow-1" style="max-width: 100px;" title="${item.name}">${displayName}</span>
                     <div class="d-flex gap-1">
-                        <button class="btn btn-link btn-sm text-warning p-0" title="Definir como Capa" onclick="setProjectCover('${item.uuid}')">
-                            <i class="bi bi-bookmark-star-fill"></i>
-                        </button>
-                        <button class="btn btn-link btn-sm text-primary p-0" title="Renomear" data-bs-toggle="modal" data-bs-target="#galleryRenameModal" onclick="prepareRenameImage('${item.uuid}', '${displayName.replace(/'/g, "\\'")}', '${extension}')">
+                        <button class="btn btn-ghost-card btn-sm text-primary p-1" title="Renomear" data-bs-toggle="modal" data-bs-target="#galleryRenameModal" onclick="prepareRenameImage('${item.uuid}', '${displayName.replace(/'/g, "\\'")}', '${extension}')">
                             <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-link btn-sm text-danger p-0" title="Excluir" data-bs-toggle="modal" data-bs-target="#galleryDeleteModal" onclick="galleryItemToDeleteUuid = '${item.uuid}'">
+                        <button class="btn btn-ghost-card btn-sm text-danger p-1" title="Excluir" data-bs-toggle="modal" data-bs-target="#galleryDeleteModal" onclick="galleryItemToDeleteUuid = '${item.uuid}'">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -2524,6 +2579,37 @@ function applyAISuggestion(uuid, title, type) {
     const modalEl = document.getElementById('aiConnectionsModal');
     const modal = bootstrap.Modal.getInstance(modalEl);
     if (modal) modal.hide();
+}
+
+// --- Notification Toast ---
+function toast(message, type = 'primary') {
+    const container = document.getElementById('toast-container') || createToastContainer();
+    const toastEl = document.createElement('div');
+    toastEl.className = `toast align-items-center text-white bg-${type} border-0 show mb-2 animate-fade-in`;
+    toastEl.role = 'alert';
+    toastEl.style.minWidth = '250px';
+    toastEl.innerHTML = `
+        <div class="d-flex p-3 backdrop-blur bg-dark bg-opacity-25 rounded shadow-lg border border-white border-opacity-10">
+            <div class="toast-body fw-bold d-flex align-items-center w-100">
+                <i class="bi ${type === 'success' ? 'bi-check-circle-fill text-success' : 'bi-info-circle-fill text-info'} me-3 fs-5"></i>
+                <div class="flex-grow-1">${message}</div>
+            </div>
+        </div>
+    `;
+    container.appendChild(toastEl);
+    setTimeout(() => {
+        toastEl.classList.remove('show');
+        setTimeout(() => toastEl.remove(), 500);
+    }, 4000);
+}
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'toast-container position-fixed bottom-0 end-0 p-4';
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+    return container;
 }
 </script>
 

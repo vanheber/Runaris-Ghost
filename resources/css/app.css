@@ -78,7 +78,8 @@ footer {
     color: var(--bs-primary);
     width: 32px;
     height: 32px;
-    border-radius: 6px;
+    border-radius: 10px;
+    /* Matched with world-grid-btn for consistency */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -117,13 +118,14 @@ footer {
 }
 
 .btn-icon-round {
-    width: 32px;
+    width: 42px;
     height: 32px;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50% !important;
+    border-radius: 10px;
+    /* Unified with project design language */
 }
 
 /* 3. Split.js Gutter */
@@ -402,21 +404,9 @@ footer {
 
 .gallery-badge {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 0.6rem;
-    padding: 4px 8px;
-    border-radius: 6px;
-    background: rgba(64, 0, 85, 0.85); /* Use primary purple */
-    color: white;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    backdrop-filter: blur(8px);
+    top: 12px;
+    left: 12px;
     z-index: 10;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    pointer-events: none;
-    line-height: 1;
-    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .btn-planning.active {

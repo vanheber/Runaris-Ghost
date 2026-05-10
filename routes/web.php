@@ -38,6 +38,7 @@ Route::prefix('projects')->group(function () {
         Route::get('/{project_uuid}/cards/{card_uuid}/suggest', [\App\Http\Controllers\CardController::class, 'suggest']);
         Route::put('/{project_uuid}/cards/{card_uuid}', [\App\Http\Controllers\CardController::class, 'update']);
         Route::patch('/{project_uuid}/cards/{card_uuid}/title', [\App\Http\Controllers\CardController::class, 'updateTitle']);
+        Route::patch('/{project_uuid}/cards/{card_uuid}/type', [\App\Http\Controllers\CardController::class, 'updateType']);
         Route::post('/{project_uuid}/cards/{card_uuid}/image', [\App\Http\Controllers\CardController::class, 'uploadImage']);
         Route::patch('/{project_uuid}/cards/{card_uuid}/image', [\App\Http\Controllers\CardController::class, 'linkImage']);
         Route::delete('/{project_uuid}/cards/{card_uuid}', [\App\Http\Controllers\CardController::class, 'destroy']);

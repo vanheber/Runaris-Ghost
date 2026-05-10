@@ -6,6 +6,7 @@ use App\Models\GalleryItem;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -40,8 +41,13 @@ class GalleryController extends Controller
         $fileName = $baseName . '-' . time() . '.jpg';
         $thumbName = 'thumb-' . $fileName;
 
+        // Ensure the project's assets directory exists using absolute path
+        $assetsDir = $project->getStoragePath('assets');
+        if (!File::exists($assetsDir)) {
+            File::makeDirectory($assetsDir, 0755, true);
+        }
+
         $projectPath = "private/projects/{$project->uuid}/assets";
-        Storage::disk('local')->makeDirectory($projectPath);
 
         // Process Main Image (Standard Amazon KDP Size: 1600x2560 max bounding box)
         $img = $this->imageManager->decode($file->getRealPath());
