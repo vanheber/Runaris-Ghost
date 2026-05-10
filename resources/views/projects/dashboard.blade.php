@@ -24,6 +24,21 @@
         <a id="nav-backup" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openBackup()" title="Backup"><i class="bi bi-shield-check me-1 text-primary"></i> Backup</a>
     </div>
 
+    <style>
+        @keyframes pulse-backup {
+            0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+        }
+        .pulse-warning {
+            animation: pulse-backup 2s infinite;
+            border: 1px solid rgba(255, 193, 7, 0.5) !important;
+            background-color: rgba(255, 193, 7, 0.1) !important;
+            color: #ffc107 !important;
+            z-index: 10;
+        }
+    </style>
+
     <!-- Graph Visualization Lib -->
     <script src="//unpkg.com/force-graph"></script>
     <!-- Layout Principal -->
@@ -277,6 +292,15 @@
                 
                 <!-- Backup Panel -->
                 <div id="backup-container" class="card bg-body-tertiary border-0 shadow-sm p-5 d-none flex-column animate-fade-in mb-4">
+                    <!-- Backup Suggestion Alert -->
+                    <div id="backup-alert" class="alert alert-warning border-0 shadow-sm d-none align-items-center animate-fade-in mb-4 py-3">
+                        <i class="bi bi-shield-exclamation me-3 fs-4"></i>
+                        <div class="flex-grow-1 text-dark">
+                            <strong>Que tal fazer um backup agora?</strong> É importante manter seu trabalho salvo externamente com frequência.
+                        </div>
+                        <button type="button" class="btn-close ms-3" onclick="dismissBackupAlert()"></button>
+                    </div>
+
                     <div class="card border-0 shadow-sm p-4 bg-body mb-4">
                         <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-shield-check me-2"></i> Backup do Projeto</h5>
                         <p class="text-body-secondary">
@@ -2851,6 +2875,77 @@ function createToastContainer() {
     document.body.appendChild(container);
     return container;
 }
+
+// --- Backup Reminder Logic ---
+function checkBackupReminder() {
+    const lastBackup = localStorage.getItem('last_backup_at');
+    const now = new Date().getTime();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+    if (!lastBackup || (now - parseInt(lastBackup)) > sevenDays) {
+        const navBackup = document.getElementById('nav-backup');
+        if (navBackup) navBackup.classList.add('pulse-warning');
+        
+        // Se a aba de backup estiver aberta, mostra o alerta interno também
+        const backupContainer = document.getElementById('backup-container');
+        if (backupContainer && !backupContainer.classList.contains('d-none')) {
+            const backupAlert = document.getElementById('backup-alert');
+            if (backupAlert) {
+                backupAlert.classList.remove('d-none');
+                backupAlert.classList.add('d-flex');
+            }
+        }
+    }
+}
+
+function dismissBackupAlert() {
+    const alert = document.getElementById('backup-alert');
+    if (alert) {
+        alert.classList.add('d-none');
+        alert.classList.remove('d-flex');
+    }
+    // Parar o pulsar da navbar ao fechar o alerta
+    const navBackup = document.getElementById('nav-backup');
+    if (navBackup) navBackup.classList.remove('pulse-warning');
+}
+
+function recordBackup() {
+    localStorage.setItem('last_backup_at', new Date().getTime().toString());
+    const navBackup = document.getElementById('nav-backup');
+    if (navBackup) navBackup.classList.remove('pulse-warning');
+    dismissBackupAlert();
+}
+
+// Chamar verificação ao carregar
+window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(checkBackupReminder, 2000); // Delay suave
+    
+    // Vincular clique de download ao recordBackup
+    // Usamos delegação ou procuramos após carregar
+    document.body.addEventListener('click', (e) => {
+        if (e.target.closest('a[href*="/export/backup"]')) {
+            recordBackup();
+        }
+    });
+});
+
+// Extende a função openBackup existente para mostrar o alerta se necessário
+const originalOpenBackup = window.openBackup;
+window.openBackup = function() {
+    if (typeof originalOpenBackup === 'function') originalOpenBackup();
+    
+    const lastBackup = localStorage.getItem('last_backup_at');
+    const now = new Date().getTime();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+    if (!lastBackup || (now - parseInt(lastBackup)) > sevenDays) {
+        const alert = document.getElementById('backup-alert');
+        if (alert) {
+            alert.classList.remove('d-none');
+            alert.classList.add('d-flex');
+        }
+    }
+};
 </script>
 
 
