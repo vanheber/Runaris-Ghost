@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "build:dist": "./scripts/build-dist.sh"
     },
     "devDependencies": {
         "axios": "^1.11.0",

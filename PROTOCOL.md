@@ -13,7 +13,7 @@ Este documento define o conjunto de diretrizes operacionais e metodológicas par
 | **Backend** | Laravel 12 | Manter aderência aos padrões de Service Layer e Repository Pattern. |
 | **Frontend** | Bootstrap 5.3 (Vanilla) | Uso exclusivo de classes nativas do Bootstrap 5.3. **Tailwind CSS é proibido.** |
 | **Lógica Cliente** | Vanilla JavaScript | Evitar frameworks complexos desnecessários no frontend. A lógica deve ser o mais direta possível. |
-| **Banco de Dados** | SQLite | Configuração otimizada para operação *offline* e baixo consumo de recursos. |
+| **Banco de Dados** | SQLite | Padrão absoluto. O instalador é *hardcoded* para SQLite para garantir instalação zero-config e portabilidade total entre servidores. |
 | **Modelo de Negócio** | Free Code, Paid Convenience | A base de código (o *free*) deve ser robusta, limpa e livre de funcionalidades de rastreamento. A receita deve vir da conveniência paga. |
 
 #### 📐 Regras de Ouro do Frontend (Design System)

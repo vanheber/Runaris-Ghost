@@ -28,10 +28,8 @@ class RequirementsChecker
      * Optional extensions that unlock extra features.
      */
     const OPTIONAL_EXTENSIONS = [
-        'pdo_mysql'  => 'Permite usar MySQL como banco de dados.',
-        'pdo_pgsql'  => 'Permite usar PostgreSQL como banco de dados.',
-        'gd'         => 'Permite manipulação de imagens (capas, galeria).',
-        'zip'        => 'Permite exportação e backup em formato ZIP.',
+        'gd'         => 'Processamento de imagens (necessário para miniaturas da galeria).',
+        'zip'        => 'Exportação e backups em formato ZIP.',
     ];
 
     /**

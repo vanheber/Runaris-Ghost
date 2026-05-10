@@ -52,102 +52,50 @@ class InstallController extends Controller
     }
 
     /**
-     * Step 3: Test database connection.
+     * Step 3: Test database connection (SQLite check).
      */
     public function testDatabase(Request $request)
     {
-        $request->validate([
-            'driver' => 'required|in:sqlite,mysql,pgsql',
-        ]);
-
-        $driver = $request->driver;
-
         try {
-            if ($driver === 'sqlite') {
-                // SQLite just needs a writable database directory
-                $dbDir = database_path();
-                if (!is_writable($dbDir)) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => "O diretório database/ não tem permissão de escrita."
-                    ]);
-                }
-                return response()->json(['status' => true, 'message' => 'SQLite pronto para uso.']);
+            // SQLite just needs a writable database directory
+            $dbDir = database_path();
+            if (!is_writable($dbDir)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "O diretório database/ não tem permissão de escrita. Por favor, ajuste as permissões para continuar."
+                ]);
             }
-
-            // MySQL or PostgreSQL
-            $request->validate([
-                'host'     => 'required|string',
-                'port'     => 'required|numeric',
-                'database' => 'required|string',
-                'username' => 'required|string',
-                'password' => 'nullable|string',
-            ]);
-
-            $config = [
-                'driver'   => $driver,
-                'host'     => $request->host,
-                'port'     => $request->port,
-                'database' => $request->database,
-                'username' => $request->username,
-                'password' => $request->password ?? '',
-                'charset'  => 'utf8mb4',
-                'collation' => 'utf8mb4_unicode_ci',
-                'prefix'   => '',
-            ];
-
-            // Test the connection
-            config(['database.connections._install_test' => $config]);
-            DB::connection('_install_test')->getPdo();
-            DB::disconnect('_install_test');
-
-            return response()->json(['status' => true, 'message' => 'Conexão estabelecida com sucesso!']);
+            return response()->json(['status' => true, 'message' => 'Tudo pronto! O SQLite pode ser inicializado.']);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Falha na conexão: ' . $e->getMessage()
+                'message' => 'Erro ao verificar diretório: ' . $e->getMessage()
             ]);
         }
     }
 
     /**
-     * Step 3b: Configure database and run migrations.
+     * Step 3b: Configure database and run migrations (SQLite only).
      */
     public function configureDatabase(Request $request)
     {
-        $request->validate([
-            'driver' => 'required|in:sqlite,mysql,pgsql',
-        ]);
-
-        $driver = $request->driver;
+        $driver = 'sqlite';
         $envWriter = new EnvWriter();
 
         try {
-            $envValues = ['DB_CONNECTION' => $driver];
-
-            if ($driver === 'sqlite') {
-                $envValues['DB_DATABASE'] = database_path('database.sqlite');
-                
-                // Create the SQLite file if it doesn't exist
-                $dbPath = database_path('database.sqlite');
-                if (!file_exists($dbPath)) {
-                    touch($dbPath);
-                }
-            } else {
-                $request->validate([
-                    'host'     => 'required|string',
-                    'port'     => 'required|numeric',
-                    'database' => 'required|string',
-                    'username' => 'required|string',
-                    'password' => 'nullable|string',
-                ]);
-
-                $envValues['DB_HOST'] = $request->host;
-                $envValues['DB_PORT'] = $request->port;
-                $envValues['DB_DATABASE'] = $request->database;
-                $envValues['DB_USERNAME'] = $request->username;
-                $envValues['DB_PASSWORD'] = $request->password ?? '';
+            $dbPath = database_path('database.sqlite');
+            
+            // Create the SQLite file if it doesn't exist
+            if (!file_exists($dbPath)) {
+                touch($dbPath);
             }
+
+            $envValues = [
+                'DB_CONNECTION' => 'sqlite',
+                'DB_DATABASE'   => $dbPath,
+                'DB_HOST'       => '127.0.0.1',
+                'DB_PORT'       => '3306', // Placeholder for Laravel defaults
+            ];
 
             // Write to .env
             $envWriter->set($envValues);
@@ -156,17 +104,8 @@ class InstallController extends Controller
             Artisan::call('config:clear');
 
             // Re-configure the database connection at runtime
-            if ($driver === 'sqlite') {
-                config(['database.default' => 'sqlite']);
-                config(['database.connections.sqlite.database' => database_path('database.sqlite')]);
-            } else {
-                config(['database.default' => $driver]);
-                config(["database.connections.{$driver}.host" => $request->host]);
-                config(["database.connections.{$driver}.port" => $request->port]);
-                config(["database.connections.{$driver}.database" => $request->database]);
-                config(["database.connections.{$driver}.username" => $request->username]);
-                config(["database.connections.{$driver}.password" => $request->password ?? '']);
-            }
+            config(['database.default' => 'sqlite']);
+            config(['database.connections.sqlite.database' => $dbPath]);
 
             DB::purge();
             DB::reconnect();
@@ -181,13 +120,13 @@ class InstallController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Banco de dados configurado e migrations executadas com sucesso!'
+                'message' => 'Banco de dados SQLite inicializado e pronto!'
             ]);
         } catch (\Exception $e) {
             Log::error("Install - DB Config Error: " . $e->getMessage());
             return response()->json([
                 'status' => false,
-                'message' => 'Erro ao configurar banco: ' . $e->getMessage()
+                'message' => 'Erro ao inicializar SQLite: ' . $e->getMessage()
             ], 500);
         }
     }

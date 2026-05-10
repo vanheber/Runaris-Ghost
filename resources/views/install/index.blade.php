@@ -106,28 +106,30 @@
 
     <!-- STEP 3: Database -->
     <div id="step-3" class="step">
-        <h3 class="fw-bold mb-2">Banco de Dados</h3>
-        <p class="text-secondary mb-4">Escolha e configure a conexão com o banco de dados.</p>
-        <div class="row g-3 mb-4">
-            <div class="col-4"><div class="db-option selected" data-driver="sqlite" onclick="pickDb('sqlite')"><i class="bi bi-file-earmark-text fs-2 d-block mb-2 text-info"></i><span class="fw-bold">SQLite</span><br><small class="text-secondary">Recomendado</small></div></div>
-            <div class="col-4"><div class="db-option" data-driver="mysql" onclick="pickDb('mysql')"><i class="bi bi-database fs-2 d-block mb-2 text-warning"></i><span class="fw-bold">MySQL</span><br><small class="text-secondary">Avançado</small></div></div>
-            <div class="col-4"><div class="db-option" data-driver="pgsql" onclick="pickDb('pgsql')"><i class="bi bi-database-gear fs-2 d-block mb-2 text-primary"></i><span class="fw-bold">PostgreSQL</span><br><small class="text-secondary">Avançado</small></div></div>
+        <div class="text-center mb-4">
+            <i class="bi bi-database-fill-check display-4 text-info d-block mb-3"></i>
+            <h3 class="fw-bold">Banco de Dados</h3>
+            <p class="text-secondary">O Runaris Ghost utiliza <strong>SQLite</strong> para garantir portabilidade e performance.</p>
         </div>
-        <div id="db-fields" class="d-none mb-4">
-            <div class="row g-3">
-                <div class="col-md-8"><input type="text" id="db_host" class="form-control" placeholder="Host (127.0.0.1)" value="127.0.0.1"></div>
-                <div class="col-md-4"><input type="number" id="db_port" class="form-control" placeholder="Porta" value="3306"></div>
-                <div class="col-md-4"><input type="text" id="db_name" class="form-control" placeholder="Nome do banco"></div>
-                <div class="col-md-4"><input type="text" id="db_user" class="form-control" placeholder="Usuário"></div>
-                <div class="col-md-4"><input type="password" id="db_pass" class="form-control" placeholder="Senha"></div>
+        
+        <div class="p-4 rounded-4 bg-info bg-opacity-10 border border-info border-opacity-10 mb-4">
+            <div class="d-flex align-items-start gap-3">
+                <i class="bi bi-info-circle-fill text-info fs-4"></i>
+                <div>
+                    <h6 class="fw-bold mb-1">Por que SQLite?</h6>
+                    <p class="small text-secondary mb-0">Diferente de bancos tradicionais, o SQLite é um arquivo dentro do seu projeto. Isso facilita backups, migrações e garante que o app funcione em qualquer hospedagem sem configurações extras.</p>
+                </div>
             </div>
         </div>
+
         <div id="db-msg" class="d-none alert-box mb-3"></div>
-        <div class="d-flex justify-content-between">
+        
+        <div class="d-flex justify-content-between align-items-center">
             <button class="btn btn-link text-secondary text-decoration-none" onclick="goTo(2)"><i class="bi bi-arrow-left me-1"></i> Voltar</button>
             <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary rounded-3" id="btn-db-test" onclick="testDb()"><i class="bi bi-plug me-1"></i>Testar</button>
-                <button class="btn btn-brand" id="btn-db-save" onclick="configureDb()">Configurar & Migrar</button>
+                <button class="btn btn-brand px-4" id="btn-db-save" onclick="configureDb()">
+                    <i class="bi bi-gear-fill me-2"></i>Inicializar Banco de Dados
+                </button>
             </div>
         </div>
     </div>
@@ -267,49 +269,18 @@ async function validateLicense(){
 }
 
 // --- Step 3: Database ---
-function pickDb(driver){
-    selectedDb=driver;
-    document.querySelectorAll('.db-option').forEach(el=>{el.classList.toggle('selected',el.dataset.driver===driver);});
-    document.getElementById('db-fields').classList.toggle('d-none',driver==='sqlite');
-    if(driver==='pgsql')document.getElementById('db_port').value='5432';
-    else if(driver==='mysql')document.getElementById('db_port').value='3306';
-}
-function getDbPayload(){
-    const p={driver:selectedDb};
-    if(selectedDb!=='sqlite'){
-        p.host=document.getElementById('db_host').value;
-        p.port=document.getElementById('db_port').value;
-        p.database=document.getElementById('db_name').value;
-        p.username=document.getElementById('db_user').value;
-        p.password=document.getElementById('db_pass').value;
-    }
-    return p;
-}
-async function testDb(){
-    const msg=document.getElementById('db-msg');
-    const btn=document.getElementById('btn-db-test');
-    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Testando...';
-    msg.className='d-none';
-    try{
-        const r=await fetch('/install/database/test',{method:'POST',headers:H(),body:JSON.stringify(getDbPayload())});
-        const d=await r.json();
-        msg.className=d.status?'alert-box ok':'alert-box err';
-        msg.textContent=d.message;
-    }catch(e){msg.className='alert-box err';msg.textContent='Erro de conexão.';}
-    finally{btn.disabled=false;btn.innerHTML='<i class="bi bi-plug me-1"></i>Testar';}
-}
 async function configureDb(){
     const msg=document.getElementById('db-msg');
     const btn=document.getElementById('btn-db-save');
-    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Configurando...';
+    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Inicializando Banco...';
     msg.className='d-none';
     try{
-        const r=await fetch('/install/database/configure',{method:'POST',headers:H(),body:JSON.stringify(getDbPayload())});
+        const r=await fetch('/install/database/configure',{method:'POST',headers:H(),body:JSON.stringify({driver:'sqlite'})});
         const d=await r.json();
         if(d.status){goTo(4);}
         else{msg.className='alert-box err';msg.textContent=d.message;}
     }catch(e){msg.className='alert-box err';msg.textContent='Erro ao configurar banco.';}
-    finally{btn.disabled=false;btn.textContent='Configurar & Migrar';}
+    finally{btn.disabled=false;btn.innerHTML='<i class="bi bi-gear-fill me-2"></i>Inicializar Banco de Dados';}
 }
 
 // --- Step 4: Admin ---
