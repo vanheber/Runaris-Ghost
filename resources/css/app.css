@@ -747,7 +747,6 @@ body .node-row:hover .node-actions {
     color: var(--bs-secondary);
     opacity: 0.3;
     font-size: 0.8em;
-    display: none; /* Esconde o texto da imagem no modo literário */
 }
 
 .ghost-image-widget {
@@ -774,13 +773,18 @@ body .node-row:hover .node-actions {
 }
 
 .ghost-image-caption {
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    color: var(--bs-secondary);
-    background: var(--bs-secondary-bg);
-    border-top: 1px solid var(--bs-border-color-translucent);
-    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--bs-body-secondary);
     font-style: italic;
+    border-top: 1px solid rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.ghost-image-widget.swapping {
+    outline: 3px solid var(--bs-primary);
+    box-shadow: 0 0 20px rgba(var(--bs-primary-rgb), 0.5);
+    transform: scale(1.02);
+    z-index: 10;
 }
 
 /* Strong & EM */

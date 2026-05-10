@@ -584,6 +584,7 @@ let bibleSaveTimeout;
 let manuscriptMode = 'writing'; // 'writing' or 'planning'
 let currentGalleryMode = 'card'; // 'card' or 'editor'
 let imageMarkers = [];
+let replacementRange = null; // Para troca de imagens
 let imageRefreshTimeout;
 
 const projectUuid = "{{ $project->uuid }}";
@@ -623,16 +624,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 const btn = btnIcon.parentElement;
                 
                 if (isActive) {
-                    // MODO RAIO-X: Texto Puro
-                    cm.setOption("mode", "null");
+                    // MODO RAIO-X: Texto Puro (Markdown nativo sem overlays)
+                    cm.setOption("mode", "markdown");
                     cm.removeOverlay(literaryOverlay);
                     
                     // Troca Visual do Botão
                     btnIcon.className = "bi bi-pencil-square";
                     btn.title = "Voltar ao Editor Literário";
                     btn.classList.add('active');
+                    
+                    // Limpa imagens fantasma no MD Puro
+                    renderGhostImages();
                 } else {
-                    // MODO LITERÁRIO: Markdown + Overlays
+                    // MODO LITERÁRIO: Markdown + Overlays Customizados
                     cm.setOption("mode", "gfm");
                     cm.addOverlay(literaryOverlay);
                     
@@ -776,13 +780,38 @@ function renderGhostImages() {
         while ((match = regex.exec(line)) !== null) {
             const alt = match[1];
             const urlOrName = match[2];
-            const item = currentGalleryItems.find(i => i.name === urlOrName || i.uuid === urlOrName);
+            
+            // Tenta achar o item na galeria (por nome, UUID ou se a URL contém o UUID)
+            const item = currentGalleryItems.find(i => {
+                if (i.name === urlOrName || i.uuid === urlOrName) return true;
+                if (urlOrName.includes(i.uuid)) return true;
+                return false;
+            });
+
             if (item) {
                 const widget = document.createElement('div');
                 widget.className = 'ghost-image-widget animate-fade-in';
+                widget.title = "Clique para trocar esta imagem";
                 widget.innerHTML = `<img src="/projects/${projectUuid}/gallery/${item.uuid}/image/thumb" alt="${alt}"><div class="ghost-image-caption">${alt || item.name}</div>`;
-                widget.onclick = (e) => { e.stopPropagation(); openGallery(); };
-                imageMarkers.push(cm.markText({line: idx, ch: match.index}, {line: idx, ch: match.index + match[0].length}, {replacedWith: widget, handleMouseEvents: true}));
+                
+                // Lógica de Troca ao Clicar
+                widget.onclick = (e) => {
+                    e.stopPropagation();
+                    const currentPos = marker.find();
+                    if (currentPos) {
+                        replacementRange = { from: currentPos.from, to: currentPos.to };
+                        document.querySelectorAll('.ghost-image-widget').forEach(w => w.classList.remove('swapping'));
+                        widget.classList.add('swapping');
+                        openGalleryPickerForEditor(); // Abre o modal unificado
+                    }
+                };
+
+                const marker = cm.markText(
+                    {line: idx, ch: match.index}, 
+                    {line: idx, ch: match.index + match[0].length}, 
+                    {replacedWith: widget, handleMouseEvents: true, atomic: true}
+                );
+                imageMarkers.push(marker);
             }
         }
     });
@@ -1573,6 +1602,12 @@ async function prepareGalleryPicker(cardUuid) {
 }
 
 async function openGalleryPickerForEditor() {
+    // Se não veio de um clique de substituição, limpa o range
+    const isSwapping = document.querySelector('.ghost-image-widget.swapping');
+    if (!isSwapping) {
+        replacementRange = null;
+    }
+    
     currentGalleryMode = 'editor';
     document.getElementById('gallery-picker-search').value = '';
     
@@ -1639,12 +1674,10 @@ function filterGalleryPicker(query) {
 
 async function selectImageFromPicker(imageUuid, filename) {
     if (currentGalleryMode === 'editor') {
-        const imageMarkdown = `\n\n![Ilustração](/projects/${projectUuid}/gallery/${imageUuid}/image)\n\n`;
-        const cm = easyMDE.codemirror;
-        const cursor = cm.getCursor();
-        cm.replaceRange(imageMarkdown, cursor);
+        const displayName = filename.replace(/\.[^/.]+$/, "");
+        insertImageInEditor(imageUuid, displayName);
         
-        // Fecha o modal via botão de fechar nativo (seguro contra erros de biblioteca)
+        // Fecha o modal
         const modalEl = document.getElementById('galleryPickerModal');
         const closeBtn = modalEl.querySelector('.btn-close');
         if (closeBtn) closeBtn.click();
@@ -1846,12 +1879,14 @@ function renderGallery(items) {
         col.innerHTML = `
             <div class="card h-100 border-0 bg-secondary bg-opacity-10 shadow-sm position-relative group overflow-hidden gallery-card text-start">
                 <span class="badge bg-primary gallery-badge">${extension}</span>
-                <div class="ratio ratio-1x1 position-relative">
+                <div class="ratio ratio-1x1 position-relative cursor-pointer" onclick="insertImageInEditor('${item.uuid}', '${displayName.replace(/'/g, "\\'")}')">
                     <img src="/projects/${projectUuid}/gallery/${item.uuid}/image/thumb" class="card-img-top object-fit-cover" alt="${displayName}">
                     <!-- Overlay de zoom/view -->
-                    <a href="/projects/${projectUuid}/gallery/${item.uuid}/image" target="_blank" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 opacity-0 transition-opacity text-white text-decoration-none gallery-overlay pe-none">
-                        <i class="bi bi-search fs-3"></i>
-                    </a>
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 opacity-0 transition-opacity text-white gallery-overlay">
+                        <a href="/projects/${projectUuid}/gallery/${item.uuid}/image" target="_blank" class="text-white p-2" onclick="event.stopPropagation()">
+                            <i class="bi bi-search fs-3"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body p-2 d-flex justify-content-between align-items-center flex-wrap gap-1">
                     <span class="small text-truncate text-body-secondary fw-bold flex-grow-1 mw-100px" title="${item.name}">${displayName}</span>
@@ -1881,6 +1916,30 @@ function renderGallery(items) {
 
         grid.appendChild(col);
     });
+}
+
+function insertImageInEditor(uuid, displayName) {
+    if (!easyMDE) return;
+    const cm = easyMDE.codemirror;
+    const doc = cm.getDoc();
+    const cursor = doc.getCursor();
+    
+    // URL canônica da imagem no sistema
+    const imageUrl = `/projects/${projectUuid}/gallery/${uuid}/image`;
+    const tag = `![${displayName}](${imageUrl})`;
+    
+    if (replacementRange) {
+        doc.replaceRange(tag, replacementRange.from, replacementRange.to);
+        replacementRange = null;
+        document.querySelectorAll('.ghost-image-widget').forEach(w => w.classList.remove('swapping'));
+    } else {
+        doc.replaceRange(tag, cursor);
+    }
+    
+    cm.focus();
+    
+    // Forçar renderização do Ghost
+    setTimeout(renderGhostImages, 100);
 }
 
 async function uploadImage(input) {

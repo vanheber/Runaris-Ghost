@@ -17,6 +17,11 @@ Este documento define o conjunto de diretrizes operacionais e metodológicas par
 | **Modelo de Negócio** | Free Code, Paid Convenience | A base de código (o *free*) deve ser robusta, limpa e livre de funcionalidades de rastreamento. A receita deve vir da conveniência paga. |
 
 #### 📐 Regras de Ouro do Frontend (Design System)
+*   **Markdown é Sagrado:** Não editar arquivos .md do conteúdo (manuscrito, planejamento, lore), exceto por ordem expressa do usuário. Toda formatação especial (Ghost Formatting) deve ser feita via camada visual (Overlay/Widget) sem alterar a fonte.
+*   **Ghost Formatting (Imagens):** Imagens em Modo Literário são renderizadas como thumbnails interativos (widgets atômicos).
+    *   **Troca Rápida:** Clicar na imagem no editor abre o Modal de Seleção para substituição imediata.
+    *   **Deleção Natural:** Use Backspace/Delete para remover imagens como se fossem caracteres.
+    *   **Raio-X:** O modo Raio-X (Markdown Puro) deve sempre manter as ferramentas de edição (B, I, etc.) ativas.
 *   **Sem Styles Inline:** Proibido o uso do atributo `style` em tags HTML.
 *   **Sem `!important`:** Proibido o uso de `!important` no CSS. Use especificidade.
 *   **Bootstrap First:** Usar estritamente as classes utilitárias nativas do Bootstrap 5.3.

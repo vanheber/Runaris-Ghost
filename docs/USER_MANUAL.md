@@ -18,6 +18,11 @@ O coração do seu livro. Organizado em uma estrutura de árvore:
 *   **Seções**: Servem para agrupar capítulos ou partes do livro.
 *   **Capítulos**: Blocos de narrativa contínua.
 *   **Planejamento**: Cada capítulo possui um modo de "Planejamento" alternável, onde você pode rascunhar cenas antes de escrever a versão final.
+2.1. Modo Literário e Ghost Formatting
+O editor possui uma camada visual inteligente chamada **Ghost Formatting**:
+*   **Imagens Imersivas**: Tags de imagem `![alt](url)` aparecem como miniaturas elegantes no texto.
+*   **Troca Rápida**: Clique em qualquer imagem no editor para abrir a galeria e escolher uma substituta instantaneamente.
+*   **Modo Raio-X**: Precisa ver o código Markdown puro? Use o botão **Markdown (Raio-X)** na barra de ferramentas. Todas as ferramentas de formatação continuam ativas neste modo.
 
 ## 3. Worldbuilding (Construção de Mundo)
 Organize os pilares da sua narrativa através de fichas interativas:
