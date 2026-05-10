@@ -26,14 +26,14 @@
 
     <style>
         @keyframes pulse-backup {
-            0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
+            50% { transform: scale(1.03); box-shadow: 0 0 0 8px rgba(255, 193, 7, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
         }
         .pulse-warning {
-            animation: pulse-backup 2s infinite;
-            border: 1px solid rgba(255, 193, 7, 0.5) !important;
-            background-color: rgba(255, 193, 7, 0.1) !important;
+            animation: pulse-backup 2s infinite ease-in-out;
+            border: 1px solid rgba(255, 193, 7, 0.6) !important;
+            background-color: rgba(255, 193, 7, 0.15) !important;
             color: #ffc107 !important;
             z-index: 10;
         }
