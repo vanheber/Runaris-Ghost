@@ -10,7 +10,9 @@
             <p class="text-body-secondary mb-0">Continue sua jornada literária ou comece uma nova aventura.</p>
         </div>
         <div class="d-none d-md-block">
-            <span class="badge bg-dark border border-secondary text-secondary p-2">Total: {{ $projects->count() }}</span>
+            <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 px-3 py-2">
+                <i class="bi bi-collection me-1"></i> Total: {{ $projects->count() }}
+            </span>
         </div>
     </div>
 
@@ -46,14 +48,14 @@
                         @if($project->cover_image_uuid)
                             <img src="{{ url('/projects/'.$project->uuid.'/gallery/'.$project->cover_image_uuid.'/image/thumb') }}" class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" alt="{{ $project->name }}">
                         @else
-                            <div class="p-2 text-center z-1 w-100 h-100 d-flex flex-column align-items-center justify-content-center cover-placeholder w-100" style="background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), 0.1), rgba(var(--bs-dark-rgb), 0.8));">
+                            <div class="p-2 text-center z-1 w-100 h-100 d-flex flex-column align-items-center justify-content-center cover-placeholder w-100 ambient-bg">
                                 <i class="bi bi-file-earmark-image fs-1 opacity-50 mb-2"></i>
-                                <span class="x-small text-body-secondary fw-bold d-block mb-3" style="font-size: 0.65rem;">1600x2560</span>
+                                <span class="small text-body-secondary fw-bold d-block mb-3 fs-9">1600x2560</span>
                                 <div class="d-flex gap-2 z-2" onclick="event.preventDefault(); event.stopPropagation();">
-                                    <button class="btn btn-ghost-card" style="width: 42px; height: 42px;" title="Selecionar da Galeria" onclick="openGalleryForCover('{{ $project->uuid }}')">
-                                        <i class="bi bi-images fs-5"></i>
+                                    <button class="btn btn-ghost-card btn-icon-round" title="Selecionar da Galeria" onclick="openGalleryForCover('{{ $project->uuid }}')">
+                                        <i class="bi bi-images"></i>
                                     </button>
-                                    <button class="btn btn-ghost-card" style="width: 42px; height: 42px;" title="Upload Nova Capa" onclick="openCoverModal('{{ $project->uuid }}')">
+                                    <button class="btn btn-ghost-card btn-icon-round" title="Upload Nova Capa" onclick="openCoverModal('{{ $project->uuid }}')">
                                         <i class="bi bi-upload fs-5"></i>
                                     </button>
                                 </div>
@@ -71,7 +73,7 @@
                                         <i class="bi bi-trash fs-5"></i>
                                     </button>
                                 </div>
-                                <span class="badge bg-secondary bg-opacity-10 text-body-secondary border border-secondary border-opacity-25 align-self-start mb-3" style="font-size: 0.7rem;">
+                                <span class="badge bg-secondary bg-opacity-10 text-body-secondary border border-secondary border-opacity-25 align-self-start mb-3 fs-11">
                                     <i class="bi bi-clock me-1"></i> Acesso: {{ $project->last_opened_at ? $project->last_opened_at->diffForHumans(null, true) : 'Never' }}
                                 </span>
                                 
@@ -101,7 +103,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4 text-center">
-                    <input type="file" id="coverUploadInput" style="display:none;" accept="image/*" onchange="handleCoverUpload(this)">
+                    <input type="file" id="coverUploadInput" class="d-none" accept="image/*" onchange="handleCoverUpload(this)">
                     <div id="coverLoading" class="d-none my-4"><div class="spinner-border text-primary"></div><p class="mt-3 text-body-secondary small fw-bold">Processando imagem em alta qualidade (1600x2560)...</p></div>
                     <div id="coverOptions">
                         <p class="text-body-secondary mb-4">O formato nativo da Amazon KDP possui largura de 1600px e altura de 2560px. Qualquer imagem enviada aqui será automaticamente redimensionada a esses limites e salva em formato JPG para otimizar os bytes da sua exportação EPUB e PDF.</p>
@@ -189,8 +191,8 @@
             
             grid.innerHTML = items.map(item => `
                 <div class="col-4 mb-3">
-                    <div class="ratio ratio-1x1 cp overflow-hidden rounded border border-primary border-opacity-25" style="box-shadow: 0 4px 6px rgba(0,0,0,0.1);" onclick="selectCoverFromGallery('${item.uuid}')">
-                        <img src="/projects/${uuid}/gallery/${item.uuid}/image/thumb" class="object-fit-cover w-100 h-100 d-block" style="transition: transform 0.2s; cursor: pointer;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                    <div class="ratio ratio-1x1 cp overflow-hidden rounded border border-primary border-opacity-25 shadow-sm" onclick="selectCoverFromGallery('${item.uuid}')">
+                        <img src="/projects/${uuid}/gallery/${item.uuid}/image/thumb" class="object-fit-cover w-100 h-100 d-block transition-all cp" onmouseover="this.classList.add('scale-110')" onmouseout="this.classList.remove('scale-110')">
                     </div>
                 </div>
             `).join('');

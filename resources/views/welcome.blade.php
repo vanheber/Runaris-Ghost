@@ -14,19 +14,19 @@
 </head>
 <body class="bg-dark text-light d-flex align-items-center justify-content-center vh-100 overflow-hidden" data-bs-theme="dark">
     <div class="ambient-bg animate-ambient"></div>
-    <div class="animate-float" style="position: absolute; font-size: 12rem; opacity: 0.03; z-index: -1; right: 15%; top: 10%;">
+    <div class="animate-float position-absolute fs-12rem opacity-03 z-n1 right-15 top-10">
         <i class="bi bi-ghost"></i>
     </div>
 
-    <div class="container" style="max-width: 420px; z-index: 10;">
+    <div class="container mw-420px z-3">
         <div class="text-center mb-5">
-            <h1 class="display-1 fw-bold mb-0" style="background: linear-gradient(135deg, var(--bs-primary), #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <h1 class="display-1 fw-bold mb-0 text-gradient-ghost">
                 <i class="bi bi-ghost text-primary-emphasis"></i> Runaris
             </h1>
             <p class="text-secondary small fw-bold tracking-widest mt-2">PLATAFORMA DE ESCRITA DE FICÇÃO</p>
         </div>
 
-        <div class="card bg-body-tertiary border-0 shadow-lg p-4" style="border-radius: 20px; backdrop-filter: blur(20px); background: rgba(var(--bs-tertiary-bg-rgb), 0.7) !important;">
+        <div class="card bg-body-tertiary border-0 shadow-lg p-4 rounded-20 backdrop-blur-20">
             <div class="mb-4">
                 <label class="form-label text-body-secondary small fw-bold text-uppercase mb-2">E-mail de Autor</label>
                 <input type="text" class="form-control" value="admin@runaris.com" readonly>

@@ -18,25 +18,30 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/icon.png') }}">
     
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="antialiased d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg border-bottom sticky-top py-2 bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg border-bottom sticky-top py-0 bg-body-tertiary navbar-custom">
         <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center" href="{{ url('/projects') }}">
-                <img src="{{ Vite::asset('resources/assets/images/logo-ghost-color.png') }}" alt="Runaris Ghost" class="logo-light navbar-logo">
-                <img src="{{ Vite::asset('resources/assets/images/logo-ghost-inverted.png') }}" alt="Runaris Ghost" class="logo-dark navbar-logo">
+            <a class="navbar-brand d-flex align-items-center py-0" href="{{ url('/projects') }}" title="Projetos">
+                <img src="{{ asset('assets/images/lg-ghost-hz-color.svg') }}" class="logo-light" alt="Runaris Ghost">
+                <img src="{{ asset('assets/images/lg-ghost-hz-color-inverted.svg') }}" class="logo-dark" alt="Runaris Ghost">
+                @yield('project-header-title')
             </a>
             
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <i class="bi bi-list text-primary fs-2"></i>
+            <button class="navbar-toggler border-0 py-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bi bi-list text-primary fs-4"></i>
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
+                @yield('project-nav')
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
                         <a class="nav-link px-2 {{ Request::is('projects') ? 'active' : '' }}" href="{{ url('/projects') }}">Projetos</a>
@@ -77,17 +82,13 @@
         @yield('content')
     </main>
 
-    <footer class="py-2 bg-body-tertiary border-top mt-auto">
+    <footer class="py-2 bg-body-tertiary border-top mt-auto sticky-bottom">
         <div class="container-fluid px-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <div class="col-md-4 d-flex align-items-center">
                     <span class="text-body-secondary small me-3">
                         &copy; {{ date('Y') }} Runaris Ghost. | <a href="{{ url('/eula') }}" class="text-body-secondary text-decoration-none small opacity-75 hover-opacity-100">Termos e Licença</a>
                     </span>
-                    <a href="https://runaris.com.br" target="_blank" class="opacity-50 hover-opacity-100">
-                        <img src="{{ Vite::asset('resources/assets/images/lg-runaris-hz.svg') }}" alt="Desenvolvido por Runaris" class="logo-light" style="height: 15px;">
-                        <img src="{{ Vite::asset('resources/assets/images/lg-runaris-hz-inverted.svg') }}" alt="Desenvolvido por Runaris" class="logo-dark" style="height: 15px;">
-                    </a>
                 </div>
                 
                 <div class="col-md-4 d-flex justify-content-center">
@@ -95,8 +96,6 @@
                 </div>
 
                 <ul class="nav col-md-4 justify-content-end list-unstyled d-flex mb-0">
-                    <li class="ms-3"><a class="text-body-secondary lh-1" href="#"><i class="bi bi-github"></i></a></li>
-                    <li class="ms-3"><a class="text-body-secondary lh-1" href="#"><i class="bi bi-discord"></i></a></li>
                     <li class="ms-3">
                         <a class="text-body-secondary lh-1" href="{{ url('/settings') }}" title="Configurações do Sistema">
                             <i class="bi bi-gear-fill"></i>
@@ -174,9 +173,12 @@
         [data-bs-theme="solar-light"] .logo-dark { display: none; }
         
         .logo-light, .logo-dark {
+            max-height: 40px;
+            width: auto;
             object-fit: contain;
             transition: opacity 0.3s ease;
         }
     </style>
+
 </body>
 </html>

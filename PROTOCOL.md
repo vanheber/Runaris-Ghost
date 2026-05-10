@@ -42,8 +42,9 @@ Todo ciclo de desenvolvimento deve seguir um fluxo rigoroso para garantir a qual
 Este é o princípio operacional mais importante. O código deve ser auditável, transparente e blindado contra qualquer forma de invasão de privacidade.
 
 1.  **Política de Zero Telemetria:** É terminantemente proibido incluir quaisquer vetores de rastreamento, logs de usuário não essenciais, ou chamadas de API externas que não sejam estritamente necessárias para a funcionalidade paga.
-2.  **Dados:** Tratar todos os dados do usuário como **confidenciais**. O armazenamento e processamento devem respeitar a arquitetura SQLite local ou o padrão de anonimização máxima.
-3.  **Resposta de Bugs/Debug:** Em caso de falhas de sintaxe ou problemas de formatação simples (e.g., *boilerplate*, ajustes Bootstrap), delegar a correção inicial e o resumo do erro ao **Gemma Local** (ou LLM de borda). Isso economiza recursos de token de comunicação e mantém o foco na lógica de negócio.
+2.  **Integridade de Conteúdo**: É estritamente proibido editar o conteúdo dos arquivos `.md` do manuscrito/lore através de automação ou scripts, exceto por ordem expressa do usuário. Toda formatação visual deve ser feita via CSS/JS no editor (Ghost Formatting).
+3.  **Dados:** Tratar todos os dados do usuário como **confidenciais**. O armazenamento e processamento devem respeitar a arquitetura SQLite local ou o padrão de anonimização máxima.
+4.  **Resposta de Bugs/Debug:** Em caso de falhas de sintaxe ou problemas de formatação simples (e.g., *boilerplate*, ajustes Bootstrap), delegar a correção inicial e o resumo do erro ao **Gemma Local** (ou LLM de borda). Isso economiza recursos de token de comunicação e mantém o foco na lógica de negócio.
 
 ### 📐 Orquestração Metodológica MCP
 

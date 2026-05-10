@@ -20,7 +20,7 @@
             @endif
 
             <div class="card bg-body-tertiary border-0 shadow-sm p-4 pt-5 mb-4 position-relative">
-                <div class="position-absolute top-0 start-0 w-100 h-2 bg-primary opacity-50 rounded-top" style="height: 4px;"></div>
+                <div class="position-absolute top-0 start-0 w-100 h-2 bg-primary opacity-50 rounded-top h-4px"></div>
                 
                 <form action="{{ url('/projects/'.$project->uuid) }}" method="POST">
                     @csrf

@@ -8,16 +8,22 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-.vh-workspace {
-    height: calc(100vh - 145px);
+main {
+    margin-bottom: 20px;
 }
 
-.navbar-brand .navbar-logo {
-    width: 160px;
-    height: auto;
+.navbar-brand .logo-light,
+.navbar-brand .logo-dark {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
 }
 
 /* Theme-based Logo Visibility */
+.logo-light {
+    display: block;
+}
+
 .logo-dark {
     display: none;
 }
@@ -40,14 +46,64 @@ body {
 
 /* Layout Z-Indexing */
 .navbar {
-    z-index: 1030;
+    z-index: 10001;
     /* Header mais alto */
 }
 
 footer {
-    position: relative;
-    z-index: 1029;
+    z-index: 10000;
     /* Um a menos que o header */
+}
+
+/* Sticky Layout System */
+.world-navbar-sticky {
+    position: sticky;
+    top: 50px;
+    /* Alinhado à base do header de 50px */
+    z-index: 9999;
+    background-color: var(--bs-body-bg);
+    height: 50px;
+    /* Altura fixa para consistência de offset */
+    display: flex;
+    align-items: center;
+    border-radius: 0px 0px 10px 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+    padding: 5px;
+}
+
+.sidebar-sticky {
+    position: sticky;
+    top: 120px;
+    /* Header (50px) + World Nav (50px) + mt-1 (4px) + pt-3 (16px) = 120px */
+    z-index: 9998;
+    align-self: flex-start;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+body .sidebar-sticky.collapsed {
+    padding: 0;
+    overflow: visible;
+}
+
+.sidebar-sticky.collapsed .sidebar-content {
+    display: none;
+}
+
+body #left-sidebar,
+body #right-panel {
+    top: 120px;
+    /* Força paridade absoluta entre as sidebars */
+}
+
+.main-layout-spacing {
+    margin-top: 20px;
+}
+
+body .center-editor-fluid {
+    min-height: 100vh;
+    flex-grow: 1;
 }
 
 /* Custom Portrait Ratios for Project Covers */
@@ -67,8 +123,90 @@ footer {
     cursor: pointer;
 }
 
-.cp-title:hover {
-    color: var(--bs-primary) !important;
+/* UI Utilities - Replacing Inline Styles */
+.navbar-custom {
+    height: 50px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.footer-runaris-logo {
+    height: 15px;
+    width: auto;
+}
+
+.min-h-700 {
+    min-height: 700px;
+}
+
+.min-h-50vh {
+    min-height: 50vh;
+}
+
+.fs-7 {
+    font-size: 0.85rem;
+}
+
+.fs-8 {
+    font-size: 0.8rem;
+}
+
+.fs-9 {
+    font-size: 0.65rem;
+}
+
+.fs-10 {
+    font-size: 0.75rem;
+}
+
+.lh-1-4 {
+    line-height: 1.4;
+}
+
+.mw-100px {
+    max-width: 100px;
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+body .cp-title:hover {
+    color: var(--bs-primary);
+}
+
+.text-gradient-ghost {
+    background: linear-gradient(135deg, var(--bs-primary), #d946ef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.rounded-20 {
+    border-radius: 20px;
+}
+
+.backdrop-blur-20 {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(var(--bs-tertiary-bg-rgb), 0.7);
+}
+
+.fs-12rem {
+    font-size: 12rem;
+}
+
+.opacity-03 {
+    opacity: 0.03;
+}
+
+.right-15 {
+    right: 15%;
+}
+
+.top-10 {
+    top: 10%;
 }
 
 /* 2. Ghost Interactive Elements */
@@ -101,6 +239,15 @@ footer {
 .toggle-btn-right {
     top: 12px;
     left: 12px;
+    /* Lado oposto para o painel da direita */
+}
+
+.scale-110 {
+    transform: scale(1.1);
+}
+
+.transition-all {
+    transition: all 0.2s ease-in-out;
 }
 
 /* Primary Button Customization */
@@ -169,27 +316,38 @@ footer {
 
 /* 5. EasyMDE Theme Integrations */
 .EasyMDEContainer .CodeMirror {
-    background: var(--bs-tertiary-bg) !important;
-    color: var(--bs-body-color) !important;
-    border-color: var(--bs-border-color) !important;
-    border-radius: 8px !important;
+    background: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+    border-radius: 8px;
     font-size: 1.1rem;
     padding: 10px;
+    height: auto;
+    min-height: 400px;
 }
 
-.editor-toolbar {
-    background: var(--bs-tertiary-bg) !important;
-    border-color: var(--bs-border-color) !important;
+.EasyMDEContainer .editor-toolbar {
+    background: var(--bs-tertiary-bg);
+    border-color: var(--bs-border-color);
     border-radius: 8px 8px 0 0;
+    position: sticky;
+    top: 120px;
+    z-index: 1000;
+    border-bottom: 1px solid var(--bs-border-color);
 }
 
-.editor-toolbar button {
-    color: var(--bs-body-color) !important;
+body .EasyMDEContainer {
+    border: none;
+    overflow: visible;
 }
 
-.editor-toolbar button.active,
-.editor-toolbar button:hover {
-    background: rgba(var(--bs-primary-rgb), 0.1) !important;
+.EasyMDEContainer .editor-toolbar button {
+    color: var(--bs-body-color);
+}
+
+.EasyMDEContainer .editor-toolbar button.active,
+.EasyMDEContainer .editor-toolbar button:hover {
+    background: rgba(var(--bs-primary-rgb), 0.1);
 }
 
 /* 6. Animations (Ambient & UI) */
@@ -239,7 +397,7 @@ footer {
 }
 
 .ambient-bg {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -251,13 +409,14 @@ footer {
 
 /* 7. Utility Overrides */
 .split-pane {
-    height: 100%;
+    height: auto;
     transition: width 0.3s ease;
 }
 
 .sidebar-content {
     opacity: 1;
     transition: opacity 0.2s;
+    padding-right: 20px;
 }
 
 .collapsed .sidebar-content {
@@ -265,13 +424,30 @@ footer {
     pointer-events: none;
 }
 
-.node-row:hover {
-    background: rgba(var(--bs-primary-rgb), 0.05) !important;
+body .node-row:hover {
+    background: rgba(var(--bs-primary-rgb), 0.05);
     cursor: pointer;
 }
 
-.node-row:hover .node-actions {
-    display: flex !important;
+#center-editor,
+#editor-container {
+    overflow: visible;
+}
+
+.node-row.active {
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    border-left: 3px solid var(--bs-primary);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.node-row.active .node-title {
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+
+body .node-row:hover .node-actions {
+    display: flex;
 }
 
 /* 8. Theme Overrides (Place last for maximum specificity) */
@@ -439,12 +615,14 @@ footer {
 .custom-editor-area {
     border: 1px solid rgba(var(--bs-primary-rgb), 0.1);
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible;
+    /* Necessário para o sticky toolbar */
 }
 
 #bible-container .CodeMirror {
-    height: calc(100vh - 350px);
-    min-height: 450px;
+    height: auto;
+    min-height: 200px;
+    /* Mantém um mínimo apenas para não colapsar vazio */
     font-size: 0.95rem;
     line-height: 1.6;
     background: var(--bs-body-bg);
@@ -472,4 +650,240 @@ footer {
     z-index: 10000;
     max-height: 200px;
     overflow-y: auto;
+}
+
+/* 
+==========================================================================
+   IMMERSIVE LITERARY EDITOR (EasyMDE/CodeMirror)
+========================================================================== 
+*/
+
+.EasyMDEContainer .CodeMirror {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--bs-body-color);
+    padding: 20px 40px;
+    background: transparent;
+}
+
+/* Base formatting symbols (Total Ghost mode with Space Collapse) */
+.cm-formatting {
+    font-size: 0;
+    letter-spacing: -1ch;
+    opacity: 0;
+    display: inline-block;
+    /* Essential for width/font-size to work well */
+    transition: all 0.1s ease-in-out;
+}
+
+/* Reveal and Expand on current line focus */
+.EasyMDEContainer .CodeMirror .CodeMirror-activeline .cm-formatting {
+    font-size: inherit;
+    letter-spacing: normal;
+    opacity: 0.8;
+    width: auto;
+}
+
+/* Headers Hierarchy */
+.EasyMDEContainer .CodeMirror .cm-header {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    color: var(--bs-primary);
+    line-height: 1.3;
+}
+
+.EasyMDEContainer .CodeMirror .cm-header-1 {
+    font-size: 2.2rem;
+    border-bottom: 1px solid rgba(var(--bs-primary-rgb), 0.1);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.EasyMDEContainer .CodeMirror .cm-header-2 {
+    font-size: 1.8rem;
+    margin-top: 20px;
+}
+
+.EasyMDEContainer .CodeMirror .cm-header-3 {
+    font-size: 1.5rem;
+    color: var(--bs-body-color);
+}
+
+.EasyMDEContainer .CodeMirror .cm-header-4 {
+    font-size: 1.3rem;
+    color: var(--bs-secondary);
+}
+
+.EasyMDEContainer .CodeMirror .cm-header-5,
+.EasyMDEContainer .CodeMirror .cm-header-6 {
+    font-size: 1.1rem;
+    color: var(--bs-secondary);
+    font-style: italic;
+}
+
+/* Quote Styling (Literary) */
+.EasyMDEContainer .CodeMirror .cm-quote {
+    font-style: italic;
+    background: rgba(var(--bs-primary-rgb), 0.03);
+    border-left: 3px solid var(--bs-primary);
+    padding: 5px 15px;
+    margin-left: -10px;
+    display: inline-block;
+    width: 100%;
+}
+
+/* Hide the > symbol in literary mode */
+.EasyMDEContainer:not(.pure-md-mode) .CodeMirror .cm-formatting-quote {
+    color: transparent !important; /* Mantido fallback se necessário, mas buscando remover !important no futuro se possível */
+    display: inline-block;
+    width: 0;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+/* Ghost Formatting: Imagens */
+.EasyMDEContainer:not(.pure-md-mode) .CodeMirror .cm-ghost-image {
+    color: var(--bs-secondary);
+    opacity: 0.3;
+    font-size: 0.8em;
+    display: none; /* Esconde o texto da imagem no modo literário */
+}
+
+.ghost-image-widget {
+    display: block;
+    margin: 1rem 0;
+    max-width: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 2px solid var(--bs-primary-border-subtle);
+    background: var(--bs-body-bg);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.ghost-image-widget:hover {
+    transform: scale(1.02);
+}
+
+.ghost-image-widget img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.ghost-image-caption {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    color: var(--bs-secondary);
+    background: var(--bs-secondary-bg);
+    border-top: 1px solid var(--bs-border-color-translucent);
+    text-align: center;
+    font-style: italic;
+}
+
+/* Strong & EM */
+.EasyMDEContainer .CodeMirror .cm-strong {
+    font-weight: 700;
+    color: var(--bs-emphasis-color);
+}
+
+.EasyMDEContainer .CodeMirror .cm-em {
+    font-style: italic;
+}
+
+/* Dash (Virtual Em Dash) - Ghost Formatting */
+.EasyMDEContainer:not(.pure-md-mode) .CodeMirror .cm-travessao {
+    position: relative;
+    color: transparent;
+    /* Esconde o -- original do arquivo */
+    display: inline;
+}
+
+.EasyMDEContainer:not(.pure-md-mode) .CodeMirror .cm-travessao::after {
+    content: "—";
+    /* Mostra visualmente o travessão real da fonte */
+    position: absolute;
+    left: 0;
+    top: -2px;
+    color: var(--bs-body-color);
+    visibility: visible;
+    pointer-events: none;
+    font-family: inherit;
+}
+
+/* Scene Divider (Literary) - Atomic Approach */
+.EasyMDEContainer:not(.pure-md-mode) .CodeMirror .cm-divisao-cena {
+    color: transparent;
+    display: block;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    margin: 2em 0;
+}
+
+/* Hide all other tokens in the same line to ensure one single visual element */
+.EasyMDEContainer:not(.pure-md-mode) .CodeMirror .cm-divisao-cena~span {
+    display: none;
+}
+
+.EasyMDEContainer:not(.pure-md-mode) .CodeMirror .cm-divisao-cena::after {
+    content: "———————— • -*- • ————————";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    color: var(--bs-secondary);
+    opacity: 0.6;
+    font-family: var(--bs-font-monospace);
+    letter-spacing: 3px;
+    visibility: visible;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* Fix active line background */
+.EasyMDEContainer .CodeMirror .CodeMirror-activeline-background {
+    background: rgba(var(--bs-primary-rgb), 0.03);
+}
+
+/* Pure MD Mode (X-Ray) - True Raw Text */
+.EasyMDEContainer.pure-md-mode {
+    background-color: #f8f9fa;
+}
+
+/* Desativa todos os botões da toolbar EXCETO o de alternar modo */
+.pure-md-mode .editor-toolbar button:not(.bi-markdown):not(.bi-pencil-square) {
+    opacity: 0.3;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+.EasyMDEContainer.pure-md-mode .CodeMirror {
+    background-color: #f8f9fa;
+}
+
+.EasyMDEContainer.pure-md-mode .CodeMirror-line {
+    font-family: var(--bs-font-monospace);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+}
+
+.EasyMDEContainer.pure-md-mode .CodeMirror-line span {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    text-decoration: none;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.text-author-meta {
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
 }

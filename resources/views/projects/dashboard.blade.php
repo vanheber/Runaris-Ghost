@@ -1,53 +1,40 @@
 @extends('layouts.app')
 
 @section('title', $project->name . ' - Workspace')
+@section('project-header-title')
+    <span class="ms-2 ps-2 border-start border-secondary border-opacity-25 small text-body-secondary fw-medium d-none d-md-inline text-author-meta">
+        {{ strtoupper($project->name) }}
+    </span>
+@endsection
 
 @section('content')
 
 
-<div class="container-fluid px-4 mt-2">
+<div class="container-fluid px-4">
+    <!-- Secondary Navbar for Worldbuilding -->
+    <div class="d-flex align-items-center gap-2 border-bottom border-secondary border-opacity-10 world-navbar overflow-x-auto text-nowrap scroll-custom world-navbar-sticky">
+        <a id="nav-scenario" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('scenario')" title="Geografia"><i class="bi bi-geo-alt me-1 text-primary"></i> Geografia</a>
+        <a id="nav-character" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('character')" title="Personagens"><i class="bi bi-people me-1 text-primary"></i> Personagens</a>
+        <a id="nav-lore" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('lore')" title="Lore"><i class="bi bi-mortarboard me-1 text-primary"></i> Lore</a>
+        <a id="nav-object" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('object')" title="Objetos"><i class="bi bi-gem me-1 text-primary"></i> Objetos</a>
+        <a id="nav-gallery" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openGallery()" title="Galeria"><i class="bi bi-images me-1 text-primary"></i> Galeria</a>
+        <a id="nav-connections" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openGraph()" title="Conexões"><i class="bi bi-diagram-3 me-1 text-primary"></i> Conexões</a>
+        <a id="nav-bible" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openBible()" title="Bíblia"><i class="bi bi-book me-1 text-primary"></i> Bíblia</a>
+        <a id="nav-export" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openExport()" title="Exportar"><i class="bi bi-cloud-download me-1 text-primary"></i> Exportar</a>
+    </div>
+
     <!-- Graph Visualization Lib -->
     <script src="//unpkg.com/force-graph"></script>
     <!-- Layout Principal -->
-    <div id="main-layout" class="d-row d-flex vh-workspace mt-1">
+    <div id="main-layout" class="d-flex align-items-start main-layout-spacing">
         
         <!-- Sidebar Esquerda -->
-        <div id="left-sidebar" class="split-pane card bg-body-tertiary border-0 shadow-sm p-4 pt-5 position-relative">
+        <div id="left-sidebar" class="split-pane card bg-body-tertiary border-0 shadow-sm p-4 sidebar-sticky">
             <button id="left-sidebar-toggle" class="btn-ghost-card position-absolute toggle-btn-left" onclick="toggleSidebar('left')" title="Navegação">
                 <i class="bi bi-layout-sidebar-inset"></i>
             </button>
 
-            <div class="sidebar-content mt-4 overflow-auto scroll-custom h-100">
-                <h6 class="text-body-secondary small text-uppercase fw-bold mb-4 ls-wide">Worldbuilding</h6>
-                
-                <div class="world-grid mb-4">
-                    <a id="nav-scenario" class="world-grid-btn nav-world" href="#" onclick="loadCards('scenario')" title="Geografia">
-                        <i class="bi bi-geo-alt"></i> Geografia
-                    </a>
-                    <a id="nav-character" class="world-grid-btn nav-world" href="#" onclick="loadCards('character')" title="Personagens">
-                        <i class="bi bi-people"></i> Personagens
-                    </a>
-                    <a id="nav-lore" class="world-grid-btn nav-world" href="#" onclick="loadCards('lore')" title="Lore">
-                        <i class="bi bi-mortarboard"></i> Lore
-                    </a>
-                    <a id="nav-object" class="world-grid-btn nav-world" href="#" onclick="loadCards('object')" title="Objetos">
-                        <i class="bi bi-gem"></i> Objetos
-                    </a>
-                    <a id="nav-gallery" class="world-grid-btn nav-world" href="#" onclick="openGallery()" title="Galeria">
-                        <i class="bi bi-images"></i> Galeria
-                    </a>
-                    <a id="nav-connections" class="world-grid-btn nav-world" href="#" onclick="openGraph()" title="Conexões">
-                        <i class="bi bi-diagram-3"></i> Conexões
-                    </a>
-                    <a id="nav-bible" class="world-grid-btn nav-world" href="#" onclick="openBible()" title="Bíblia">
-                        <i class="bi bi-book"></i> Bíblia
-                    </a>
-                    <a id="nav-export" class="world-grid-btn nav-world" href="#" onclick="openExport()" title="Exportar">
-                        <i class="bi bi-cloud-download"></i> Exportar
-                    </a>
-                </div>
-
-                <hr class="border-secondary opacity-25 my-4">
+            <div class="sidebar-content mt-4 overflow-y-auto scroll-custom">
 
                 <!-- Sessão: Escrita -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -68,9 +55,9 @@
         </div>
 
         <!-- Coluna Central (Editor) -->
-        <div id="center-editor" class="split-pane p-0">
-            <div id="editor-wrapper" class="h-100 p-0 mx-1">
-                <div id="editor-container" class="card bg-body-tertiary border-0 shadow-sm p-4 h-100 d-none overflow-hidden d-flex flex-column">
+        <div id="center-editor" class="split-pane p-0 center-editor-fluid">
+            <div id="editor-wrapper" class="p-0 mx-1">
+                <div id="editor-container" class="card bg-body-tertiary border-0 shadow-sm p-4 d-none flex-column mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3 flex-shrink-0">
                         <div class="d-flex align-items-center">
                             <span id="editor-type-icon" class="me-2 text-primary"></span>
@@ -96,7 +83,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex-grow-1 overflow-auto custom-editor-area">
+                    <div class="flex-grow-1 custom-editor-area">
                         <textarea id="markdown-editor"></textarea>
                     </div>
 
@@ -130,7 +117,7 @@
                 </div>
 
                 <!-- Bible View -->
-                <div id="bible-container" class="card bg-body-tertiary border-0 shadow-sm p-4 h-100 d-none overflow-hidden d-flex flex-column">
+                <div id="bible-container" class="card bg-body-tertiary border-0 shadow-sm p-4 d-none flex-column mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-book me-2 text-primary fs-4"></i>
@@ -146,14 +133,14 @@
                         </div>
                     </div>
 
-                    <div class="flex-grow-1 overflow-hidden d-flex flex-column">
+                    <div class="d-flex flex-column">
                         <!-- Seção Única: Resumo (IA) -->
-                        <div class="d-flex flex-column h-100">
+                        <div class="d-flex flex-column">
                             <h6 class="text-accent small text-uppercase fw-bold mb-3 ls-wide d-flex align-items-center">
                                 <i class="bi bi-stars me-2"></i> Resumo Narrativo & Cronologia 
                                 <span class="badge bg-secondary bg-opacity-10 text-body-secondary fw-normal ms-2 fs-xs">IA RECAP</span>
                             </h6>
-                            <div class="flex-grow-1 overflow-hidden border border-secondary border-opacity-10 rounded shadow-sm bg-body custom-editor-area">
+                            <div class="border border-secondary border-opacity-10 rounded shadow-sm bg-body custom-editor-area">
                                 <textarea id="bible-summary-editor"></textarea>
                             </div>
                             
@@ -166,7 +153,7 @@
                 </div>
 
                 <!-- Export Panel -->
-                <div id="export-container" class="card bg-body-tertiary border-0 shadow-sm p-5 h-100 d-none overflow-auto d-flex flex-column animate-fade-in">
+                <div id="export-container" class="card bg-body-tertiary border-0 shadow-sm p-5 d-none flex-column animate-fade-in mb-4">
                     <!-- Project Cover Management -->
                     <div class="card border-0 shadow-sm p-4 bg-body mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -287,7 +274,7 @@
                     </div>
                 </div>
 
-                <div id="graph-container" class="card bg-body-tertiary border-0 shadow-sm h-100 d-none overflow-hidden position-relative">
+                <div id="graph-container" class="card bg-body-tertiary border-0 shadow-sm d-none overflow-hidden position-relative mb-4 min-h-700">
                     <div id="graph-view" class="w-100 h-100"></div>
                     <div class="position-absolute top-0 end-0 p-3 z-2">
                         <button class="btn btn-sm btn-ghost-card backdrop-blur" onclick="loadGraphData(true)" title="Atualizar Grafo">
@@ -302,7 +289,7 @@
                     </div>
                 </div>
 
-                <div id="empty-state" class="card bg-body-tertiary border-0 shadow-sm p-5 h-100 d-flex flex-column align-items-center justify-content-center text-center">
+                <div id="empty-state" class="card bg-body-tertiary border-0 shadow-sm p-5 d-flex flex-column align-items-center justify-content-center text-center mb-4 min-h-50vh">
                     <div class="opacity-10 mb-4">
                         <i id="empty-icon" class="bi bi-feather display-1"></i>
                     </div>
@@ -318,7 +305,7 @@
                 </div>
 
                 <!-- Grid de Fichas (Worldbuilding) -->
-                <div id="cards-grid-container" class="card bg-body-tertiary border-0 shadow-sm p-4 h-100 d-none overflow-hidden d-flex flex-column">
+                <div id="cards-grid-container" class="card bg-body-tertiary border-0 shadow-sm p-4 d-none flex-column mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
                         <div class="d-flex align-items-center">
                             <i id="cards-grid-icon" class="bi bi-people me-2 text-primary fs-4"></i>
@@ -340,7 +327,7 @@
                         </div>
                     </div>
                     
-                    <div class="flex-grow-1 overflow-auto scroll-custom">
+                    <div class="flex-grow-1 overflow-y-auto overflow-x-hidden scroll-custom">
                         <div id="cards-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
                             <!-- Fichas serão carregadas aqui -->
                         </div>
@@ -348,7 +335,7 @@
                 </div>
 
                 <!-- Galeria de Imagens -->
-                <div id="gallery-container" class="card bg-body-tertiary border-0 shadow-sm p-4 h-100 d-none overflow-hidden d-flex flex-column">
+                <div id="gallery-container" class="card bg-body-tertiary border-0 shadow-sm p-4 d-none flex-column mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-images me-2 text-primary fs-4"></i>
@@ -366,7 +353,7 @@
                         </div>
                     </div>
                     
-                    <div class="flex-grow-1 overflow-auto scroll-custom">
+                    <div class="flex-grow-1 overflow-y-auto overflow-x-hidden scroll-custom">
                         <div id="gallery-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
                             <!-- Imagens serão carregadas aqui -->
                         </div>
@@ -376,12 +363,12 @@
         </div>
 
         <!-- Painel Direita (Estatísticas e IA) -->
-        <div id="right-panel" class="split-pane card bg-body-tertiary border-0 shadow-sm p-4 pt-5 position-relative">
+        <div id="right-panel" class="split-pane card bg-body-tertiary border-0 shadow-sm p-4 sidebar-sticky">
             <button id="right-sidebar-toggle" class="btn-ghost-card position-absolute toggle-btn-right" onclick="toggleSidebar('right')" title="Estatísticas">
                 <i class="bi bi-layout-sidebar-inset-reverse"></i>
             </button>
 
-            <div class="sidebar-content mt-4 overflow-auto scroll-custom h-100">
+            <div class="sidebar-content mt-4 overflow-y-auto scroll-custom">
                 <h6 class="text-body-secondary small text-uppercase fw-bold mb-3">Item Details</h6>
                 <div id="item-stats" class="small text-body-secondary">
                     <div class="d-flex justify-content-between mb-2">
@@ -596,12 +583,17 @@ let saveTimeout;
 let bibleSaveTimeout;
 let manuscriptMode = 'writing'; // 'writing' or 'planning'
 let currentGalleryMode = 'card'; // 'card' or 'editor'
+let imageMarkers = [];
+let imageRefreshTimeout;
 
 const projectUuid = "{{ $project->uuid }}";
 let activeProjectCoverUuid = "{{ $project->cover_image_uuid }}";
 
 document.addEventListener('DOMContentLoaded', function() {
     const bootstrapToolbar = [
+        { name: "undo", action: EasyMDE.undo, className: "bi bi-arrow-counterclockwise", title: "Desfazer (Ctrl+Z)" },
+        { name: "redo", action: EasyMDE.redo, className: "bi bi-arrow-clockwise", title: "Refazer (Ctrl+Y)" },
+        "|",
         { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: "Negrito" },
         { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: "Itálico" },
         { name: "heading", action: EasyMDE.toggleHeadingSmaller, className: "bi bi-type-h1", title: "Título" },
@@ -617,8 +609,45 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "Inserir imagem da galeria",
         },
         "|",
-        { name: "preview", action: EasyMDE.togglePreview, className: "bi bi-eye", title: "Visualizar" },
-        "|",
+        {
+            name: "pure-md",
+            action: function(editor) {
+                const cm = editor.codemirror;
+                const wrapper = cm.getWrapperElement();
+                const container = wrapper.closest('.EasyMDEContainer');
+                const isActive = container.classList.toggle('pure-md-mode');
+                
+                // Seleciona o ícone e o botão pai (que está na toolbar)
+                // Usamos o container para garantir que pegamos o botão certo
+                const btnIcon = container.querySelector('.bi-markdown, .bi-pencil-square');
+                const btn = btnIcon.parentElement;
+                
+                if (isActive) {
+                    // MODO RAIO-X: Texto Puro
+                    cm.setOption("mode", "null");
+                    cm.removeOverlay(literaryOverlay);
+                    
+                    // Troca Visual do Botão
+                    btnIcon.className = "bi bi-pencil-square";
+                    btn.title = "Voltar ao Editor Literário";
+                    btn.classList.add('active');
+                } else {
+                    // MODO LITERÁRIO: Markdown + Overlays
+                    cm.setOption("mode", "gfm");
+                    cm.addOverlay(literaryOverlay);
+                    
+                    // Troca Visual do Botão
+                    btnIcon.className = "bi bi-markdown";
+                    btn.title = "Ver MD Puro (Raio-X)";
+                    btn.classList.remove('active');
+                    
+                    // Renderiza imagens fantasma
+                    setTimeout(renderGhostImages, 100);
+                }
+            },
+            className: "bi bi-markdown",
+            title: "Ver MD Puro (Raio-X)"
+        },
         { name: "guide", action: "https://www.markdownguide.org/basic-syntax/", className: "bi bi-question-circle", title: "Guia Markdown" }
     ];
 
@@ -629,8 +658,38 @@ document.addEventListener('DOMContentLoaded', function() {
         status: false,
         autoDownloadFontAwesome: false,
         placeholder: "Use sua criatividade...",
-        toolbar: bootstrapToolbar
+        toolbar: bootstrapToolbar,
+        codeMirrorOptions: {
+            viewportMargin: Infinity
+        }
     });
+
+    // CodeMirror Overlays for Literary Formatting
+    const literaryOverlay = {
+        token: function(stream) {
+            // 1. Scene Divider: Atomic match - ONLY the first char gets the class
+            if (stream.sol() && stream.match("-*-", false)) {
+                stream.next(); // Consume only the first '-'
+                return "divisao-cena";
+            }
+            
+            // 2. Em Dash: Match "--" OR the real character "—"
+            if (stream.match("--") || stream.match("—")) {
+                return "travessao";
+            }
+            
+            // 4. Image: ![alt](url)
+            if (stream.match(/!\[.*\]\(.*\)/)) {
+                return "ghost-image";
+            }
+            
+            // 5. Skip ahead
+            stream.next();
+            return null;
+        }
+    };
+
+    easyMDE.codemirror.addOverlay(literaryOverlay);
 
     bibleEditor = new EasyMDE({
         element: document.getElementById('bible-editor'),
@@ -639,8 +698,13 @@ document.addEventListener('DOMContentLoaded', function() {
         status: false,
         autoDownloadFontAwesome: false,
         placeholder: "Pense na bíblia como o DNA do seu projeto...",
-        toolbar: bootstrapToolbar
+        toolbar: bootstrapToolbar,
+        codeMirrorOptions: {
+            viewportMargin: Infinity
+        }
     });
+
+    bibleEditor.codemirror.addOverlay(literaryOverlay);
 
     bibleSummaryEditor = new EasyMDE({
         element: document.getElementById('bible-summary-editor'),
@@ -648,13 +712,14 @@ document.addEventListener('DOMContentLoaded', function() {
         autosave: { enabled: false },
         status: false,
         autoDownloadFontAwesome: false,
-        minHeight: "450px",
         placeholder: "O resumo narrativo será gerado aqui...",
+        codeMirrorOptions: {
+            viewportMargin: Infinity
+        },
         toolbar: [
             { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: "Negrito" },
             { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: "Itálico" },
             "|",
-            { name: "preview", action: EasyMDE.togglePreview, className: "bi bi-eye", title: "Visualizar" },
             "|",
             { 
                 name: "sync", 
@@ -670,6 +735,10 @@ document.addEventListener('DOMContentLoaded', function() {
         showSaveStatus('Salvando...', 'bi-arrow-repeat spin');
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(saveActiveItem, 1500);
+
+        // Refresh ghost images com debounce curto
+        clearTimeout(imageRefreshTimeout);
+        imageRefreshTimeout = setTimeout(renderGhostImages, 300);
     });
 
     bibleEditor.codemirror.on("change", () => {
@@ -684,20 +753,40 @@ document.addEventListener('DOMContentLoaded', function() {
         bibleSaveTimeout = setTimeout(saveBibleContent, 1500);
     });
 
-    // Auto-convert -- to — (travessão)
-    easyMDE.codemirror.on("beforeChange", (cm, change) => {
-        if (change.origin === "+input" && change.text[0] === "-") {
-            const cursor = cm.getCursor();
-            const range = { line: cursor.line, ch: cursor.ch - 1 };
-            const prevChar = cm.getRange(range, cursor);
-            if (prevChar === "-") {
-                change.update(range, cursor, ["—"]);
+    loadManuscript();
+    loadGallery();
+});
+
+function renderGhostImages() {
+    if (!easyMDE) return;
+    const cm = easyMDE.codemirror;
+    const wrapper = cm.getWrapperElement();
+    const container = wrapper.closest('.EasyMDEContainer');
+    if (!container || container.classList.contains('pure-md-mode')) {
+        imageMarkers.forEach(m => m.clear());
+        imageMarkers = [];
+        return;
+    }
+    imageMarkers.forEach(m => m.clear());
+    imageMarkers = [];
+    const lines = cm.getValue().split('\n');
+    lines.forEach((line, idx) => {
+        const regex = /!\[(.*?)\]\((.*?)\)/g;
+        let match;
+        while ((match = regex.exec(line)) !== null) {
+            const alt = match[1];
+            const urlOrName = match[2];
+            const item = currentGalleryItems.find(i => i.name === urlOrName || i.uuid === urlOrName);
+            if (item) {
+                const widget = document.createElement('div');
+                widget.className = 'ghost-image-widget animate-fade-in';
+                widget.innerHTML = `<img src="/projects/${projectUuid}/gallery/${item.uuid}/image/thumb" alt="${alt}"><div class="ghost-image-caption">${alt || item.name}</div>`;
+                widget.onclick = (e) => { e.stopPropagation(); openGallery(); };
+                imageMarkers.push(cm.markText({line: idx, ch: match.index}, {line: idx, ch: match.index + match[0].length}, {replacedWith: widget, handleMouseEvents: true}));
             }
         }
     });
-
-    loadManuscript();
-});
+}
 
 // --- UI Utility Logic ---
 
@@ -878,10 +967,10 @@ function renderTreeNodes(nodes, container) {
         const colorClass = node.type === 'toc' ? 'text-accent' : (node.type === 'section' ? 'text-primary' : (node.type === 'chapter' ? 'text-info' : 'text-ghost-muted'));
 
         item.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center py-1 px-2 rounded node-row ${activeItemUuid === node.uuid ? 'bg-primary bg-opacity-10 shadow-sm' : ''}" onclick="openManuscriptItem('${node.uuid}')">
+            <div class="d-flex justify-content-between align-items-center py-1 px-2 rounded node-row ${activeItemUuid === node.uuid ? 'active' : ''}" onclick="openManuscriptItem('${node.uuid}')">
                 <div class="d-flex align-items-center overflow-hidden">
                     <i class="bi ${icon} ${colorClass} me-2 flex-shrink-0"></i>
-                    <span class="node-title text-truncate ${activeItemUuid === node.uuid ? 'text-primary fw-bold' : 'text-ghost-muted'}">${node.title}</span>
+                    <span class="node-title text-truncate ${activeItemUuid === node.uuid ? '' : 'text-ghost-muted'}">${node.title}</span>
                 </div>
                 <div class="node-actions d-none gap-2">
                     ${!node.is_system && node.type !== 'scene' ? `
@@ -958,6 +1047,18 @@ async function openManuscriptItem(uuid) {
     activeCardCategory = null;
     activeItemType = 'manuscript';
     manuscriptMode = 'writing'; // Reset to writing mode by default
+
+    // UI Update: Toggle Active Class in Sidebar
+    document.querySelectorAll('.node-row').forEach(row => {
+        row.classList.remove('active');
+        row.querySelector('.node-title').classList.add('text-ghost-muted');
+    });
+    
+    const activeRow = document.querySelector(`.tree-item[data-uuid="${uuid}"] .node-row`);
+    if (activeRow) {
+        activeRow.classList.add('active');
+        activeRow.querySelector('.node-title').classList.remove('text-ghost-muted');
+    }
     
     // Reset Editor Styles
     const editorContainer = document.getElementById('editor-container');
@@ -1118,6 +1219,7 @@ async function loadManuscriptContent() {
         const data = await response.json();
         easyMDE.value(data.content);
         showSaveStatus('Salvo', 'bi-check2-all');
+        setTimeout(renderGhostImages, 200);
     } catch (error) {
         showSaveStatus('Erro ao carregar', 'bi-exclamation-triangle text-danger');
     }
@@ -1130,6 +1232,7 @@ async function loadManuscriptPlanning() {
         const data = await response.json();
         easyMDE.value(data.content || "# Planejamento da Cena\n\nDescreva aqui os pontos chaves, objetivos e conflitos desta seção.");
         showSaveStatus('Salvo', 'bi-check2-all');
+        setTimeout(renderGhostImages, 200);
     } catch (error) {
         showSaveStatus('Erro ao carregar', 'bi-exclamation-triangle text-danger');
     }
@@ -1305,7 +1408,7 @@ function renderCards(cards) {
                     </div>
                 </div>
                 <div class="card-body p-2 d-flex justify-content-between align-items-center bg-body-tertiary">
-                    <span class="small text-body-secondary" style="font-size: 0.75rem;">${card.type.charAt(0).toUpperCase() + card.type.slice(1)}</span>
+                    <span class="small text-body-secondary fs-10">${card.type.charAt(0).toUpperCase() + card.type.slice(1)}</span>
                     <div class="d-flex gap-1" onclick="event.stopPropagation()">
                         <input type="file" id="card-upload-${card.uuid}" class="d-none" accept="image/*" onchange="uploadCardImage('${card.uuid}', this)">
                         
@@ -1324,8 +1427,8 @@ function renderCards(cards) {
                             <button class="btn btn-ghost-card btn-sm p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Mover para...">
                                 <i class="bi bi-arrow-left-right"></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-dark shadow border-0 backdrop-blur" style="font-size: 0.8rem;">
-                                <li><h6 class="dropdown-header text-uppercase opacity-50" style="font-size: 0.65rem;">Mover para:</h6></li>
+                            <ul class="dropdown-menu dropdown-menu-dark shadow border-0 backdrop-blur fs-8">
+                                <li><h6 class="dropdown-header text-uppercase opacity-50 fs-9">Mover para:</h6></li>
                                 ${card.type !== 'scenario' ? `<li><a class="dropdown-item py-1" href="#" onclick="moveCard('${card.uuid}', 'scenario')"><i class="bi bi-geo-alt me-2 text-primary"></i> Geografia</a></li>` : ''}
                                 ${card.type !== 'character' ? `<li><a class="dropdown-item py-1" href="#" onclick="moveCard('${card.uuid}', 'character')"><i class="bi bi-people me-2 text-primary"></i> Personagens</a></li>` : ''}
                                 ${card.type !== 'lore' ? `<li><a class="dropdown-item py-1" href="#" onclick="moveCard('${card.uuid}', 'lore')"><i class="bi bi-mortarboard me-2 text-primary"></i> Lore</a></li>` : ''}
@@ -1714,6 +1817,7 @@ async function loadGallery() {
         currentGalleryItems = await response.json();
         renderGallery(currentGalleryItems);
         updateRightPanelForGallery();
+        renderGhostImages();
     } catch (error) {
         console.error('Erro na galeria:', error);
         const galleryItemsEl = document.getElementById('gallery-items');
@@ -1745,12 +1849,12 @@ function renderGallery(items) {
                 <div class="ratio ratio-1x1 position-relative">
                     <img src="/projects/${projectUuid}/gallery/${item.uuid}/image/thumb" class="card-img-top object-fit-cover" alt="${displayName}">
                     <!-- Overlay de zoom/view -->
-                    <a href="/projects/${projectUuid}/gallery/${item.uuid}/image" target="_blank" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 opacity-0 transition-opacity text-white text-decoration-none gallery-overlay" style="pointer-events: none;">
+                    <a href="/projects/${projectUuid}/gallery/${item.uuid}/image" target="_blank" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 opacity-0 transition-opacity text-white text-decoration-none gallery-overlay pe-none">
                         <i class="bi bi-search fs-3"></i>
                     </a>
                 </div>
                 <div class="card-body p-2 d-flex justify-content-between align-items-center flex-wrap gap-1">
-                    <span class="small text-truncate text-body-secondary fw-bold flex-grow-1" style="max-width: 100px;" title="${item.name}">${displayName}</span>
+                    <span class="small text-truncate text-body-secondary fw-bold flex-grow-1 mw-100px" title="${item.name}">${displayName}</span>
                     <div class="d-flex gap-1">
                         <button class="btn btn-ghost-card btn-sm text-primary p-1" title="Renomear" data-bs-toggle="modal" data-bs-target="#galleryRenameModal" onclick="prepareRenameImage('${item.uuid}', '${displayName.replace(/'/g, "\\'")}', '${extension}')">
                             <i class="bi bi-pencil-square"></i>
@@ -2063,7 +2167,7 @@ function renderConnections() {
                         <span class="badge ${colors[c.type] || 'bg-secondary'} x-small fw-normal">${c.type}</span>
                         <span class="fw-bold small text-truncate" title="${c.title}">${c.title}</span>
                     </div>
-                    ${reason ? `<div class="x-small text-body-secondary italic opacity-75 mt-1" style="line-height: 1.4;">${reason}</div>` : ''}
+                    ${reason ? `<div class="x-small text-body-secondary italic opacity-75 mt-1 lh-1-4">${reason}</div>` : ''}
                 </div>
                 <button class="btn btn-link btn-sm text-body-secondary p-0 ms-2 hover-danger" onclick="removeConnection('${c.uuid}')">
                     <i class="bi bi-x-circle"></i>
@@ -2350,14 +2454,14 @@ function renderExportResults(state) {
                             <i class="bi bi-file-zip me-1"></i> Baixar Pacote Web (ZIP)
                         </a>
                     </div>
-                    <div class="x-small text-body-secondary opacity-50 mt-1" style="font-size: 0.65rem;">Gerado em: ${ts}</div>
+                    <div class="x-small text-body-secondary opacity-50 mt-1 fs-9">Gerado em: ${ts}</div>
                 `;
             } else {
                 container.innerHTML = `
                     <a href="${state[f].url}" class="btn ${cfg.class} btn-sm w-100 rounded-pill mb-1" ${cfg.target ? 'target="'+cfg.target+'"' : 'download'}>
                         <i class="bi ${cfg.icon} me-1"></i> ${cfg.label}
                     </a>
-                    <div class="x-small text-body-secondary opacity-50" style="font-size: 0.65rem;">Gerado em: ${ts}</div>
+                    <div class="x-small text-body-secondary opacity-50 fs-9">Gerado em: ${ts}</div>
                 `;
             }
         } else {
@@ -2530,7 +2634,7 @@ function renderAISuggestions(suggestions) {
                                 </div>
                                 <span class="badge bg-primary bg-opacity-10 text-primary x-small">${s.type}</span>
                             </div>
-                            <p class="x-small text-body-secondary mb-0 italic" style="line-height: 1.4;">"${s.reason}"</p>
+                            <p class="x-small text-body-secondary mb-0 italic lh-1-4">"${s.reason}"</p>
                         </label>
                     </div>
                 `).join('')}
