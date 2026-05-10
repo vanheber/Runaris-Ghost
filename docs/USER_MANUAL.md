@@ -36,12 +36,10 @@ O repositório central da "Verdade" do seu universo.
 *   **Lore**: Descrições profundas sobre as regras do seu mundo.
 *   **IA Recap**: Um resumo narrativo que a IA mantém atualizado para ajudar você a não perder o fio da meada em tramas longas.
 
-## 5. Exportação e Distribuição
-Gere versões prontas para leitura e backup:
-*   **ePub**: Estabilizado para leitura no Kindle e dispositivos móveis.
-*   **PDF**: Pronto para revisão e impressão.
-*   **Pacote Web (ZIP)**: Um conjunto estruturado de arquivos HTML para leitura no navegador ou hospedagem em site pessoal.
-*   **Backup Total**: Nas configurações de Sistema, você pode baixar um arquivo ZIP contendo **absolutamente tudo** (projetos, DB e imagens) para segurança máxima.
+## 5. Exportação e Backup Soberano
+O Runaris Ghost prioriza a soberania dos seus dados. Você pode exportar seu trabalho a qualquer momento em formatos profissionais ou brutos:
+*   **Formatos de Leitura**: Gere **ePub** (Kindle), **PDF** (Impressão) ou um **Pacote Web** (HTML) com metadados e capa profissional.
+*   **Backup Human-Readable**: O botão **Backup** gera um arquivo ZIP estruturado com todo o conteúdo em **Markdown puro**. Diferente de backups técnicos, aqui os arquivos usam os **nomes reais** das cenas e categorias, facilitando a portabilidade para qualquer outro editor (como Obsidian ou Notion).
 
 ## 6. Inteligência Artificial (Botões Mágicos) 🌟
 O Runaris Ghost utiliza a tecnologia **Google Gemini** para atuar como seu co-autor:

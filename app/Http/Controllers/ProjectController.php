@@ -212,6 +212,18 @@ class ProjectController extends Controller
     }
 
     /**
+     * Export full readable project backup ZIP.
+     */
+    public function exportBackup($project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $exporter = new \App\Services\ExporterService($project);
+        $zipPath = $exporter->generateFullBackupZip();
+        $filename = Str::slug($project->name) . '-full-backup.zip';
+        return response()->download($zipPath, $filename)->deleteFileAfterSend(true);
+    }
+
+    /**
      * Get the current export state (existing files).
      */
     public function getExportState($project_uuid)

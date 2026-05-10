@@ -63,6 +63,7 @@ Route::prefix('projects')->group(function () {
         Route::get('/{project_uuid}/export/html', [\App\Http\Controllers\ProjectController::class, 'exportHtml']);
         Route::get('/{project_uuid}/export/zip', [\App\Http\Controllers\ProjectController::class, 'exportZip']);
         Route::get('/{project_uuid}/export/markdown', [\App\Http\Controllers\ProjectController::class, 'exportMarkdown']);
+        Route::get('/{project_uuid}/export/backup', [\App\Http\Controllers\ProjectController::class, 'exportBackup']);
         Route::get('/{project_uuid}/export/preview-html', [\App\Http\Controllers\ProjectController::class, 'previewHtml']);
         Route::get('/{project_uuid}/export-state', [\App\Http\Controllers\ProjectController::class, 'getExportState']);
         Route::post('/{project_uuid}/export-process', [\App\Http\Controllers\ProjectController::class, 'processBatchExport']);

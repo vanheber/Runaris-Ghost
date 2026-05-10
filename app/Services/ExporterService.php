@@ -169,10 +169,101 @@ class ExporterService
         $items = ManuscriptItem::orderBy('order')->get();
         $tree = $this->buildItemTreeForExport($items);
 
-        $this->addMarkdownToZip($zip, $tree, "");
+        $this->addMarkdownToZip($zip, $tree, "Manuscrito/");
 
         $zip->close();
         return $zipFile;
+    }
+
+    /**
+     * Generate a full project backup ZIP (Human-Readable).
+     */
+    public function generateFullBackupZip(): string
+    {
+        $safeName = Str::slug($this->project->name);
+        $fileName = "{$safeName}_Backup_" . date('Y-m-d_His') . ".zip";
+        $dir      = Storage::disk('public')->path($this->baseExportPath);
+        $zipFile  = "{$dir}/{$fileName}";
+
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new \Exception("Erro ao criar ZIP de Backup.");
+        }
+
+        // 1. Manuscript
+        $items = ManuscriptItem::orderBy('order')->get();
+        $tree = $this->buildItemTreeForExport($items);
+        $this->addMarkdownToZip($zip, $tree, "01 - Manuscrito/");
+
+        // 2. Lore (Cards)
+        $this->addLoreToZip($zip, "02 - Lore/");
+
+        // 3. Bible
+        $this->addBibleToZip($zip, "03 - Biblia/");
+
+        // 4. Gallery
+        $this->addGalleryToZip($zip, "04 - Galeria/");
+
+        // 5. Metadata
+        $metadata = [
+            'name' => $this->project->name,
+            'author' => $this->project->author,
+            'description' => $this->project->description,
+            'language' => $this->project->language,
+            'created_at' => $this->project->created_at,
+            'exported_at' => now()->toDateTimeString(),
+        ];
+        $zip->addFromString("projeto.json", json_encode($metadata, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+        $zip->close();
+        return $zipFile;
+    }
+
+    protected function addLoreToZip(ZipArchive $zip, string $basePath): void
+    {
+        $cards = Card::orderBy('type')->orderBy('title')->get();
+        
+        foreach ($cards as $card) {
+            $typeDir = Str::title($card->type);
+            $safeTitle = preg_replace('/[^A-Za-z0-9\- \_]+/', '', $card->title);
+            $fileName = "{$basePath}{$typeDir}/{$safeTitle}.md";
+            
+            $content = "# {$card->title}\n\n";
+            $content .= "**Categoria:** {$card->type}\n\n";
+            $content .= $card->content ?? '';
+            
+            $zip->addFromString($fileName, $content);
+        }
+    }
+
+    protected function addBibleToZip(ZipArchive $zip, string $basePath): void
+    {
+        if ($this->project->bible_content) {
+            $zip->addFromString("{$basePath}Conteudo_da_Biblia.md", $this->project->bible_content);
+        }
+        
+        if ($this->project->bible_summary) {
+            $zip->addFromString("{$basePath}Resumo_Narrativo_IA.md", $this->project->bible_summary);
+        }
+    }
+
+    protected function addGalleryToZip(ZipArchive $zip, string $basePath): void
+    {
+        $items = GalleryItem::all();
+        
+        foreach ($items as $item) {
+            $filePath = ltrim($item->file_path, '/');
+            $fullPath = storage_path("app/{$filePath}");
+            
+            if (file_exists($fullPath)) {
+                $ext = pathinfo($fullPath, PATHINFO_EXTENSION);
+                $safeTitle = preg_replace('/[^A-Za-z0-9\- \_]+/', '', $item->title ?? 'imagem');
+                $fileName = "{$basePath}{$safeTitle}_{$item->uuid}.{$ext}";
+                $zip->addFile($fullPath, $fileName);
+            }
+        }
     }
 
     protected function buildItemTreeForExport($items, $parentUuid = null)

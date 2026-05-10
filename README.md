@@ -57,7 +57,7 @@ php artisan serve
 
 ### 3. Santuário & Segurança
 *   **Onboarding Local**: Setup privado, sem contas em nuvem obrigatórias.
-*   **Backup Total**: Exportação de todo o seu progresso em um único ZIP.
+*   **Backup Soberano**: Exportação legível de todo o seu progresso em Markdown estruturado.
 *   **Reset de Fábrica**: Limpeza profunda e segura de todos os dados locais.
 
 ---

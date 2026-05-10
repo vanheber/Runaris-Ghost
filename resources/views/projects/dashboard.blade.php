@@ -21,6 +21,7 @@
         <a id="nav-connections" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openGraph()" title="Conexões"><i class="bi bi-diagram-3 me-1 text-primary"></i> Conexões</a>
         <a id="nav-bible" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openBible()" title="Bíblia"><i class="bi bi-book me-1 text-primary"></i> Bíblia</a>
         <a id="nav-export" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openExport()" title="Exportar"><i class="bi bi-cloud-download me-1 text-primary"></i> Exportar</a>
+        <a id="nav-backup" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openBackup()" title="Backup"><i class="bi bi-shield-check me-1 text-primary"></i> Backup</a>
     </div>
 
     <!-- Graph Visualization Lib -->
@@ -271,6 +272,47 @@
                         <button id="btn-run-export" class="btn btn-primary btn-lg rounded-pill px-5 shadow" onclick="runExportBatch()">
                             <i class="bi bi-gear-wide-connected me-2"></i> Gerar Arquivos Selecionados
                         </button>
+                    </div>
+                </div>
+                
+                <!-- Backup Panel -->
+                <div id="backup-container" class="card bg-body-tertiary border-0 shadow-sm p-5 d-none flex-column animate-fade-in mb-4">
+                    <div class="card border-0 shadow-sm p-4 bg-body mb-4">
+                        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-shield-check me-2"></i> Backup do Projeto</h5>
+                        <p class="text-body-secondary">
+                            Este recurso gera um arquivo ZIP contendo todo o seu trabalho organizado de forma legível. 
+                            Ao contrário do banco de dados, aqui os arquivos usam os <strong>títulos reais</strong> das cenas e lore.
+                        </p>
+                        <div class="alert alert-info bg-info bg-opacity-10 border-0 d-flex align-items-center py-3 px-4 small mb-4">
+                            <i class="bi bi-info-circle-fill me-3 fs-4"></i>
+                            <div>
+                                <strong>Privacidade Total:</strong> O processamento é feito localmente no seu servidor. 
+                                Nenhum dado é enviado para a nuvem. O arquivo gerado fica disponível apenas para o seu download imediato.
+                            </div>
+                        </div>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="p-3 border border-secondary border-opacity-10 rounded bg-body-tertiary">
+                                    <h6 class="fw-bold mb-2 small text-uppercase opacity-75">O que está incluído:</h6>
+                                    <ul class="list-unstyled mb-0 small">
+                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Manuscrito (Markdown estruturado)</li>
+                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Worldbuilding (Personagens, Locais, Lore)</li>
+                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Bíblia do Projeto & Resumos</li>
+                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Galeria de Imagens</li>
+                                        <li><i class="bi bi-check2 text-success me-2"></i> Metadados (JSON)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                <div class="text-center">
+                                    <a href="{{ url('/projects/'.$project->uuid.'/export/backup') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow hover-lift" onclick="this.classList.add('disabled'); setTimeout(()=>this.classList.remove('disabled'), 5000)">
+                                        <i class="bi bi-download me-2"></i> Baixar Backup Completo
+                                    </a>
+                                    <p class="x-small text-body-secondary mt-3 italic">Formato: ZIP (Markdown + Assets)</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -829,6 +871,7 @@ function showEmptyState(category) {
     document.getElementById('graph-container').classList.add('d-none');
     document.getElementById('cards-grid-container').classList.add('d-none');
     document.getElementById('gallery-container').classList.add('d-none');
+    document.getElementById('backup-container').classList.add('d-none');
     
     // Deactivate nav buttons
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
@@ -1122,6 +1165,12 @@ async function openManuscriptItem(uuid) {
     
     const galleryCon = document.getElementById('gallery-container');
     if (galleryCon) galleryCon.classList.add('d-none');
+    
+    const backupCon = document.getElementById('backup-container');
+    if (backupCon) backupCon.classList.add('d-none');
+    
+    const exportCon = document.getElementById('export-container');
+    if (exportCon) exportCon.classList.add('d-none');
     
     if (editorContainer) editorContainer.classList.remove('d-none');
     
@@ -1728,6 +1777,7 @@ async function openItem(uuid, type) {
     document.getElementById('graph-container').classList.add('d-none');
     document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('export-container').classList.add('d-none');
+    document.getElementById('backup-container').classList.add('d-none');
     
     // Hide markdown help by default when opening a card
     document.getElementById('markdown-tips').classList.add('d-none');
@@ -1810,6 +1860,7 @@ function openGallery() {
     document.getElementById('graph-container').classList.add('d-none');
     document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('export-container').classList.add('d-none');
+    document.getElementById('backup-container').classList.add('d-none');
     document.getElementById('markdown-tips').classList.add('d-none');
 
     // Highlight sidebar
@@ -2064,6 +2115,7 @@ function openGraph() {
     document.getElementById('gallery-container').classList.add('d-none');
     document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('export-container').classList.add('d-none');
+    document.getElementById('backup-container').classList.add('d-none');
     document.getElementById('graph-container').classList.remove('d-none');
     
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
@@ -2263,9 +2315,9 @@ async function openBible() {
     
     showEmptyState(null); // Clear other views
     document.querySelectorAll('.sidebar-nav .nav-link').forEach(el => el.classList.remove('active'));
-    document.querySelector('[onclick="openBible()"]').classList.add('active');
-    
     document.getElementById('bible-container').classList.remove('d-none');
+    document.getElementById('export-container').classList.add('d-none');
+    document.getElementById('backup-container').classList.add('d-none');
     document.getElementById('empty-state').classList.add('d-none');
     
     try {
@@ -2351,6 +2403,7 @@ async function openExport() {
     document.getElementById('graph-container').classList.add('d-none');
     document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('export-container').classList.remove('d-none');
+    document.getElementById('backup-container').classList.add('d-none');
     document.getElementById('dynamic-context-panel').classList.add('d-none');
     document.getElementById('markdown-tips').classList.add('d-none');
 
@@ -2367,6 +2420,30 @@ async function openExport() {
         renderExportResults(state);
     } catch (error) {
         console.error('Erro ao carregar estado de exportação:', error);
+    }
+}
+
+function openBackup() {
+    activeItemUuid = null;
+    activeCardCategory = null;
+    activeItemType = 'backup';
+
+    // UI state
+    document.getElementById('empty-state').classList.add('d-none');
+    document.getElementById('editor-container').classList.add('d-none');
+    document.getElementById('cards-grid-container').classList.add('d-none');
+    document.getElementById('gallery-container').classList.add('d-none');
+    document.getElementById('graph-container').classList.add('d-none');
+    document.getElementById('bible-container').classList.add('d-none');
+    document.getElementById('export-container').classList.add('d-none');
+    document.getElementById('backup-container').classList.remove('d-none');
+    document.getElementById('dynamic-context-panel').classList.add('d-none');
+    document.getElementById('markdown-tips').classList.add('d-none');
+
+    // Highlight sidebar
+    document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
+    if (document.getElementById('nav-backup')) {
+        document.getElementById('nav-backup').classList.add('active');
     }
 }
 
