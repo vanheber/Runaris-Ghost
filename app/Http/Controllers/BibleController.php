@@ -13,9 +13,18 @@ class BibleController extends Controller
     public function show($project_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        
+        // Load tree with summaries
+        $projectManager = app(\App\Services\ProjectManager::class);
+        $projectManager->switchToProject($project);
+        
+        $manuscriptService = app(\App\Services\ManuscriptService::class);
+        $tree = $manuscriptService->getTree($project);
+
         return response()->json([
             'content' => $project->bible_content ?? "# Bíblia do Projeto\n\nDefina aqui os pilares do seu mundo, tom de voz e sinopse geral.",
-            'summary' => $project->bible_summary ?? "# Resumo Narrativo (Geração IA)\n\nClique em 'Sincronizar Bíblia' para que a IA atualize o resumo baseada no seu manuscrito."
+            'summary' => $project->bible_summary ?? "# Resumo Narrativo (Geração IA)\n\nClique em 'Sincronizar Bíblia' para que a IA atualize o resumo baseada no seu manuscrito.",
+            'manuscript_tree' => $tree
         ]);
     }
 
@@ -36,7 +45,54 @@ class BibleController extends Controller
     }
 
     /**
-     * Sincroniza a Bíblia gerando um resumo com IA a partir dos manuscritos.
+     * Sincroniza a Bíblia gerando um resumo com IA a partir dos resumos individuais (Cerebelo).
+     */
+    public function syncCerebellum($project_uuid)
+    {
+        try {
+            $project = Project::where('uuid', $project_uuid)->firstOrFail();
+            
+            // Reconnect to project DB to get summaries
+            $projectManager = app(\App\Services\ProjectManager::class);
+            $projectManager->switchToProject($project);
+            
+            $items = \App\Models\ManuscriptItem::whereNotNull('summary')
+                        ->where('summary', '!=', '')
+                        ->orderBy('order')
+                        ->get();
+            
+            if ($items->isEmpty()) {
+                return response()->json(['error' => 'Nenhum resumo de capítulo encontrado. Sincronize os capítulos individualmente primeiro.'], 400);
+            }
+
+            $consolidatedSummaries = "";
+            foreach ($items as $item) {
+                $consolidatedSummaries .= "### {$item->title}\n{$item->summary}\n\n";
+            }
+
+            $gemini = new \App\Services\GeminiService($project);
+            $prompt = "Abaixo estão os resumos individuais de cada capítulo/cena do projeto '{$project->name}':\n\n" .
+                      $consolidatedSummaries . "\n\n" .
+                      "SUA TAREFA: Consolide essas informações em um único 'Resumo Narrativo / Cerebelo' mestre. " .
+                      "O objetivo é ter uma visão macro e fluida da história até agora, mantendo a cronologia impecável. " .
+                      "Use Markdown (H2, H3, Bullets). Vá direto ao ponto, sem introduções.";
+
+            $newCerebellum = $gemini->generate($prompt, 'gemini-3.1-flash-lite');
+
+            $project->update(['bible_summary' => $newCerebellum]);
+
+            return response()->json([
+                'success' => true,
+                'summary' => $newCerebellum
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Legacy: Sincroniza a Bíblia gerando um resumo com IA a partir dos manuscritos brutos.
      */
     public function syncBibleWithAI($project_uuid)
     {
@@ -45,6 +101,9 @@ class BibleController extends Controller
             $gemini = new \App\Services\GeminiService($project);
 
             // Coletar texto bruto dos manuscritos para enviar pra IA
+            $projectManager = app(\App\Services\ProjectManager::class);
+            $projectManager->switchToProject($project);
+
             $sections = \App\Models\ManuscriptItem::whereIn('type', ['section', 'chapter', 'scene'])
                             ->orderBy('order')
                             ->get();

@@ -345,15 +345,34 @@ class ExporterService
     }
 
     /**
+     * Get a flattened list of manuscript items following the tree structure.
+     */
+    private function getFlattenedTree($parentUuid = null)
+    {
+        $items = ManuscriptItem::where('parent_uuid', $parentUuid)
+            ->where('is_system', false)
+            ->orderBy('order')
+            ->get();
+        
+        $flat = [];
+        foreach ($items as $item) {
+            $flat[] = $item;
+            $children = $this->getFlattenedTree($item->uuid);
+            if (!empty($children)) {
+                $flat = array_merge($flat, $children);
+            }
+        }
+        return $flat;
+    }
+
+    /**
      * Prepare the manuscript data for PDF/HTML templates.
      */
     protected function prepareFullManuscriptData(): array
     {
-        $sections = ManuscriptItem::whereIn('type', ['section', 'chapter', 'scene'])
-            ->orderBy('order')
-            ->get();
+        $sections = $this->getFlattenedTree();
 
-        $manuscript = $sections->map(function ($section) {
+        $manuscript = array_map(function ($section) {
             $raw = $this->getManuscriptContent($section->uuid);
             return [
                 'title'   => $section->title,
@@ -361,7 +380,7 @@ class ExporterService
                 'type'    => $section->type,
                 'uuid'    => $section->uuid,
             ];
-        });
+        }, $sections);
 
         $cards    = Card::orderBy('title')->get();
         $appendix = $cards->map(function ($card) {
@@ -386,11 +405,9 @@ class ExporterService
      */
     protected function prepareFullManuscriptDataForWeb(ZipArchive $zip): array
     {
-        $sections = ManuscriptItem::whereIn('type', ['section', 'chapter', 'scene'])
-            ->orderBy('order')
-            ->get();
+        $sections = $this->getFlattenedTree();
 
-        $manuscript = $sections->map(function ($section) use ($zip) {
+        $manuscript = array_map(function ($section) use ($zip) {
             $raw = $this->getManuscriptContent($section->uuid);
             return [
                 'title'   => $section->title,
@@ -398,7 +415,7 @@ class ExporterService
                 'type'    => $section->type,
                 'uuid'    => $section->uuid,
             ];
-        });
+        }, $sections);
 
         $cards    = Card::orderBy('title')->get();
         $appendix = $cards->map(function ($card) use ($zip) {
@@ -504,9 +521,7 @@ class ExporterService
         $spine[]    = 'title';
 
         // Manuscript sections
-        $sections = ManuscriptItem::whereIn('type', ['section', 'chapter', 'scene'])
-            ->orderBy('order')
-            ->get();
+        $sections = $this->getFlattenedTree();
 
         foreach ($sections as $index => $section) {
             $id      = "section_{$index}";

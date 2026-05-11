@@ -2,20 +2,16 @@
 
 **Runaris Ghost** é um Santuário Digital para Autores. Uma plataforma de escrita criativa focada em imersão, organização e cooperação com Inteligência Artificial.
 
-> [!TIP]
-> **Convenience is the Product**: Este software é Open Source, mas a conveniência é paga. Se você quer usar o Runaris Ghost sem se preocupar com dependências, compilação de código, assinatura de binários ou suporte técnico, adquira a versão oficial no Gumroad.
-
-[**🛒 Baixar Versão Oficial (Mac ARM64/Intel)**](https://gumroad.com)
+> [!NOTE]
+> **Open Source & Donation-Ware**: Este software é gratuito e de código aberto. Se você aprecia o trabalho e deseja apoiar a continuidade do projeto, visite o site oficial: [runaris.com.br/ghost](https://runaris.com.br/ghost/).
 
 ---
 
-## ⚖️ Filosofia e Modelo de Negócio
+Este projeto é regido pela comunidade e focado na liberdade criativa:
 
-Este projeto opera sob o modelo **"Free Code, Paid Convenience"**:
-
-1.  **Código Aberto (Open Source)**: O código fonte está disponível sob a licença [MIT](LICENSE). Você é livre para auditar, modificar e compilar sua própria build.
-2.  **Binários Oficiais**: As builds oficiais são assinadas, notarizadas pela Apple e prontas para uso. É nelas que investimos nosso tempo de curadoria e suporte.
-3.  **Suporte Pago**: Build manual? Você por sua conta. Suporte técnico e garantias de estabilidade são exclusivos para quem adquire a versão oficial.
+1.  **Código Aberto (Open Source)**: O código fonte está disponível sob a licença [MIT](LICENSE). Você é livre para auditar, modificar e redistribuir.
+2.  **Soberania de Dados**: Tudo roda localmente. Suas histórias pertencem a você, não a um servidor em nuvem.
+3.  **Comunidade**: O suporte é colaborativo. Bugs e melhorias são discutidos e resolvidos coletivamente.
 
 ---
 
@@ -75,4 +71,6 @@ Interessado em ajudar? Veja nosso arquivo [CONTRIBUTING.md](CONTRIBUTING.md) par
 
 ---
 
-&copy; {{ date('Y') }} Runaris. Desenvolvido com alma por [vanheber](https://github.com/vanheber).
+&copy; 2024-2026 [Runaris Ghost](https://runaris.com.br/ghost/). Desenvolvido com alma por [vanheber](https://github.com/vanheber).
+
+**Isenção de Garantia**: Este software é fornecido "como está" (AS IS), sem garantias de qualquer tipo, expressas ou implícitas. O desenvolvedor não oferece suporte técnico direto e não se responsabiliza por perda de dados ou mau funcionamento decorrente do uso ou modificação do código.

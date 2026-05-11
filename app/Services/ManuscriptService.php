@@ -56,7 +56,7 @@ class ManuscriptService
         ]);
 
         // Initialize empty content file
-        $this->saveContent($project, $uuid, "# " . $data['title'] . "\n\nComece sua escrita aqui...");
+        $this->saveContent($project, $uuid, "");
 
         $this->syncTOC($project);
 

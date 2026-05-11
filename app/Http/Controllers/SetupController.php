@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\GumroadService;
 use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -11,11 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class SetupController extends Controller
 {
-    protected $gumroad;
-
-    public function __construct(GumroadService $gumroad)
+    public function __construct()
     {
-        $this->gumroad = $gumroad;
     }
 
     /**
@@ -54,17 +50,6 @@ class SetupController extends Controller
         return response()->json(['status' => true]);
     }
 
-    /**
-     * Step 1: Handle License Activation.
-     */
-    public function activateLicense(Request $request)
-    {
-        $request->validate(['license_key' => 'required|string']);
-
-        $result = $this->gumroad->verifyLicense($request->license_key);
-
-        return response()->json($result);
-    }
 
     /**
      * Step 2: Handle User Creation.

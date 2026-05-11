@@ -5,7 +5,6 @@ O Runaris Ghost é um ambiente de escrita imersivo projetado para autores que bu
 ## 0. Primeiros Passos e Configuração
 Ao iniciar o aplicativo pela primeira vez, você passará pelo fluxo de Onboarding profissional:
 *   **Idioma**: Escolha entre Português (BR/PT), Inglês ou Espanhol para a interface.
-*   **Licença**: Valide sua chave de licença adquirida no Gumroad para desbloquear o app permanentemente.
 *   **Perfil e Segurança**: Defina seu nome de autor e escolha se deseja proteger seus manuscritos com uma senha local.
 *   **IA (Opcional)**: Configure sua chave da API do Google Gemini para habilitar as funções de co-autoria.
 
@@ -15,9 +14,11 @@ Cada projeto representa uma obra única (livro ou série). Na tela principal, vo
 
 ## 2. Manuscrito
 O coração do seu livro. Organizado em uma estrutura de árvore:
-*   **Seções**: Servem para agrupar capítulos ou partes do livro.
-*   **Capítulos**: Blocos de narrativa contínua.
+*   **Seções**: Servem para agrupar capítulos ou partes do livro. Você pode criar capítulos diretamente de uma seção usando o ícone `+` na árvore.
+*   **Capítulos**: Blocos de narrativa contínua. Você pode criar cenas diretamente de um capítulo usando o ícone `+`.
+*   **Cenas de Raiz**: Use o botão de "Nova Cena" no topo da árvore para criar arquivos independentes (Prólogos, Prefácios) fora de seções.
 *   **Planejamento**: Cada capítulo possui um modo de "Planejamento" alternável, onde você pode rascunhar cenas antes de escrever a versão final.
+*   **Editor Limpo**: Ao criar um novo item, o editor inicia totalmente em branco. O título é gerenciado na árvore lateral para evitar duplicação de conteúdo no manuscrito.
 2.1. Modo Literário e Ghost Formatting
 O editor possui uma camada visual inteligente chamada **Ghost Formatting**:
 *   **Imagens Imersivas**: Tags de imagem `![alt](url)` aparecem como miniaturas elegantes no texto.
@@ -38,7 +39,7 @@ O repositório central da "Verdade" do seu universo.
 
 ## 5. Exportação e Backup Soberano
 O Runaris Ghost prioriza a soberania dos seus dados. Você pode exportar seu trabalho a qualquer momento em formatos profissionais ou brutos:
-*   **Formatos de Leitura**: Gere **ePub** (Kindle), **PDF** (Impressão) ou um **Pacote Web** (HTML) com metadados e capa profissional.
+*   **Formatos de Leitura**: Gere **ePub** (Kindle), **PDF** (Impressão) ou um **Pacote Web** (HTML). A exportação é **recursiva**, preservando toda a hierarquia de Seções, Capítulos e Cenas definida na sua árvore lateral.
 *   **Backup Human-Readable**: O botão **Backup** gera um arquivo ZIP estruturado com todo o conteúdo em **Markdown puro**. Diferente de backups técnicos, aqui os arquivos usam os **nomes reais** das cenas e categorias, facilitando a portabilidade para qualquer outro editor (como Obsidian ou Notion).
 
 ## 6. Inteligência Artificial (Botões Mágicos) 🌟

@@ -27,6 +27,7 @@ Route::prefix('projects')->group(function () {
         Route::delete('/{project_uuid}/manuscript/{uuid}', [\App\Http\Controllers\ManuscriptController::class, 'destroy']);
         Route::get('/{project_uuid}/manuscript/{uuid}/planning', [\App\Http\Controllers\ManuscriptController::class, 'getPlanning']);
         Route::put('/{project_uuid}/manuscript/{uuid}/planning', [\App\Http\Controllers\ManuscriptController::class, 'savePlanning']);
+        Route::post('/{project_uuid}/manuscript/{uuid}/summary', [\App\Http\Controllers\ManuscriptController::class, 'generateSummary']);
 
         // Worldbuilding Cards
         Route::get('/{project_uuid}/cards/search', [\App\Http\Controllers\CardController::class, 'searchCards']);
@@ -72,6 +73,7 @@ Route::prefix('projects')->group(function () {
         Route::get('/{project_uuid}/bible', [\App\Http\Controllers\BibleController::class, 'show']);
         Route::put('/{project_uuid}/bible', [\App\Http\Controllers\BibleController::class, 'update']);
         Route::post('/{project_uuid}/bible/sync', [\App\Http\Controllers\BibleController::class, 'syncBibleWithAI']);
+        Route::post('/{project_uuid}/bible/cerebellum', [\App\Http\Controllers\BibleController::class, 'syncCerebellum']);
 
         // AI Magic Buttons
         Route::post('/{project_uuid}/ai/card', [\App\Http\Controllers\AiController::class, 'suggestCard']);
@@ -89,7 +91,6 @@ Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])-
 Route::prefix('install')->group(function () {
     Route::get('/', [\App\Http\Controllers\InstallController::class, 'index'])->name('install');
     Route::get('/requirements', [\App\Http\Controllers\InstallController::class, 'checkRequirements']);
-    Route::post('/license', [\App\Http\Controllers\InstallController::class, 'validateLicense']);
     Route::post('/database/test', [\App\Http\Controllers\InstallController::class, 'testDatabase']);
     Route::post('/database/configure', [\App\Http\Controllers\InstallController::class, 'configureDatabase']);
     Route::post('/admin', [\App\Http\Controllers\InstallController::class, 'createAdmin']);
@@ -102,7 +103,6 @@ Route::get('/dev/reset', [\App\Http\Controllers\SetupController::class, 'factory
 Route::prefix('setup')->group(function () {
     Route::get('/', [\App\Http\Controllers\SetupController::class, 'index'])->name('setup');
     Route::post('/locale', [\App\Http\Controllers\SetupController::class, 'setLocale']);
-    Route::post('/license', [\App\Http\Controllers\SetupController::class, 'activateLicense']);
     Route::post('/user', [\App\Http\Controllers\SetupController::class, 'createUser']);
     Route::post('/ai', [\App\Http\Controllers\SetupController::class, 'saveAiKey']);
 });

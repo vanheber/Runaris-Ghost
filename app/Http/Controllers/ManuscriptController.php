@@ -142,4 +142,42 @@ class ManuscriptController extends Controller
 
         return response()->json(['status' => 'success']);
     }
+
+    /**
+     * Generate an AI summary for a manuscript item.
+     */
+    public function generateSummary($project_uuid, string $uuid)
+    {
+        try {
+            $project = Project::where('uuid', $project_uuid)->firstOrFail();
+            $this->projectManager->switchToProject($project);
+            
+            $item = ManuscriptItem::where('uuid', $uuid)->firstOrFail();
+            $content = $this->manuscriptService->getContent($project, $uuid);
+
+            if (empty($content) || strlen($content) < 50) {
+                return response()->json(['error' => 'Conteúdo muito curto para gerar resumo.'], 400);
+            }
+
+            $gemini = new \App\Services\GeminiService($project);
+            $prompt = "Você é um editor literário especialista em análise estrutural. " .
+                      "Abaixo está o texto de um capítulo/cena intitulado '{$item->title}':\n\n" .
+                      "--- INÍCIO DO TEXTO ---\n{$content}\n--- FIM DO TEXTO ---\n\n" .
+                      "SUA TAREFA: Escreva um resumo conciso (máximo 150 palavras) dos acontecimentos desta seção. " .
+                      "Foque em fatos, mudanças de estado emocional dos personagens e revelações de plot. " .
+                      "Não use introduções, vá direto ao resumo.";
+
+            $summary = $gemini->generate($prompt, 'gemini-3.1-flash-lite');
+            
+            $item->update(['summary' => $summary]);
+
+            return response()->json([
+                'success' => true,
+                'summary' => $summary
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

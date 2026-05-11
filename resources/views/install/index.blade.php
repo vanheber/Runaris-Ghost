@@ -89,20 +89,6 @@
         </div>
     </div>
 
-    <!-- STEP 2: License -->
-    <div id="step-2" class="step">
-        <h3 class="fw-bold mb-2">Chave de Licença</h3>
-        <p class="text-secondary mb-4">Insira sua chave do Gumroad para desbloquear o Runaris Ghost.</p>
-        <div class="mb-4">
-            <label class="form-label text-uppercase small fw-bold opacity-50">License Key</label>
-            <input type="text" id="license_key" class="form-control" placeholder="GUM-XXXX-XXXX-XXXX">
-            <div id="lic-msg" class="d-none alert-box mt-2"></div>
-        </div>
-        <div class="d-flex justify-content-between">
-            <button class="btn btn-link text-secondary text-decoration-none" onclick="goTo(1)"><i class="bi bi-arrow-left me-1"></i> Voltar</button>
-            <button class="btn btn-brand" id="btn-lic" onclick="validateLicense()">Validar Licença</button>
-        </div>
-    </div>
 
     <!-- STEP 3: Database -->
     <div id="step-3" class="step">
@@ -125,7 +111,7 @@
         <div id="db-msg" class="d-none alert-box mb-3"></div>
         
         <div class="d-flex justify-content-between align-items-center">
-            <button class="btn btn-link text-secondary text-decoration-none" onclick="goTo(2)"><i class="bi bi-arrow-left me-1"></i> Voltar</button>
+            <button class="btn btn-link text-secondary text-decoration-none" onclick="goTo(1)"><i class="bi bi-arrow-left me-1"></i> Voltar</button>
             <div class="d-flex gap-2">
                 <button class="btn btn-brand px-4" id="btn-db-save" onclick="configureDb()">
                     <i class="bi bi-gear-fill me-2"></i>Inicializar Banco de Dados
@@ -192,7 +178,7 @@
 </div>
 
 <script>
-const STEPS=7, csrf=document.querySelector('meta[name="csrf-token"]').content;
+const STEPS=6, csrf=document.querySelector('meta[name="csrf-token"]').content;
 let current=0, selectedDb='sqlite', selectedLang='pt_BR';
 
 function H(m){return{'Content-Type':'application/json','X-CSRF-TOKEN':csrf,'Accept':'application/json'}}
@@ -249,24 +235,8 @@ async function checkReqs(){
 checkReqs();
 
 // --- Step 1: Language ---
-function pickLang(l){selectedLang=l;goTo(2);}
+function pickLang(l){selectedLang=l;goTo(3);}
 
-// --- Step 2: License ---
-async function validateLicense(){
-    const key=document.getElementById('license_key').value;
-    const msg=document.getElementById('lic-msg');
-    const btn=document.getElementById('btn-lic');
-    if(!key)return;
-    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Validando...';
-    msg.className='d-none';
-    try{
-        const r=await fetch('/install/license',{method:'POST',headers:H(),body:JSON.stringify({license_key:key})});
-        const d=await r.json();
-        if(d.status){goTo(3);}
-        else{msg.className='alert-box err';msg.textContent=d.message;}
-    }catch(e){msg.className='alert-box err';msg.textContent='Erro de conexão.';}
-    finally{btn.disabled=false;btn.textContent='Validar Licença';}
-}
 
 // --- Step 3: Database ---
 async function configureDb(){

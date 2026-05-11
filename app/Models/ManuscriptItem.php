@@ -21,7 +21,8 @@ class ManuscriptItem extends Model
         'word_count',
         'is_system',
         'has_planning',
-        'planning_updated_at'
+        'planning_updated_at',
+        'summary'
     ];
     
     protected $casts = [

@@ -891,3 +891,115 @@ body .node-row:hover .node-actions {
     font-size: 0.75rem;
     letter-spacing: 0.02em;
 }
+/* 9. Bento News Sidebar */
+.news-sidebar {
+    height: fit-content;
+}
+
+.bento-news-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.bento-item {
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 16px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.bento-item:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: var(--bs-primary);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.bento-item.large {
+    grid-column: span 2;
+    min-height: 180px;
+    background-size: cover;
+    background-position: center;
+}
+
+.bento-item.medium {
+    grid-column: span 1;
+    min-height: 140px;
+}
+
+.bento-item.small {
+    grid-column: span 1;
+    min-height: 100px;
+}
+
+.bento-item .badge-type {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 20px;
+    background: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+}
+
+.bento-item.large .bento-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    color: white;
+}
+
+.bento-item .bento-title {
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.bento-item.large .bento-title {
+    font-size: 1.25rem;
+}
+
+.bento-item .bento-content {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.bento-item .bento-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-top: auto;
+}
+
+.bento-skeleton {
+    animation: pulse 1.5s infinite ease-in-out;
+    background: var(--bs-border-color);
+    opacity: 0.2;
+    border-radius: 12px;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.4; }
+}

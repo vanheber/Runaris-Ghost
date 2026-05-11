@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
-use App\Services\GumroadService;
 
 class EnsureAppIsSetup
 {
@@ -21,10 +20,8 @@ class EnsureAppIsSetup
         }
 
         try {
-            $gumroad = app(GumroadService::class);
-
-            // Check if licensed and user exists
-            if (!$gumroad->isLicensedLocally() || !\App\Models\User::exists()) {
+            // Simplified check: if no user exists, redirect to setup
+            if (!\App\Models\User::exists()) {
                 return redirect('/setup');
             }
 

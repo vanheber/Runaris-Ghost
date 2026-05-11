@@ -14,7 +14,7 @@ Este documento define o conjunto de diretrizes operacionais e metodológicas par
 | **Frontend** | Bootstrap 5.3 (Vanilla) | Uso exclusivo de classes nativas do Bootstrap 5.3. **Tailwind CSS é proibido.** |
 | **Lógica Cliente** | Vanilla JavaScript | Evitar frameworks complexos desnecessários no frontend. A lógica deve ser o mais direta possível. |
 | **Banco de Dados** | SQLite | Padrão absoluto. O instalador é *hardcoded* para SQLite para garantir instalação zero-config e portabilidade total entre servidores. |
-| **Modelo de Negócio** | Free Code, Paid Convenience | A base de código (o *free*) deve ser robusta, limpa e livre de funcionalidades de rastreamento. A receita deve vir da conveniência paga. |
+| **Modelo de Negócio** | 100% Open Source (Donation-based) | O software é gratuito. O desenvolvimento é mantido por doações e contribuições da comunidade. |
 
 #### 📐 Regras de Ouro do Frontend (Design System)
 *   **Markdown é Sagrado:** Não editar arquivos .md do conteúdo (manuscrito, planejamento, lore), exceto por ordem expressa do usuário. Toda formatação especial (Ghost Formatting) deve ser feita via camada visual (Overlay/Widget) sem alterar a fonte.
@@ -49,7 +49,9 @@ Este é o princípio operacional mais importante. O código deve ser auditável,
 1.  **Política de Zero Telemetria:** É terminantemente proibido incluir quaisquer vetores de rastreamento, logs de usuário não essenciais, ou chamadas de API externas que não sejam estritamente necessárias para a funcionalidade paga.
 2.  **Integridade de Conteúdo**: É estritamente proibido editar o conteúdo dos arquivos `.md` do manuscrito/lore através de automação ou scripts, exceto por ordem expressa do usuário. Toda formatação visual deve ser feita via CSS/JS no editor (Ghost Formatting).
 3.  **Dados:** Tratar todos os dados do usuário como **confidenciais**. O armazenamento e processamento devem respeitar a arquitetura SQLite local ou o padrão de anonimização máxima.
-4.  **Resposta de Bugs/Debug:** Em caso de falhas de sintaxe ou problemas de formatação simples (e.g., *boilerplate*, ajustes Bootstrap), delegar a correção inicial e o resumo do erro ao **Gemma Local** (ou LLM de borda). Isso economiza recursos de token de comunicação e mantém o foco na lógica de negócio.
+4.  **Resposta de Bugs/Debug**: Em caso de falhas de sintaxe ou problemas de formatação simples (e.g., *boilerplate*, ajustes Bootstrap), delegar a correção inicial e o resumo do erro ao **Gemma Local** (ou LLM de borda). Isso economiza recursos de token de comunicação e mantém o foco na lógica de negócio.
+5.  **Comunicação Externa (News Feed)**: O consumo de dados externos para o Feed de Notícias deve ser estritamente unidirecional (`GET`). É proibido o envio de qualquer metadado do projeto, conteúdo do manuscrito ou identificação do usuário durante essas chamadas. O feed deve possuir suporte a cache local para permitir operação offline resiliente. O gerenciamento deste conteúdo é feito via repositório isolado (`RunarisGhostNews`) garantindo que o código-fonte do Ghost permaneça limpo e focado no usuário.
+6.  **Merchandising e Sustentabilidade**: Como o projeto é distribuído sem custo inicial (Open Source / MIT), o desenvolvedor reserva-se o direito de manter um canal de comunicação ("The Author's Pulse") para autopromoção de suas obras e serviços. A opção de ocultar o News Feed é considerada uma funcionalidade "Ghost PRO" (Whitelabel), destinada a usuários que apoiam o projeto financeiramente. Alterações manuais no código para remover o merchandising são permitidas pela licença, mas desencorajadas.
 
 ### 📐 Orquestração Metodológica MCP
 
@@ -60,3 +62,4 @@ Para maximizar a eficiência e minimizar o custo de processamento (tokens), a or
 *   **Delegação de Tarefas Simples:** Funções que não exigem raciocínio de negócio complexo, como formatação de código, correção de sintaxe simples em HTML/JS, ou resumir *stacks* de logs, devem ser delegadas à inteligência local (Gemma Local).
 
 > **Lembrete:** A arquitetura deve ser limpa, o código deve ser cirúrgico, e o usuário deve permanecer no controle total de seus dados.
+> **Isenção de Responsabilidade:** O Runaris Ghost é fornecido sem garantias de qualquer natureza e sem suporte técnico oficial. Visite [runaris.com.br/ghost](https://runaris.com.br/ghost/) para atualizações e manuais.

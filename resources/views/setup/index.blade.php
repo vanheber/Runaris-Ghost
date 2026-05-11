@@ -188,23 +188,6 @@
                 <button type="button" class="btn btn-brand btn-lg" onclick="nextStep(3)">{{ __('Start Now') }}</button>
             </div>
 
-            <!-- Step 2: License Key -->
-            <div id="step-2" class="step">
-                <h3 class="fw-bold mb-2">{{ __('License Key') }}</h3>
-                <p class="text-secondary mb-4">{{ __('Enter the key received from Gumroad to permanently unlock Runaris Ghost.') }}</p>
-                
-                <div class="mb-4">
-                    <label class="form-label text-uppercase small fw-bold opacity-50">{{ __('License Key') }}</label>
-                    <input type="text" id="license_key" class="form-control" placeholder="GUM-XXXX-XXXX-XXXX">
-                    <div id="license-error" class="text-danger small mt-2 d-none"></div>
-                </div>
-
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-link text-secondary text-decoration-none" onclick="nextStep(0)">{{ __('Back') }}</button>
-                    <button class="btn btn-brand" id="btn-validate-license" onclick="validateLicense()">{{ __('Validate License') }}</button>
-                </div>
-            </div>
-
             <!-- Step 3: User Details & Security -->
             <div id="step-3" class="step">
                 <h3 class="fw-bold mb-2">{{ __('Profile and Security') }}</h3>
@@ -326,43 +309,6 @@
             document.getElementById(`step-${step}`).classList.add('active');
         }
 
-        async function validateLicense() {
-            const key = document.getElementById('license_key').value;
-            const btn = document.getElementById('btn-validate-license');
-            const errorEl = document.getElementById('license-error');
-
-            if (!key) return;
-
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Validando...';
-            errorEl.classList.add('d-none');
-
-            try {
-                const response = await fetch('/setup/license', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
-                    },
-                    body: JSON.stringify({ license_key: key })
-                });
-
-                const data = await response.json();
-
-                if (data.status) {
-                    nextStep(3);
-                } else {
-                    errorEl.innerText = data.message;
-                    errorEl.classList.remove('d-none');
-                }
-            } catch (error) {
-                errorEl.innerText = 'Erro ao conectar servidor. Verifique sua internet.';
-                errorEl.classList.remove('d-none');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = 'Validar Licença';
-            }
-        }
 
         async function saveAiKey() {
             const key = document.getElementById('ai_key').value;

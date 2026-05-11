@@ -87,7 +87,7 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <div class="col-md-4 d-flex align-items-center">
                     <span class="text-body-secondary small me-3">
-                        &copy; {{ date('Y') }} Runaris Ghost. | <a href="{{ url('/eula') }}" class="text-body-secondary text-decoration-none small opacity-75 hover-opacity-100">Termos e Licença</a>
+                        &copy; {{ date('Y') }} <a href="https://runaris.com.br/ghost/" target="_blank" class="text-body-secondary text-decoration-none hover-primary">Runaris Ghost</a>. | <a href="{{ url('/eula') }}" class="text-body-secondary text-decoration-none small opacity-75 hover-opacity-100">Termos e Licença</a>
                     </span>
                 </div>
                 

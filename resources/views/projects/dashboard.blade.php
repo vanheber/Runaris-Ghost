@@ -37,6 +37,87 @@
             color: #ffc107 !important;
             z-index: 10;
         }
+        .nav-world.active {
+            background-color: var(--bs-primary) !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25) !important;
+        }
+        .nav-world.active i {
+            color: white !important;
+        }
+        /* Bible Styles */
+        .custom-accordion .accordion-item {
+            background: transparent;
+            border: 1px solid rgba(13, 110, 253, 0.1);
+            margin-bottom: 0.5rem;
+            border-radius: 0.75rem !important;
+            overflow: hidden;
+        }
+        .custom-accordion .accordion-button {
+            background: rgba(13, 110, 253, 0.02);
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.875rem;
+        }
+        .custom-accordion .accordion-button:not(.collapsed) {
+            background: rgba(13, 110, 253, 0.05);
+            color: var(--bs-primary);
+            box-shadow: none;
+        }
+        .custom-accordion .accordion-body {
+            background: var(--bs-body-bg);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--bs-body-color);
+            padding: 1.25rem;
+        }
+        .summary-empty {
+            font-style: italic;
+            color: var(--bs-secondary);
+            opacity: 0.6;
+        }
+
+        /* Manuscript Tree Actions */
+        .node-row {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .node-row:hover {
+            background: rgba(13, 110, 253, 0.05);
+        }
+        .node-row.active {
+            background: var(--bs-primary) !important;
+            color: white !important;
+        }
+        .node-row.active .node-title, .node-row.active i {
+            color: white !important;
+        }
+        .node-actions {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .node-row:hover .node-actions {
+            opacity: 1;
+        }
+        .btn-node-action {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .btn-node-action:hover {
+            background: rgba(13, 110, 253, 0.15);
+            transform: scale(1.1);
+        }
+        .node-row.active .btn-node-action:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .node-row.active .btn-node-action {
+            color: white !important;
+        }
     </style>
 
     <!-- Graph Visualization Lib -->
@@ -56,6 +137,9 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="text-body-secondary small text-uppercase fw-bold mb-0 ls-wide cp" onclick="showEmptyState('manuscript')">Manuscrito</h6>
                     <div class="d-flex gap-2">
+                        <button class="btn btn-link text-primary p-0" onclick="createNewItem('scene')" title="Nova Cena (Raiz)">
+                            <i class="bi bi-file-earmark-plus"></i>
+                        </button>
                         <button class="btn btn-link text-primary p-0" onclick="createNewItem('section')" title="Nova Seção">
                             <i class="bi bi-folder-plus"></i>
                         </button>
@@ -92,6 +176,9 @@
                             </button>
                             <button id="btn-magic-writing" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="writeAiScene()" title="Escritor Fantasma">
                                 <i class="bi bi-magic"></i>
+                            </button>
+                            <button id="btn-sync-to-bible" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="syncSectionToBible()" title="Sincronizar com a Bíblia: Gera um resumo da seção atual para o cânone do projeto.">
+                                <i class="bi bi-journal-arrow-up"></i>
                             </button>
                             <div id="save-status-container" class="d-flex align-items-center opacity-75">
                                 <i id="save-status-icon" class="bi bi-check2-all me-1"></i> 
@@ -140,22 +227,48 @@
                             <h3 class="fw-bold mb-0">Bíblia do Projeto</h3>
                         </div>
                         <div class="d-flex align-items-center gap-3">
-                            <button id="btn-sync-bible" class="btn btn-outline-primary btn-icon-round shadow-sm" onclick="syncBibleWithAI()" title="Sincronizar Bíblia: A IA lerá seu manuscrito e atualizará o resumo.">
-                                <i class="bi bi-stars text-warning"></i>
-                            </button>
                             <div id="bible-save-status" class="text-body-secondary small">
                                 <i class="bi bi-check2-all me-1"></i> Salvo
                             </div>
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column">
-                        <!-- Seção Única: Resumo (IA) -->
-                        <div class="d-flex flex-column">
-                            <h6 class="text-accent small text-uppercase fw-bold mb-3 ls-wide d-flex align-items-center">
-                                <i class="bi bi-stars me-2"></i> Resumo Narrativo & Cronologia 
-                                <span class="badge bg-secondary bg-opacity-10 text-body-secondary fw-normal ms-2 fs-xs">IA RECAP</span>
-                            </h6>
+                    <!-- Bible Mode Tabs (Style like Editor) -->
+                    <div class="d-flex gap-2 mb-4" id="bible-tabs">
+                        <button id="btn-bible-structure" class="btn btn-xs btn-primary active py-0 px-2 small fs-xs text-uppercase" onclick="setBibleMode('structure')">ESTRUTURA</button>
+                        <button id="btn-bible-cerebellum" class="btn btn-xs btn-outline-secondary py-0 px-2 small fs-xs text-uppercase" onclick="setBibleMode('cerebellum')">CEREBELO</button>
+                    </div>
+
+                    <div class="tab-content flex-grow-1 overflow-y-auto scroll-custom px-1" id="bible-tabs-content" style="max-height: 70vh;">
+                        <!-- Tab 1: Structure (Accordion) -->
+                        <div class="tab-pane fade show active" id="bible-structure" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <p class="text-body-secondary small mb-0">Resumos detalhados de cada capítulo e cena do manuscrito.</p>
+                                <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill small">
+                                    <i class="bi bi-info-circle me-1"></i> Sincronize itens no editor
+                                </div>
+                            </div>
+                            <div class="accordion accordion-flush custom-accordion" id="bible-manuscript-accordion">
+                                <!-- Carregado via JS -->
+                                <div class="text-center py-5 text-ghost-muted">
+                                    <div class="spinner-border spinner-border-sm mb-2" role="status"></div>
+                                    <p class="small">Construindo estrutura...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Cerebellum (Master Resumo) -->
+                        <div class="tab-pane fade" id="bible-cerebellum" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h6 class="fw-bold mb-1">Cerebelo do Projeto</h6>
+                                    <p class="text-body-secondary small mb-0">Macro-narrativa consolidada para contexto global da IA.</p>
+                                </div>
+                                <button id="btn-sync-cerebellum" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" onclick="syncCerebellum()">
+                                    <i class="bi bi-stars me-1 text-warning"></i> Sincronizar Cerebelo
+                                </button>
+                            </div>
+                            
                             <div class="border border-secondary border-opacity-10 rounded shadow-sm bg-body custom-editor-area">
                                 <textarea id="bible-summary-editor"></textarea>
                             </div>
@@ -1068,14 +1181,14 @@ function renderTreeNodes(nodes, container) {
                     <i class="bi ${icon} ${colorClass} me-2 flex-shrink-0"></i>
                     <span class="node-title text-truncate ${activeItemUuid === node.uuid ? '' : 'text-ghost-muted'}">${node.title}</span>
                 </div>
-                <div class="node-actions d-none gap-2">
+                <div class="node-actions d-flex gap-1">
                     ${!node.is_system && node.type !== 'scene' ? `
-                        <button class="btn btn-link btn-sm p-0 text-primary" type="button" title="Adicionar Filho" onclick="event.preventDefault(); event.stopPropagation(); createNewItem('${node.type === 'section' ? 'chapter' : 'scene'}', '${node.uuid}')">
-                            <i class="bi bi-plus"></i>
+                        <button class="btn btn-link btn-sm p-0 text-primary btn-node-action" type="button" title="Adicionar ${node.type === 'section' ? 'Capítulo' : 'Cena'}" onclick="event.preventDefault(); event.stopPropagation(); createNewItem('${node.type === 'section' ? 'chapter' : 'scene'}', '${node.uuid}')">
+                            <i class="bi bi-plus-lg"></i>
                         </button>
                     ` : ''}
                     ${!node.is_system ? `
-                    <button class="btn btn-link btn-sm p-0 text-danger" type="button" title="Excluir" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" onclick="event.preventDefault(); event.stopPropagation(); itemToDeleteUuid = '${node.uuid}'">
+                    <button class="btn btn-link btn-sm p-0 text-danger btn-node-action" type="button" title="Excluir" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" onclick="event.preventDefault(); event.stopPropagation(); itemToDeleteUuid = '${node.uuid}'">
                         <i class="bi bi-trash"></i>
                     </button>
                     ` : ''}
@@ -1143,6 +1256,9 @@ async function openManuscriptItem(uuid) {
     activeCardCategory = null;
     activeItemType = 'manuscript';
     manuscriptMode = 'writing'; // Reset to writing mode by default
+    
+    // Clear worldbuilding nav active state
+    document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
 
     // UI Update: Toggle Active Class in Sidebar
     document.querySelectorAll('.node-row').forEach(row => {
@@ -1234,6 +1350,7 @@ async function openManuscriptItem(uuid) {
 
             const btnMagicWriting = document.getElementById('btn-magic-writing');
             const btnMagicPlanning = document.getElementById('btn-magic-planning');
+            const btnSyncBible = document.getElementById('btn-sync-to-bible');
 
             // AI Buttons
             if (manuscriptMode === 'writing') {
@@ -1243,6 +1360,13 @@ async function openManuscriptItem(uuid) {
                 if (btnMagicPlanning) btnMagicPlanning.classList.remove('d-none');
                 if (btnMagicWriting) btnMagicWriting.classList.add('d-none');
             }
+            
+            // Sync to Bible button only for Chapters and Scenes
+            if (btnSyncBible) {
+                if (item.type === 'chapter' || item.type === 'scene') btnSyncBible.classList.remove('d-none');
+                else btnSyncBible.classList.add('d-none');
+            }
+
             easyMDE.codemirror.setOption("readOnly", false);
             if (easyMDE.isPreviewActive()) easyMDE.togglePreview();
         }
@@ -2333,24 +2457,253 @@ async function openBible() {
     activeItemUuid = null;
     activeCardCategory = null;
     
+    showEmptyState(null); // Clear other views
+    
     // Update Navigation UI
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
     document.getElementById('nav-bible').classList.add('active');
     
-    showEmptyState(null); // Clear other views
     document.querySelectorAll('.sidebar-nav .nav-link').forEach(el => el.classList.remove('active'));
     document.getElementById('bible-container').classList.remove('d-none');
     document.getElementById('export-container').classList.add('d-none');
     document.getElementById('backup-container').classList.add('d-none');
     document.getElementById('empty-state').classList.add('d-none');
     
+    // Reset to Structure Mode
+    setBibleMode('structure');
+
+    loadBibleData();
+}
+
+function setBibleMode(mode) {
+    const btnStructure = document.getElementById('btn-bible-structure');
+    const btnCerebellum = document.getElementById('btn-bible-cerebellum');
+    const structurePane = document.getElementById('bible-structure');
+    const cerebellumPane = document.getElementById('bible-cerebellum');
+
+    if (!btnStructure || !btnCerebellum || !structurePane || !cerebellumPane) return;
+
+    if (mode === 'structure') {
+        btnStructure.classList.add('active', 'btn-primary');
+        btnStructure.classList.remove('btn-outline-secondary');
+        btnCerebellum.classList.remove('active', 'btn-primary');
+        btnCerebellum.classList.add('btn-outline-secondary');
+        
+        structurePane.classList.add('show', 'active');
+        cerebellumPane.classList.remove('show', 'active');
+    } else {
+        btnCerebellum.classList.add('active', 'btn-primary');
+        btnCerebellum.classList.remove('btn-outline-secondary');
+        btnStructure.classList.remove('active', 'btn-primary');
+        btnStructure.classList.add('btn-outline-secondary');
+        
+        cerebellumPane.classList.add('show', 'active');
+        structurePane.classList.remove('show', 'active');
+    }
+}
+
+async function loadBibleData() {
     try {
         const response = await fetch(`/projects/${projectUuid}/bible`);
         const data = await response.json();
-        bibleEditor.value(data.content);
-        bibleSummaryEditor.value(data.summary || '');
+        
+        // Update Cerebellum (Legacy "summary" in bible)
+        if (bibleEditor) bibleEditor.value(data.content || '');
+        if (bibleSummaryEditor) bibleSummaryEditor.value(data.summary || '');
+        
+        // Render Manuscript Structure with summaries
+        renderBibleAccordion(data.manuscript_tree);
+        
     } catch (error) {
         console.error('Erro ao carregar bíblia:', error);
+    }
+}
+
+function renderBibleAccordion(tree) {
+    const container = document.getElementById('bible-manuscript-accordion');
+    if (!container) return;
+    
+    if (!tree || tree.length === 0) {
+        container.innerHTML = '<div class="text-center py-5 text-ghost-muted italic small">Manuscrito vazio. Escreva algo primeiro.</div>';
+        return;
+    }
+
+    // Limpa e renderiza recursivamente, informando que estamos no nível raiz (parentType null)
+    container.innerHTML = tree.map(node => renderBibleItem(node, null)).join('');
+}
+
+function renderBibleItem(item, parentType = null) {
+    if (item.type === 'toc') return '';
+
+    // Regra: Itens fora de uma seção não têm resumo, exceto as próprias seções
+    const showSync = parentType === 'section' || item.type === 'section';
+
+    if (item.type === 'section') {
+        const childrenHtml = (item.children || []).map(child => renderBibleItem(child, 'section')).join('');
+        const hasSummary = item.summary && item.summary.trim() !== '';
+        
+        return `
+            <div class="bible-section-group mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom border-primary border-opacity-20 pb-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-folder2-open text-primary fs-5"></i>
+                        <h5 class="fw-bold mb-0 text-primary small text-uppercase ls-wide">${item.title}</h5>
+                        ${showSync ? `
+                        <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100 ms-1" data-uuid="${item.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${item.uuid}')" title="Sincronizar esta seção">
+                            <i class="bi bi-journal-arrow-up"></i>
+                        </span>` : ''}
+                    </div>
+                </div>
+                ${showSync && hasSummary ? `<div class="mb-3 p-2 bg-primary bg-opacity-5 rounded border-start border-primary border-3 small italic text-body-secondary mx-2">${item.summary}</div>` : ''}
+                <div class="ps-2">
+                    ${childrenHtml || '<div class="text-ghost-muted x-small italic ps-4 pb-3">Seção vazia.</div>'}
+                </div>
+            </div>
+        `;
+    }
+
+    if (item.type === 'chapter') {
+        const scenesHtml = (item.children || []).map(scene => renderSceneHtml(scene, 'chapter')).join('');
+        return renderChapterAccordionHtml(item, scenesHtml, showSync);
+    }
+
+    if (item.type === 'scene') {
+        return renderSceneHtml(item, parentType, showSync);
+    }
+
+    return '';
+}
+
+function renderChapterAccordionHtml(chapter, childrenHtml, showSync = true) {
+    const hasChapterSummary = chapter.summary && chapter.summary.trim() !== '';
+    
+    return `
+        <div class="accordion-item shadow-sm mb-3 border rounded overflow-hidden">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-bible-${chapter.uuid}">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-journal-bookmark text-info"></i>
+                        <span class="fw-bold text-truncate" style="max-width: 250px;">${chapter.title}</span>
+                        ${showSync ? `
+                        <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100 ms-1" data-uuid="${chapter.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${chapter.uuid}')" title="Sincronizar este capítulo">
+                            <i class="bi bi-journal-arrow-up"></i>
+                        </span>` : ''}
+                    </div>
+                    ${chapter.children && chapter.children.length > 0 ? `<span class="badge bg-secondary bg-opacity-10 text-body-secondary ms-auto me-3 fw-normal small">${chapter.children.length} cenas</span>` : ''}
+                </button>
+            </h2>
+            <div id="collapse-bible-${chapter.uuid}" class="accordion-collapse collapse" data-bs-parent="#bible-manuscript-accordion">
+                <div class="accordion-body bg-body">
+                    ${showSync && hasChapterSummary ? `<div class="mb-4 p-3 bg-info bg-opacity-5 rounded border-start border-info border-4 small">${chapter.summary}</div>` : ''}
+                    <div class="scenes-list">
+                        ${childrenHtml || '<div class="text-ghost-muted x-small italic ps-4">Sem cenas neste capítulo.</div>'}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderSceneHtml(scene, parentType, showSync = true) {
+    const hasSummary = scene.summary && scene.summary.trim() !== '';
+    return `
+        <div class="mb-3 border-bottom border-secondary border-opacity-10 pb-3 last-child-border-0">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="bi bi-text-paragraph text-ghost-muted small"></i>
+                <span class="fw-bold small">${scene.title}</span>
+                ${showSync ? `
+                <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100" data-uuid="${scene.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${scene.uuid}')" title="Sincronizar esta cena">
+                    <i class="bi bi-journal-arrow-up"></i>
+                </span>` : ''}
+            </div>
+            ${showSync ? `
+            <div class="summary-content ps-4 ${hasSummary ? '' : 'summary-empty small'}">
+                ${hasSummary ? scene.summary : 'Sem resumo sincronizado.'}
+            </div>` : '<div class="ps-4 text-ghost-muted small italic">Item administrativo (sem resumo).</div>'}
+        </div>
+    `;
+}
+
+async function syncSectionToBible(uuid = null) {
+    const targetUuid = uuid || activeItemUuid;
+    if (!targetUuid) return;
+    
+    // Identificar qual botão foi clicado para feedback visual
+    let btn, icon;
+    if (uuid) {
+        btn = document.querySelector(`.btn-sync-bible-item[data-uuid="${uuid}"]`);
+    } else {
+        btn = document.getElementById('btn-sync-to-bible');
+    }
+    
+    if (btn) {
+        icon = btn.querySelector('i');
+        icon.className = 'spinner-border spinner-border-sm';
+        btn.classList.add('disabled');
+    }
+    
+    try {
+        const response = await fetch(`/projects/${projectUuid}/manuscript/${targetUuid}/summary`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            showToast('Sucesso', 'Resumo gerado e sincronizado!', 'success');
+            // Se estivermos na tela da bíblia, recarregar apenas os dados para atualizar o accordion (sem resetar modo)
+            if (!document.getElementById('bible-container').classList.contains('d-none')) {
+                loadBibleData();
+            }
+        } else {
+            showToast('Aviso', data.error || 'Não foi possível gerar o resumo.', 'warning');
+        }
+    } catch (error) {
+        console.error('Erro ao sincronizar:', error);
+        showToast('Erro', 'Falha na comunicação com o servidor.', 'danger');
+    } finally {
+        if (btn && icon) {
+            icon.className = 'bi bi-journal-arrow-up';
+            btn.classList.remove('disabled');
+        }
+    }
+}
+
+async function syncCerebellum() {
+    const btn = document.getElementById('btn-sync-cerebellum');
+    const icon = btn.querySelector('i');
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Sincronizando...';
+    btn.classList.add('disabled');
+    
+    try {
+        const response = await fetch(`/projects/${projectUuid}/bible/sync-cerebellum`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            bibleSummaryEditor.value(data.summary);
+            showToast('Sucesso', 'Cerebelo atualizado com base nos resumos individuais!', 'success');
+        } else {
+            showToast('Erro', data.error || 'Erro ao sincronizar cerebelo.', 'danger');
+        }
+    } catch (error) {
+        console.error('Erro ao sincronizar cerebelo:', error);
+        showToast('Erro', 'Falha na conexão.', 'danger');
+    } finally {
+        btn.innerHTML = originalText;
+        btn.classList.remove('disabled');
     }
 }
 

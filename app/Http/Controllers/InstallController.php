@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\RequirementsChecker;
 use App\Services\EnvWriter;
-use App\Services\GumroadService;
 use App\Models\SystemSetting;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
@@ -38,18 +37,6 @@ class InstallController extends Controller
         return response()->json($checker->check());
     }
 
-    /**
-     * Step 2: Validate license key.
-     */
-    public function validateLicense(Request $request)
-    {
-        $request->validate(['license_key' => 'required|string']);
-
-        $gumroad = app(GumroadService::class);
-        $result = $gumroad->verifyLicense($request->license_key);
-
-        return response()->json($result);
-    }
 
     /**
      * Step 3: Test database connection (SQLite check).

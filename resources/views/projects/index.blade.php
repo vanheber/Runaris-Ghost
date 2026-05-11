@@ -4,17 +4,20 @@
 
 @section('content')
 <div class="container mt-3">
-    <div class="d-flex justify-content-between align-items-end mb-4">
-        <div>
-            <h1 class="fw-bold mb-2">Suas Histórias</h1>
-            <p class="text-body-secondary mb-0">Continue sua jornada literária ou comece uma nova aventura.</p>
-        </div>
-        <div class="d-none d-md-block">
-            <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 px-3 py-2">
-                <i class="bi bi-collection me-1"></i> Total: {{ $projects->count() }}
-            </span>
-        </div>
-    </div>
+    <div class="row">
+        <!-- Main Content: Projects Grid -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <h1 class="fw-bold mb-2">Suas Histórias</h1>
+                    <p class="text-body-secondary mb-0">Continue sua jornada literária ou comece uma nova aventura.</p>
+                </div>
+                <div class="d-none d-md-block">
+                    <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 px-3 py-2">
+                        <i class="bi bi-collection me-1"></i> Total: {{ $projects->count() }}
+                    </span>
+                </div>
+            </div>
 
     @if($projects->isEmpty())
     <div class="card bg-body-tertiary border-0 shadow-sm p-5 text-center my-5 animate__animated animate__fadeIn">
@@ -44,9 +47,9 @@
             <div class="card bg-body-tertiary border-0 shadow-sm h-100 project-card hover-lift overflow-hidden">
                 <div class="row g-0 h-100">
                     <!-- Thumbnail Side -->
-                    <div class="col-4 col-sm-3 position-relative bg-dark bg-opacity-10 d-flex flex-column align-items-center justify-content-center border-end border-secondary border-opacity-10">
+                    <div class="col-5 col-sm-4 position-relative bg-dark bg-opacity-5 d-flex align-items-center justify-content-center border-end border-secondary border-opacity-10 overflow-hidden">
                         @if($project->cover_image_uuid)
-                            <img src="{{ url('/projects/'.$project->uuid.'/gallery/'.$project->cover_image_uuid.'/image/thumb') }}" class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" alt="{{ $project->name }}">
+                            <img src="{{ url('/projects/'.$project->uuid.'/gallery/'.$project->cover_image_uuid.'/image/thumb') }}" class="w-100 h-100 object-fit-contain" alt="{{ $project->name }}">
                         @else
                             <div class="p-2 text-center z-1 w-100 h-100 d-flex flex-column align-items-center justify-content-center cover-placeholder w-100 ambient-bg">
                                 <i class="bi bi-file-earmark-image fs-1 opacity-50 mb-2"></i>
@@ -64,11 +67,11 @@
                     </div>
                     
                     <!-- Content Side -->
-                    <div class="col-8 col-sm-9">
+                    <div class="col-7 col-sm-8">
                         <a href="{{ url('/projects/'.$project->uuid) }}" class="project-card-link text-decoration-none d-block h-100">
                             <div class="p-4 d-flex flex-column h-100">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h4 class="fw-bold text-project-title mb-0 text-truncate">{{ $project->name }}</h4>
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="fw-bold text-project-title mb-0" style="font-size: 1.15rem; line-height: 1.3;">{{ $project->name }}</h5>
                                     <button class="btn btn-link text-body-secondary opacity-50 hover-danger p-0" title="Excluir Projeto" onclick="event.preventDefault(); event.stopPropagation(); openDeleteProjectModal('{{ $project->uuid }}', '{{ addslashes($project->name) }}')">
                                         <i class="bi bi-trash fs-5"></i>
                                     </button>
@@ -93,6 +96,24 @@
         </div>
         @endforeach
     </div>
+</div>
+
+<!-- News Sidebar -->
+    <div class="col-lg-3 mt-4 mt-lg-0 news-sidebar">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0 text-uppercase ls-wide fs-7 text-primary">
+                <i class="bi bi-lightning-charge-fill me-1"></i> O Pulso do Autor
+            </h5>
+        </div>
+        
+        <div id="bento-news-feed" class="bento-news-container">
+            <!-- Skeleton Loading -->
+            <div class="bento-item large bento-skeleton"></div>
+            <div class="bento-item small bento-skeleton"></div>
+            <div class="bento-item small bento-skeleton"></div>
+        </div>
+    </div>
+</div> <!-- row -->
 
     <!-- Cover Image Modal -->
     <div class="modal fade" id="coverModal" tabindex="-1" aria-hidden="true">
@@ -301,7 +322,65 @@
             btn.classList.remove('disabled');
         }
     }
+    // --- News Feed Logic ---
+    async function loadNewsFeed() {
+        const feedContainer = document.getElementById('bento-news-feed');
+        const NEWS_URL = 'https://runaris.com.br/ghost/news/news.json';
+        
+        try {
+            const response = await fetch(NEWS_URL);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            
+            if (data.news && data.news.length > 0) {
+                renderNews(data.news);
+            } else {
+                showOfflineFeed();
+            }
+        } catch (error) {
+            console.error('Ghost News Feed offline or unreachable.');
+            showOfflineFeed();
+        }
+    }
+
+    function renderNews(news) {
+        const feedContainer = document.getElementById('bento-news-feed');
+        feedContainer.innerHTML = news.map(item => {
+            const style = item.image ? `style="background-image: url('${item.image}')"` : '';
+            const overlay = item.image ? '<div class="bento-overlay"></div>' : '';
+            const footerIcon = item.type === 'video' ? 'bi-play-circle-fill' : 'bi-arrow-right-short';
+            
+            return `
+                <a href="${item.url}" target="_blank" class="bento-item ${item.size || 'small'}" ${style}>
+                    <span class="badge-type">${item.type}</span>
+                    ${overlay}
+                    <div class="z-1">
+                        <div class="bento-title">${item.title}</div>
+                        ${item.content ? `<div class="bento-content line-clamp-2">${item.content}</div>` : ''}
+                    </div>
+                    <div class="bento-footer z-1">
+                        <i class="bi ${footerIcon}"></i> ${item.type === 'video' ? 'Assistir' : 'Ler mais'}
+                    </div>
+                </a>
+            `;
+        }).join('');
+    }
+
+    function showOfflineFeed() {
+        const feedContainer = document.getElementById('bento-news-feed');
+        feedContainer.innerHTML = `
+            <div class="bento-item large">
+                <div class="bento-title">Santuário Offline</div>
+                <div class="bento-content small">O feed de notícias não pôde ser carregado. Continue escrevendo sua história com foco total.</div>
+                <div class="bento-footer mt-3"><i class="bi bi-shield-check"></i> Modo Imersivo Ativo</div>
+            </div>
+        `;
+    }
+
+    // Initialize News
+    document.addEventListener('DOMContentLoaded', loadNewsFeed);
     </script>
     @endif
-</div>
+    </div> <!-- container -->
+</div> <!-- bg-body -->
 @endsection
