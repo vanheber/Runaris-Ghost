@@ -80,6 +80,62 @@
                     <div class="position-absolute top-0 start-0 w-100 h-2 bg-danger opacity-50 rounded-top" style="height: 4px;"></div>
                     <h5 class="fw-bold mb-4 text-danger"><i class="bi bi-shield-exclamation"></i> Administração do Santuário</h5>
                     
+                    @if(session('success'))
+                        <div class="alert alert-success border-0 shadow-sm mb-4">
+                            <i class="bi bi-check-circle me-2"></i> {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger border-0 shadow-sm mb-4">
+                            <i class="bi bi-exclamation-triangle me-2"></i> {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <!-- Seção de Atualização -->
+                    <div class="mb-5 p-4 rounded-4 border border-primary border-opacity-10 bg-primary bg-opacity-10">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="position-relative">
+                                <i class="bi bi-shield-check fs-2 text-primary me-3"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 0.5rem;">
+                                    GUARD
+                                </span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold mb-1">Guardian Update System</h6>
+                                <p class="text-body-secondary small mb-0">Versão Atual: <span class="badge bg-body text-primary border border-primary border-opacity-25">{{ $currentVersion }}</span></p>
+                            </div>
+                            <div id="update-status" class="text-end d-none">
+                                <span class="badge bg-success shadow-sm">Nova Versão Disponível!</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <form action="{{ url('/settings/update') }}" method="POST" id="update-form">
+                                @csrf
+                                <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm" id="btn-update">
+                                    <i class="bi bi-cloud-arrow-down me-2"></i> Atualizar Sistema
+                                </button>
+                            </form>
+
+                            @if($hasRollback)
+                                <form action="{{ url('/settings/rollback') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-secondary rounded-pill px-4" onclick="return confirm('Isso irá restaurar o banco de dados e arquivos para o estado anterior à última atualização. Continuar?')">
+                                        <i class="bi bi-arrow-counterclockwise me-2"></i> Desfazer Atualização
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+                        
+                        <div class="mt-3">
+                            <p class="text-body-secondary small mb-0">
+                                <i class="bi bi-info-circle me-1"></i> 
+                                Um backup de segurança é criado automaticamente antes de qualquer atualização.
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="mb-5 p-4 rounded-4 border border-info border-opacity-10 bg-info bg-opacity-10">
                         <div class="d-flex align-items-center mb-3">
                             <i class="bi bi-cloud-download fs-2 text-info me-3"></i>
@@ -184,4 +240,30 @@
         to { opacity: 1; transform: translateY(0); }
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if($tab === 'system')
+            // Check for updates
+            fetch('{{ url("/settings/update/check") }}')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.has_update) {
+                        document.getElementById('update-status').classList.remove('d-none');
+                        const btn = document.getElementById('btn-update');
+                        btn.innerHTML = `<i class="bi bi-stars me-2"></i> Instalar Versão ${data.latest_version}`;
+                        btn.classList.replace('btn-primary', 'btn-success');
+                    }
+                })
+                .catch(err => console.error('Update check failed:', err));
+
+            // Prevent multiple clicks
+            document.getElementById('update-form')?.addEventListener('submit', function() {
+                const btn = document.getElementById('btn-update');
+                btn.disabled = true;
+                btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Atualizando...`;
+            });
+        @endif
+    });
+</script>
 @endsection

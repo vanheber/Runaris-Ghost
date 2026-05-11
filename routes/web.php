@@ -110,6 +110,9 @@ Route::prefix('setup')->group(function () {
 Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index']);
 Route::post('/settings/ai', [\App\Http\Controllers\SettingsController::class, 'updateAi']);
 Route::get('/settings/backup', [\App\Http\Controllers\SettingsController::class, 'fullBackup']);
+Route::get('/settings/update/check', [\App\Http\Controllers\UpdateController::class, 'check']);
+Route::post('/settings/update', [\App\Http\Controllers\UpdateController::class, 'update']);
+Route::post('/settings/rollback', [\App\Http\Controllers\UpdateController::class, 'rollback']);
 Route::post('/settings/factory-reset', [\App\Http\Controllers\SettingsController::class, 'showResetProgress']);
 Route::post('/settings/factory-reset/step-files', [\App\Http\Controllers\SettingsController::class, 'stepCleanFiles']);
 Route::post('/settings/factory-reset/step-database', [\App\Http\Controllers\SettingsController::class, 'stepCleanDatabase']);

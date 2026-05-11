@@ -9,10 +9,12 @@ use App\Services\BackupService;
 class SettingsController extends Controller
 {
     protected $backupService;
+    protected $updateService;
 
-    public function __construct(BackupService $backupService)
+    public function __construct(BackupService $backupService, \App\Services\UpdateService $updateService)
     {
         $this->backupService = $backupService;
+        $this->updateService = $updateService;
     }
     /**
      * Display the global system settings or documentation.
@@ -34,8 +36,10 @@ class SettingsController extends Controller
         }
 
         $geminiApiKey = \App\Models\SystemSetting::getSetting('gemini_api_key');
+        $currentVersion = $this->updateService->getCurrentVersion();
+        $hasRollback = \App\Models\SystemSetting::getSetting('last_auto_backup') !== null;
 
-        return view('settings.index', compact('tab', 'docContent', 'geminiApiKey'));
+        return view('settings.index', compact('tab', 'docContent', 'geminiApiKey', 'currentVersion', 'hasRollback'));
     }
 
     /**
