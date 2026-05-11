@@ -12,10 +12,12 @@ use Illuminate\Support\Str;
 class ProjectController extends Controller
 {
     protected $projectManager;
+    protected $backupService;
 
-    public function __construct(ProjectManager $projectManager)
+    public function __construct(ProjectManager $projectManager, \App\Services\ProjectBackupService $backupService)
     {
         $this->projectManager = $projectManager;
+        $this->backupService = $backupService;
     }
 
     /**
@@ -262,11 +264,76 @@ class ProjectController extends Controller
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
         
         // Delete project assets directory
-        $projectPath = "projects/{$project->uuid}";
+        $projectPath = "private/projects/{$project->uuid}";
         \Illuminate\Support\Facades\Storage::disk('local')->deleteDirectory($projectPath);
         
         $project->delete();
 
         return response()->json(['success' => true, 'message' => 'Projeto destruido permanentemente.']);
+    }
+
+    /**
+     * List all snapshots for the project.
+     */
+    public function listSnapshots($project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        return response()->json($this->backupService->listSnapshots($project));
+    }
+
+    /**
+     * Create a new snapshot.
+     */
+    public function createSnapshot($project_uuid)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $name = $this->backupService->createSnapshot($project);
+
+        if ($name) {
+            return response()->json(['success' => true, 'name' => $name]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Falha ao criar snapshot.'], 500);
+    }
+
+    /**
+     * Rollback to a specific snapshot.
+     */
+    public function rollback($project_uuid, Request $request)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        $snapshotName = $request->input('snapshot');
+
+        if (!$snapshotName) {
+            return response()->json(['success' => false, 'message' => 'Nenhum snapshot selecionado.'], 400);
+        }
+
+        $success = $this->backupService->restoreSnapshot($project, $snapshotName);
+
+        if ($success) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Falha ao restaurar snapshot.'], 500);
+    }
+
+    /**
+     * Restore project from an uploaded ZIP.
+     */
+    public function uploadRestore($project_uuid, Request $request)
+    {
+        $project = Project::where('uuid', $project_uuid)->firstOrFail();
+        
+        if (!$request->hasFile('backup_file')) {
+            return redirect()->back()->with('error', 'Nenhum arquivo enviado.');
+        }
+
+        $success = $this->backupService->restoreFromUpload($project, $request->file('backup_file')->getRealPath());
+
+        if ($success) {
+            return redirect()->back()->with('success', 'Projeto restaurado com sucesso!');
+        }
+
+        return redirect()->back()->with('error', 'Falha ao restaurar backup. Verifique se o arquivo é um ZIP válido do Runaris Ghost.');
     }
 }

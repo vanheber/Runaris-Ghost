@@ -40,7 +40,9 @@ O repositório central da "Verdade" do seu universo.
 ## 5. Exportação e Backup Soberano
 O Runaris Ghost prioriza a soberania dos seus dados. Você pode exportar seu trabalho a qualquer momento em formatos profissionais ou brutos:
 *   **Formatos de Leitura**: Gere **ePub** (Kindle), **PDF** (Impressão) ou um **Pacote Web** (HTML). A exportação é **recursiva**, preservando toda a hierarquia de Seções, Capítulos e Cenas definida na sua árvore lateral.
-*   **Backup Human-Readable**: O botão **Backup** gera um arquivo ZIP estruturado com todo o conteúdo em **Markdown puro**. Diferente de backups técnicos, aqui os arquivos usam os **nomes reais** das cenas e categorias, facilitando a portabilidade para qualquer outro editor (como Obsidian ou Notion).
+*   **Backup Human-Readable**: Gera um arquivo ZIP estruturado com todo o conteúdo em **Markdown puro**. Diferente de backups técnicos, aqui os arquivos usam os **nomes reais** das cenas e categorias, facilitando a portabilidade para qualquer outro editor (como Obsidian ou Notion).
+*   **Snapshots & Rollback**: Você pode criar "Snapshots" — pontos de restauração que capturam o estado exato do banco de dados e arquivos do projeto. Se algo der errado ou você se arrepender de uma mudança, pode fazer o **Rollback** instantâneo para um estado anterior.
+*   **Restauração Externa**: Permite importar um arquivo ZIP de backup para restaurar o projeto ou movê-lo entre diferentes instalações do Runaris Ghost.
 
 ## 6. Inteligência Artificial (Botões Mágicos) 🌟
 O Runaris Ghost utiliza a tecnologia **Google Gemini** para atuar como seu co-autor:

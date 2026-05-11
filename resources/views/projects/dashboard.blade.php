@@ -420,13 +420,6 @@
                             Este recurso gera um arquivo ZIP contendo todo o seu trabalho organizado de forma legível. 
                             Ao contrário do banco de dados, aqui os arquivos usam os <strong>títulos reais</strong> das cenas e lore.
                         </p>
-                        <div class="alert alert-info bg-info bg-opacity-10 border-0 d-flex align-items-center py-3 px-4 small mb-4">
-                            <i class="bi bi-info-circle-fill me-3 fs-4"></i>
-                            <div>
-                                <strong>Privacidade Total:</strong> O processamento é feito localmente no seu servidor. 
-                                Nenhum dado é enviado para a nuvem. O arquivo gerado fica disponível apenas para o seu download imediato.
-                            </div>
-                        </div>
                         
                         <div class="row g-4">
                             <div class="col-md-6">
@@ -437,18 +430,65 @@
                                         <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Worldbuilding (Personagens, Locais, Lore)</li>
                                         <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Bíblia do Projeto & Resumos</li>
                                         <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Galeria de Imagens</li>
-                                        <li><i class="bi bi-check2 text-success me-2"></i> Metadados (JSON)</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col-md-6 d-flex align-items-center justify-content-center">
                                 <div class="text-center">
-                                    <a href="{{ url('/projects/'.$project->uuid.'/export/backup') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow hover-lift" onclick="this.classList.add('disabled'); setTimeout(()=>this.classList.remove('disabled'), 5000)">
+                                    <a href="{{ url('/projects/'.$project->uuid.'/export/backup') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow hover-lift">
                                         <i class="bi bi-download me-2"></i> Baixar Backup Completo
                                     </a>
                                     <p class="x-small text-body-secondary mt-3 italic">Formato: ZIP (Markdown + Assets)</p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Snapshot & Rollback System -->
+                    <div class="card border-0 shadow-sm p-4 bg-body mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-clock-history me-2"></i> Snapshots & Rollback</h5>
+                            <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="createProjectSnapshot()">
+                                <i class="bi bi-camera me-1"></i> Criar Novo Snapshot
+                            </button>
+                        </div>
+                        
+                        <p class="text-body-secondary small mb-4">
+                            Snapshots são cópias de segurança locais do estado exato do seu projeto (incluindo o banco de dados SQLite). 
+                            Use-os para criar pontos de restauração antes de grandes mudanças.
+                        </p>
+
+                        <div id="snapshots-list-container" class="border rounded bg-body-tertiary overflow-hidden">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0 small">
+                                    <thead class="bg-dark bg-opacity-10">
+                                        <tr>
+                                            <th class="ps-3 py-2">Data</th>
+                                            <th class="py-2">Tamanho</th>
+                                            <th class="py-2 text-end pe-3">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="snapshots-table-body">
+                                        <tr>
+                                            <td colspan="3" class="text-center py-4 text-ghost-muted italic">Carregando snapshots...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top border-secondary border-opacity-10">
+                            <h6 class="fw-bold mb-3 small text-uppercase opacity-75">Importar Projeto / Restaurar Backup</h6>
+                            <form action="{{ url('/projects/'.$project->uuid.'/restore') }}" method="POST" enctype="multipart/form-data" class="d-flex gap-3 align-items-end">
+                                @csrf
+                                <div class="flex-grow-1">
+                                    <label class="form-label x-small text-body-secondary fw-bold text-uppercase">Selecionar Arquivo ZIP</label>
+                                    <input type="file" name="backup_file" class="form-control form-control-sm bg-body-tertiary border-secondary border-opacity-25" accept=".zip">
+                                </div>
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-4 shadow-sm" onclick="return confirm('ATENÇÃO: Isso substituirá TODO o conteúdo atual deste projeto pelo conteúdo do backup. Deseja continuar?')">
+                                    <i class="bi bi-upload me-1"></i> Restaurar do Arquivo
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -2822,6 +2862,92 @@ function openBackup() {
     if (document.getElementById('nav-backup')) {
         document.getElementById('nav-backup').classList.add('active');
     }
+
+    loadProjectSnapshots();
+}
+
+function loadProjectSnapshots() {
+    const tableBody = document.getElementById('snapshots-table-body');
+    if (!tableBody) return;
+    
+    tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-ghost-muted italic">Carregando snapshots...</td></tr>';
+
+    fetch(`/projects/${projectUuid}/snapshots`)
+        .then(response => response.json())
+        .then(snapshots => {
+            if (!snapshots || snapshots.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-ghost-muted">Nenhum snapshot encontrado.</td></tr>';
+                return;
+            }
+            
+            tableBody.innerHTML = snapshots.map(s => `
+                <tr>
+                    <td class="ps-3 py-2 align-middle">
+                        <div class="fw-bold">${s.date}</div>
+                        <div class="x-small text-body-secondary">${s.name}</div>
+                    </td>
+                    <td class="py-2 align-middle text-body-secondary">${s.size}</td>
+                    <td class="py-2 align-middle text-end pe-3">
+                        <button class="btn btn-outline-danger btn-xs rounded-pill px-3" onclick="rollbackProject('${s.name}')">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Rollback
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        })
+        .catch(err => {
+            console.error('Error loading snapshots:', err);
+            tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-danger">Erro ao carregar snapshots.</td></tr>';
+        });
+}
+
+function createProjectSnapshot() {
+    showToast('Iniciando snapshot do projeto...', 'info');
+    
+    fetch(`/projects/${projectUuid}/snapshots`, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Snapshot criado com sucesso!', 'success');
+            loadProjectSnapshots();
+        } else {
+            showToast('Falha ao criar snapshot: ' + (data.message || 'Erro desconhecido'), 'danger');
+        }
+    })
+    .catch(err => {
+        showToast('Erro de conexão ao criar snapshot.', 'danger');
+    });
+}
+
+function rollbackProject(snapshotName) {
+    if (!confirm(`Tem certeza que deseja restaurar o snapshot "${snapshotName}"? TODO o progresso atual desde este snapshot será perdido. O banco de dados e arquivos serão substituídos.`)) {
+        return;
+    }
+    
+    showToast('Restaurando snapshot... O sistema irá recarregar.', 'warning');
+    
+    fetch(`/projects/${projectUuid}/rollback`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+        },
+        body: JSON.stringify({ snapshot: snapshotName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            showToast(data.message || 'Falha no rollback.', 'danger');
+        }
+    })
+    .catch(err => {
+        showToast('Erro de conexão ao restaurar snapshot.', 'danger');
+    });
 }
 
 async function setProjectCover(imageUuid) {

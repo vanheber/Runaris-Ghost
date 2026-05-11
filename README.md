@@ -54,6 +54,7 @@ php artisan serve
 ### 3. Santuário & Segurança
 *   **Onboarding Local**: Setup privado, sem contas em nuvem obrigatórias.
 *   **Backup Soberano**: Exportação legível de todo o seu progresso em Markdown estruturado.
+*   **Snapshots & Rollback**: Pontos de restauração locais para o projeto (banco de dados e arquivos), permitindo reverter alterações com um clique.
 *   **Reset de Fábrica**: Limpeza profunda e segura de todos os dados locais.
 
 ---

@@ -69,6 +69,12 @@ Route::prefix('projects')->group(function () {
         Route::get('/{project_uuid}/export-state', [\App\Http\Controllers\ProjectController::class, 'getExportState']);
         Route::post('/{project_uuid}/export-process', [\App\Http\Controllers\ProjectController::class, 'processBatchExport']);
 
+        // Project Snapshots & Rollback
+        Route::get('/{project_uuid}/snapshots', [\App\Http\Controllers\ProjectController::class, 'listSnapshots']);
+        Route::post('/{project_uuid}/snapshots', [\App\Http\Controllers\ProjectController::class, 'createSnapshot']);
+        Route::post('/{project_uuid}/rollback', [\App\Http\Controllers\ProjectController::class, 'rollback']);
+        Route::post('/{project_uuid}/restore', [\App\Http\Controllers\ProjectController::class, 'uploadRestore']);
+
         // Project Bible
         Route::get('/{project_uuid}/bible', [\App\Http\Controllers\BibleController::class, 'show']);
         Route::put('/{project_uuid}/bible', [\App\Http\Controllers\BibleController::class, 'update']);
