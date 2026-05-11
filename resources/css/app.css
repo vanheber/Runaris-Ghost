@@ -897,9 +897,10 @@ body .node-row:hover .node-actions {
 }
 
 .bento-news-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 24px;
 }
 
 .bento-item {
@@ -925,34 +926,31 @@ body .node-row:hover .node-actions {
 }
 
 .bento-item.large {
-    grid-column: span 2;
     min-height: 180px;
     background-size: cover;
     background-position: center;
 }
 
 .bento-item.medium {
-    grid-column: span 1;
     min-height: 140px;
 }
 
 .bento-item.small {
-    grid-column: span 1;
     min-height: 100px;
 }
 
 .bento-item .badge-type {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    font-size: 10px;
+    align-self: flex-start;
+    font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-weight: bold;
-    padding: 4px 8px;
+    font-weight: 800;
+    padding: 3px 10px;
     border-radius: 20px;
-    background: rgba(var(--bs-primary-rgb), 0.1);
+    background: rgba(var(--bs-primary-rgb), 0.15);
     color: var(--bs-primary);
+    margin-bottom: 12px;
+    border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
 }
 
 .bento-item.large .bento-overlay {
