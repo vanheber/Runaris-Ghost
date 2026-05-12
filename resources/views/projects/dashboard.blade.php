@@ -1600,6 +1600,8 @@ async function loadCards(type) {
     document.getElementById('graph-container').classList.add('d-none');
     document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('export-container').classList.add('d-none');
+    document.getElementById('backup-container').classList.add('d-none');
+    document.getElementById('markdown-tips').classList.add('d-none');
     document.getElementById('cards-grid-container').classList.remove('d-none');
     
     // Update headers
@@ -2049,6 +2051,7 @@ function openGallery() {
     document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('export-container').classList.add('d-none');
     document.getElementById('backup-container').classList.add('d-none');
+    document.getElementById('dynamic-context-panel').classList.add('d-none');
     document.getElementById('markdown-tips').classList.add('d-none');
 
     // Highlight sidebar
@@ -2304,6 +2307,8 @@ function openGraph() {
     document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('export-container').classList.add('d-none');
     document.getElementById('backup-container').classList.add('d-none');
+    document.getElementById('dynamic-context-panel').classList.add('d-none');
+    document.getElementById('markdown-tips').classList.add('d-none');
     document.getElementById('graph-container').classList.remove('d-none');
     
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
@@ -3325,7 +3330,20 @@ function applyAISuggestion(uuid, title, type) {
 }
 
 // --- Notification Toast ---
+function showToast(titleOrMessage, messageOrType = 'primary', type = 'primary') {
+    if (arguments.length === 3) {
+        // Formato: title, message, type
+        toast(`<strong>${titleOrMessage}</strong><br>${messageOrType}`, type);
+    } else {
+        // Formato: message, type
+        toast(titleOrMessage, messageOrType);
+    }
+}
+
 function toast(message, type = 'primary') {
+    // Map 'error' to 'danger' for Bootstrap compatibility
+    if (type === 'error') type = 'danger';
+    
     const container = document.getElementById('toast-container') || createToastContainer();
     const toastEl = document.createElement('div');
     toastEl.className = `toast align-items-center text-white bg-${type} border-0 show mb-2 animate-fade-in`;
