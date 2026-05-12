@@ -82,7 +82,7 @@
         @yield('content')
     </main>
 
-    <footer class="py-2 bg-body-tertiary border-top mt-auto sticky-bottom">
+    <footer class="py-2 bg-body-tertiary border-top mt-auto sticky-bottom footer-custom">
         <div class="container-fluid px-4">
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <div class="col-md-4 d-flex align-items-center">

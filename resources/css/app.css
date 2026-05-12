@@ -50,9 +50,12 @@ main {
     /* Header mais alto */
 }
 
-footer {
+.footer-custom {
     z-index: 10000;
     /* Um a menos que o header */
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 /* Sticky Layout System */
@@ -61,7 +64,9 @@ footer {
     top: 50px;
     /* Alinhado à base do header de 50px */
     z-index: 9999;
-    background-color: var(--bs-body-bg);
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     height: 50px;
     /* Altura fixa para consistência de offset */
     display: flex;
@@ -129,6 +134,9 @@ body .center-editor-fluid {
     min-height: 50px;
     display: flex;
     align-items: center;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .footer-runaris-logo {
@@ -460,10 +468,34 @@ body .node-row:hover .node-actions {
     --bs-tertiary-bg-rgb: 30, 30, 30;
 }
 
+[data-bs-theme="dark"] body {
+    background: radial-gradient(circle at 50.57% 29.9%, #280245, transparent 100%),
+                radial-gradient(circle at 98.02% 87.06%, #633c3e, transparent 100%),
+                radial-gradient(circle at 50% 50%, #020005, #020005 100%);
+    background-attachment: fixed;
+}
+
 [data-bs-theme="light"] {
     --bs-body-color: #212529;
     --bs-emphasis-color: #000000;
     --bs-secondary-color: #495057;
+    --bs-body-bg-rgb: 255, 255, 255;
+    --bs-tertiary-bg-rgb: 248, 249, 250;
+}
+
+[data-bs-theme="light"] body {
+    background: radial-gradient(circle at 50.57% 29.9%, #fbfaff, transparent 100%),
+                radial-gradient(circle at 98.02% 87.06%, #ffffff, transparent 100%),
+                radial-gradient(circle at 50% 50%, #ffffff, #ffffff 100%);
+    background-attachment: fixed;
+}
+
+/* Global Card Transparency */
+.card, .bento-item, .card-ficha, .modal-content {
+    background-color: rgba(var(--bs-tertiary-bg-rgb), 0.7) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(var(--bs-primary-rgb), 0.1) !important;
 }
 
 [data-bs-theme="solar-light"] {
@@ -480,6 +512,13 @@ body .node-row:hover .node-actions {
     --bs-primary-rgb: 181, 137, 0;
     --bs-link-color: #b58900;
     --bs-secondary-color: #657b83;
+}
+
+[data-bs-theme="solar-light"] body {
+    background: radial-gradient(circle at 50.57% 29.9%, #e1d8e3, transparent 100%),
+                radial-gradient(circle at 98.02% 87.06%, #fffde8, transparent 100%),
+                radial-gradient(circle at 50% 50%, #e1e6d5, #e1e6d5 100%);
+    background-attachment: fixed;
 }
 
 .text-project-title {
