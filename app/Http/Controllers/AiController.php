@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\ManuscriptItem;
 use App\Services\GeminiService;
+use App\Services\LiteraryCraft;
 use Illuminate\Http\Request;
 
 class AiController extends Controller
@@ -58,7 +59,7 @@ class AiController extends Controller
                       "SUA TAREFA: Escreva 5 a 7 bullet points (em Markdown) traçando os acontecimentos sugeridos para esta cena. " .
                       "Foque em conflito, avanços de plot e revelações. Vá direto ao ponto, não explique suas escolhas.";
 
-            $planningMarkdown = $gemini->generate($prompt, 'gemini-3.1-flash-lite');
+            $planningMarkdown = $gemini->generate($prompt, 'gemini-3.1-flash-lite', LiteraryCraft::instructions());
 
             return response()->json([
                 'success' => true,
@@ -96,7 +97,8 @@ class AiController extends Controller
             // Usa o Pro para qualidade literária densa
             $responseText = $gemini->generate($prompt, 'gemini-3.1-pro', [
                 "Você é o fantasma literário, escreva apenas a arte.",
-                "Não inclua notas, sumários ou avisos no final."
+                "Não inclua notas, sumários ou avisos no final.",
+                ...LiteraryCraft::instructions()
             ]);
 
             return response()->json([
