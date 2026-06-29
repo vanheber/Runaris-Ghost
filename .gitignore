@@ -36,3 +36,7 @@ yarn-error.log
 
 # Web Installer lock
 /storage/install.lock
+
+# Improve skill generated plans
+/plans/
+/advisor-plans/
