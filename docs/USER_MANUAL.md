@@ -1,4 +1,4 @@
-# Guia do Runaris Ghost - v1.2.0
+# Guia do Runaris Ghost - v1.3.0
 
 O Runaris Ghost é um ambiente de escrita imersivo projetado para autores que buscam organizar o caos da criação literária em uma jornada estruturada.
 
@@ -45,10 +45,11 @@ O Runaris Ghost prioriza a soberania dos seus dados. Você pode exportar seu tra
 *   **Restauração Externa**: Permite importar um arquivo ZIP de backup para restaurar o projeto ou movê-lo entre diferentes instalações do Runaris Ghost.
 
 ## 6. Inteligência Artificial (Botões Mágicos) 🌟
-O Runaris Ghost utiliza a tecnologia **Google Gemini** para atuar como seu co-autor:
-*   **Escritor Fantasma**: No modo *Escrita*, a IA redige parágrafos literários baseando-se no que você planejou e no lore do seu mundo.
+O Runaris Ghost utiliza a tecnologia **Google Gemini 2.5** para atuar como seu co-autor:
+*   **Escritor Fantasma**: No modo *Escrita*, a IA redige parágrafos literários baseando-se no que você planejou e no lore do seu mundo. Se houver texto existente, uma confirmação aparece para evitar substituição acidental.
 *   **Sugerir Ideias**: No modo *Planejamento*, a IA sugere pontos de conflito, objetivos e reviravoltas para estruturar sua cena.
-*   **Sincronização da Bíblia**: A IA lê seu manuscrito e gera resumos narrativos automáticos.
+*   **Revisor**: Corrige gramática do português brasileiro e remove padrões de "AI Slop" (clichês, travessões indevidos, advérbios em diálogo, aberturas genéricas). Possui checkboxes para controlar o que revisar: só gramática, só anti-slop, ou ambos.
+*   **Sincronização da Bíblia**: A IA lê seu manuscrito e gera resumos narrativos automáticos. O botão fica verde quando o resumo já existe.
 
 ---
 *Nota: Este guia serve tanto como manual para usuários quanto como base de contexto para sistemas de inteligência artificial que auxiliem na escrita.*

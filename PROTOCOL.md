@@ -15,6 +15,7 @@ Este documento define o conjunto de diretrizes operacionais e metodológicas par
 | **Lógica Cliente** | Vanilla JavaScript | Evitar frameworks complexos desnecessários no frontend. A lógica deve ser o mais direta possível. |
 | **Banco de Dados** | SQLite | Padrão absoluto. O instalador é *hardcoded* para SQLite para garantir instalação zero-config e portabilidade total entre servidores. |
 | **Modelo de Negócio** | 100% Open Source (Donation-based) | O software é gratuito. O desenvolvimento é mantido por doações e contribuições da comunidade. |
+| **Agentes de IA** | Agent Skills + Ruleset | O diretório `.agents/` contém skills (`skills/`) e regras (`rules/`) para agentes de IA que auxiliam no desenvolvimento. O `CONTEXT.md` provê domínio e stack para auditoria automatizada via `shadcn/improve`. |
 
 #### 📐 Regras de Ouro do Frontend (Design System)
 *   **Markdown é Sagrado:** Não editar arquivos .md do conteúdo (manuscrito, planejamento, lore), exceto por ordem expressa do usuário. Toda formatação especial (Ghost Formatting) deve ser feita via camada visual (Overlay/Widget) sem alterar a fonte.
@@ -27,6 +28,7 @@ Este documento define o conjunto de diretrizes operacionais e metodológicas par
 *   **Bootstrap First:** Usar estritamente as classes utilitárias nativas do Bootstrap 5.3.
 *   **app.css:** Criar classes customizadas apenas para o que o Bootstrap 5.3 não resolve.
 *   **Ícones:** Uso exclusivo da biblioteca **Bootstrap Icons**.
+*   **Anti-AI-Slop Literário:** Conteúdo gerado pela IA (Escritor Fantasma, Revisor, Sugerir Ideias) deve respeitar as regras definidas em `app/Services/LiteraryCraft.php`. As regras cobrem padrões proibidos (aberturas genéricas, diálogo expositivo, travessão narrativo, advérbios em diálogo), evitar (vozes iguais, info-dump, "de repente"), e polimento (sinestesia, variação rítmica, action beats).
 
 ### ⚙️ Fluxo de Trabalho de Desenvolvimento (SKILL Protocol)
 

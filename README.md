@@ -1,4 +1,4 @@
-# 🕯️ Runaris Ghost - v1.2.0
+# 🕯️ Runaris Ghost - v1.3.0
 
 **Runaris Ghost** é um Santuário Digital para Autores. Uma plataforma de escrita criativa focada em imersão, organização e cooperação com Inteligência Artificial.
 
@@ -48,7 +48,8 @@ php artisan serve
 *   **Árvore de Trama**: Organização hierárquica (Seção > Capítulo > Cena).
 
 ### 2. Inteligência Artificial (Magic Buttons)
-*   **Escritor Fantasma**: Redação literária de cenas baseada em sua Bíblia de Trama.
+*   **Escritor Fantasma**: Redação literária de cenas baseada em sua Bíblia de Trama, com confirmação para evitar perda de conteúdo.
+*   **Revisor**: Correção de português e remoção de AI Slop (clichês, travessões, advérbios) com checkboxes configuráveis.
 *   **Sugerir Ideias**: Geração de conflitos e reviravoltas baseadas no contexto.
 
 ### 3. Santuário & Segurança
@@ -63,7 +64,7 @@ php artisan serve
 *   **Core**: Laravel 12.
 *   **Frontend**: Vanilla JS + Bootstrap 5.3 (Strict Design).
 *   **Database**: SQLite.
-*   **IA**: Google Gemini Cloud (via API Key local).
+*   **IA**: Google Gemini 2.5 Cloud (via API Key local).
 
 ---
 
