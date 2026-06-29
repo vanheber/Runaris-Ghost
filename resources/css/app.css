@@ -3,6 +3,15 @@
 /* Centralized Design System - Runaris Ghost (Strict Bootstrap 5.3) */
 
 /* 1. Global Aesthetics */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     transition: background-color 0.3s, color 0.3s;
@@ -10,6 +19,11 @@ body {
 
 main {
     margin-bottom: 20px;
+}
+
+.text-ghost-muted {
+    color: var(--bs-secondary-color);
+    opacity: 0.75;
 }
 
 .navbar-brand .logo-light,
@@ -126,6 +140,18 @@ body .center-editor-fluid {
 
 .cp {
     cursor: pointer;
+}
+
+.cp-sidebar-item {
+    cursor: pointer;
+}
+
+.hover-opacity-100:hover {
+    opacity: 1;
+}
+
+.hover-primary:hover {
+    color: var(--bs-primary);
 }
 
 /* UI Utilities - Replacing Inline Styles */
@@ -433,30 +459,66 @@ body .EasyMDEContainer {
     pointer-events: none;
 }
 
+.node-row {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
 body .node-row:hover {
     background: rgba(var(--bs-primary-rgb), 0.05);
     cursor: pointer;
 }
 
-#center-editor,
-#editor-container {
-    overflow: visible;
-}
-
 .node-row.active {
-    background: rgba(var(--bs-primary-rgb), 0.1);
+    background: var(--bs-primary);
+    color: white;
     border-left: 3px solid var(--bs-primary);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
 
-.node-row.active .node-title {
-    color: var(--bs-primary);
+.node-row.active .node-title,
+.node-row.active i {
+    color: white;
     font-weight: 600;
 }
 
+.node-actions {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
 body .node-row:hover .node-actions {
+    opacity: 1;
     display: flex;
+}
+
+.btn-node-action {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-node-action:hover {
+    background: rgba(var(--bs-primary-rgb), 0.15);
+    transform: scale(1.1);
+}
+
+.node-row.active .btn-node-action {
+    color: white;
+}
+
+.node-row.active .btn-node-action:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#center-editor,
+#editor-container {
+    overflow: visible;
 }
 
 /* 8. Theme Overrides (Place last for maximum specificity) */

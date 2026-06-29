@@ -83,15 +83,10 @@ class GalleryController extends Controller
     {
         $item = GalleryItem::where('uuid', $item_uuid)->firstOrFail();
         
-        $files = [$item->file_path, $item->thumb_path];
+        $files = array_filter([$item->file_path, $item->thumb_path]);
 
         foreach ($files as $f) {
-            if ($f) {
-                $p = storage_path("app/{$f}");
-                if (file_exists($p)) {
-                    unlink($p);
-                }
-            }
+            Storage::disk('local')->delete($f);
         }
 
         $item->delete();

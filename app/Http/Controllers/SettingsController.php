@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Services\BackupService;
+use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
@@ -135,7 +136,8 @@ class SettingsController extends Controller
                 $files = [$target, $target . '-wal', $target . '-shm'];
                 foreach ($files as $file) {
                     if (file_exists($file)) {
-                        unlink($file);
+                        $relative = str_replace(storage_path('app/'), '', $file);
+                        Storage::disk('local')->delete($relative);
                     }
                 }
             }
@@ -159,7 +161,7 @@ class SettingsController extends Controller
             // Remove install lock so the wizard can run again
             $lockFile = storage_path('install.lock');
             if (file_exists($lockFile)) {
-                unlink($lockFile);
+                Storage::disk('local')->delete('install.lock');
             }
 
             // Unlock .env for re-configuration

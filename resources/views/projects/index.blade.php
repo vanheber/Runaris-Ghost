@@ -20,7 +20,7 @@
             </div>
 
     @if($projects->isEmpty())
-    <div class="card bg-body-tertiary border-0 shadow-sm p-5 text-center my-5 animate__animated animate__fadeIn">
+    <div class="card bg-body-tertiary border-0 shadow-sm p-5 text-center my-5 animate-fade-in">
         <i class="bi bi-journal-plus fs-1 text-primary mb-3 d-block"></i>
         <h3 class="fw-bold">Nenhum projeto encontrado</h3>
         <p class="text-body-secondary mb-4">Você ainda não iniciou sua primeira obra. Que tal começarmos hoje?</p>

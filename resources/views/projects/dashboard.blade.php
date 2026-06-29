@@ -76,48 +76,6 @@
             color: var(--bs-secondary);
             opacity: 0.6;
         }
-
-        /* Manuscript Tree Actions */
-        .node-row {
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        .node-row:hover {
-            background: rgba(13, 110, 253, 0.05);
-        }
-        .node-row.active {
-            background: var(--bs-primary) !important;
-            color: white !important;
-        }
-        .node-row.active .node-title, .node-row.active i {
-            color: white !important;
-        }
-        .node-actions {
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        .node-row:hover .node-actions {
-            opacity: 1;
-        }
-        .btn-node-action {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-        .btn-node-action:hover {
-            background: rgba(13, 110, 253, 0.15);
-            transform: scale(1.1);
-        }
-        .node-row.active .btn-node-action:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .node-row.active .btn-node-action {
-            color: white !important;
-        }
     </style>
 
     <!-- Graph Visualization Lib -->
@@ -1098,20 +1056,23 @@ function renderGhostImages() {
 
 // --- UI Utility Logic ---
 
-function showEmptyState(category) {
-    activeItemUuid = null;
+function hideAllPanels() {
     document.getElementById('editor-container').classList.add('d-none');
     document.getElementById('bible-container').classList.add('d-none');
     document.getElementById('export-container').classList.add('d-none');
-    document.getElementById('empty-state').classList.remove('d-none');
     document.getElementById('markdown-tips').classList.add('d-none');
     document.getElementById('graph-container').classList.add('d-none');
     document.getElementById('cards-grid-container').classList.add('d-none');
     document.getElementById('gallery-container').classList.add('d-none');
     document.getElementById('backup-container').classList.add('d-none');
-    
-    // Deactivate nav buttons
+    document.getElementById('empty-state').classList.add('d-none');
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));
+}
+
+function showEmptyState(category) {
+    activeItemUuid = null;
+    hideAllPanels();
+    document.getElementById('empty-state').classList.remove('d-none');
     
     const icon = document.getElementById('empty-icon');
     const title = document.getElementById('empty-title');
@@ -2578,7 +2539,7 @@ async function openBible() {
     activeItemUuid = null;
     activeCardCategory = null;
     
-    showEmptyState(null); // Clear other views
+    hideAllPanels();
     
     // Update Navigation UI
     document.querySelectorAll('.nav-world').forEach(el => el.classList.remove('active'));

@@ -231,14 +231,6 @@
     .documentation-content h2 { border-bottom: 1px solid rgba(var(--bs-primary-rgb), 0.1); padding-bottom: 0.5rem; }
     .documentation-content code { background: rgba(var(--bs-primary-rgb), 0.1); color: var(--bs-primary); padding: 2px 4px; border-radius: 4px; }
     .documentation-content li { margin-bottom: 0.5rem; }
-
-    .animate-fade-in {
-        animation: fadeIn 0.3s ease-out;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
 </style>
 
 <script>

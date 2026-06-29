@@ -67,13 +67,6 @@
 
 <style>
     .ls-wide { letter-spacing: 0.05em; }
-    .animate-fade-in {
-        animation: fadeIn 0.4s ease-out;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
     .form-control:focus {
         border-color: rgba(var(--bs-primary-rgb), 0.5);
         box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.1);
