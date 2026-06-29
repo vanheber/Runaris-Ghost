@@ -17,6 +17,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Version
+    |--------------------------------------------------------------------------
+    |
+    | Versão canônica do projeto. Centralizada no arquivo `version` na raiz.
+    | Para referenciar em Blade: config('app.version'). Em markdown (README,
+    | USER_MANUAL): manter sincronizado manualmente com este arquivo.
+    |
+    */
+
+    'version' => trim(file_exists(base_path('version')) ? file_get_contents(base_path('version')) : '0.0.0'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

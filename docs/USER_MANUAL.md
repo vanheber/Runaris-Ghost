@@ -1,4 +1,4 @@
-# Guia do Runaris Ghost - v1.3.0
+# Guia do Runaris Ghost - v1.1
 
 O Runaris Ghost é um ambiente de escrita imersivo projetado para autores que buscam organizar o caos da criação literária em uma jornada estruturada.
 

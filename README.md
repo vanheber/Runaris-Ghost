@@ -1,4 +1,4 @@
-# 🕯️ Runaris Ghost - v1.3.0
+# 🕯️ Runaris Ghost - v1.1
 
 **Runaris Ghost** é um Santuário Digital para Autores. Uma plataforma de escrita criativa focada em imersão, organização e cooperação com Inteligência Artificial.
 
