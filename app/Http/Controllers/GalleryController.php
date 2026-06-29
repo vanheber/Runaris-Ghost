@@ -59,13 +59,13 @@ class GalleryController extends Controller
         }
 
         $fullPath = storage_path("app/{$projectPath}/{$fileName}");
-        $img->save($fullPath, 85);
+        $img->save($fullPath, 92);
 
         // Process Thumbnail (200x240 relative proportions roughly)
         $thumb = $this->imageManager->decode($file->getRealPath());
         $thumb->cover(200, 240);
         $thumbPath = storage_path("app/{$projectPath}/{$thumbName}");
-        $thumb->save($thumbPath, 85);
+        $thumb->save($thumbPath, 75);
 
         $galleryItem = GalleryItem::create([
             'name' => $file->getClientOriginalName(),

@@ -137,13 +137,13 @@ class CardController extends Controller
             $img->scaleDown(1200, 1200);
         }
         $fullPath = storage_path("app/{$projectPath}/{$fileName}");
-        $img->save($fullPath);
+        $img->save($fullPath, 92);
 
         // Process Thumb
         $thumb = $imageManager->decode($file->getRealPath());
         $thumb->cover(400, 400); 
         $thumbPath = storage_path("app/{$projectPath}/{$thumbName}");
-        $thumb->save($thumbPath);
+        $thumb->save($thumbPath, 75);
 
         // Create Gallery Item
         $galleryItem = \App\Models\GalleryItem::create([

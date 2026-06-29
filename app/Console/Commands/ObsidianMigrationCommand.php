@@ -241,12 +241,12 @@ class ObsidianMigrationCommand extends Command
             if ($img->width() > 1600 || $img->height() > 2560) {
                 $img->scaleDown(1600, 2560);
             }
-            $img->save($destPath, 85);
+            $img->save($destPath, 92);
             
             // 2. Process Thumbnail
             $thumb = $this->imageManager->decode($file->getRealPath());
             $thumb->cover(200, 240);
-            $thumb->save($destThumbPath, 85);
+            $thumb->save($destThumbPath, 75);
             
             // 3. Register in Gallery
             $galleryItem = GalleryItem::updateOrCreate(

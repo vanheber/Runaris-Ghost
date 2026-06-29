@@ -174,8 +174,11 @@
                             <button id="btn-magic-planning" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="generateAiPlanning()" title="Sugerir ideias">
                                 <i class="bi bi-stars"></i>
                             </button>
-                            <button id="btn-magic-writing" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="writeAiScene()" title="Escritor Fantasma">
+                            <button id="btn-magic-writing" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="openWriteAiConfirmModal()" title="Escritor Fantasma">
                                 <i class="bi bi-magic"></i>
+                            </button>
+                            <button id="btn-magic-review" class="btn btn-outline-warning btn-icon-round d-none me-1" onclick="openReviewConfirmModal()" title="Revisor: Corrige português e remove AI Slop">
+                                <i class="bi bi-spellcheck"></i>
                             </button>
                             <button id="btn-sync-to-bible" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="syncSectionToBible()" title="Sincronizar com a Bíblia: Gera um resumo da seção atual para o cânone do projeto.">
                                 <i class="bi bi-journal-arrow-up"></i>
@@ -655,6 +658,52 @@
     <i class="bi bi-layout-sidebar-inset-reverse"></i>
 </button>
 
+<!-- Modal de Confirmação do Escritor Fantasma -->
+<div class="modal fade" id="writeAiConfirmModal" tabindex="-1" aria-labelledby="writeAiConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-body-tertiary border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-info ls-wide" id="writeAiConfirmModalLabel">Escritor Fantasma</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="mb-0 text-body">A IA irá gerar ou complementar o texto desta cena com base no planejamento e no universo do projeto. Deseja continuar?</p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-info px-4 rounded-pill" onclick="writeAiScene()" data-bs-dismiss="modal">Escrever Cena</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação do Revisor -->
+<div class="modal fade" id="writeReviewConfirmModal" tabindex="-1" aria-labelledby="writeReviewConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-body-tertiary border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-warning ls-wide" id="writeReviewConfirmModalLabel">Revisor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-4">
+                <p class="mb-3 text-body">A IA irá revisar o texto atual da cena. Escolha o que deseja revisar:</p>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="review-fix-grammar" checked>
+                    <label class="form-check-label" for="review-fix-grammar">Corrigir gramática e ortografia</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="review-remove-slop" checked>
+                    <label class="form-check-label" for="review-remove-slop">Remover padrões de AI Slop (clichês, travessões, advérbios)</label>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-warning px-4 rounded-pill" onclick="reviewScene()" data-bs-dismiss="modal">Revisar Texto</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal de Confirmação de Exclusão -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -1000,20 +1049,31 @@ function renderGhostImages() {
             const alt = match[1];
             const urlOrName = match[2];
             
-            // Tenta achar o item na galeria (por nome, UUID ou se a URL contém o UUID)
-            const item = currentGalleryItems.find(i => {
+            // Resolve o UUID e nome do item (cache ou extração direta da URL)
+            let item = currentGalleryItems.find(i => {
                 if (i.name === urlOrName || i.uuid === urlOrName) return true;
                 if (urlOrName.includes(i.uuid)) return true;
                 return false;
             });
 
-            if (item) {
+            let itemUuid = item ? item.uuid : null;
+            let itemName = item ? item.name : alt;
+
+            if (!itemUuid) {
+                const uuidMatch = urlOrName.match(/\/gallery\/([a-f0-9-]+)\//);
+                if (uuidMatch) {
+                    itemUuid = uuidMatch[1];
+                    item = currentGalleryItems.find(i => i.uuid === itemUuid);
+                    if (item) itemName = item.name;
+                }
+            }
+
+            if (itemUuid) {
                 const widget = document.createElement('div');
                 widget.className = 'ghost-image-widget animate-fade-in';
                 widget.title = "Clique para trocar esta imagem";
-                widget.innerHTML = `<img src="/projects/${projectUuid}/gallery/${item.uuid}/image/thumb" alt="${alt}"><div class="ghost-image-caption">${alt || item.name}</div>`;
-                
-                // Lógica de Troca ao Clicar
+                widget.innerHTML = `<img src="/projects/${projectUuid}/gallery/${itemUuid}/image/thumb" alt="${alt}"><div class="ghost-image-caption">${alt || itemName}</div>`;
+
                 widget.onclick = (e) => {
                     e.stopPropagation();
                     const currentPos = marker.find();
@@ -1021,13 +1081,13 @@ function renderGhostImages() {
                         replacementRange = { from: currentPos.from, to: currentPos.to };
                         document.querySelectorAll('.ghost-image-widget').forEach(w => w.classList.remove('swapping'));
                         widget.classList.add('swapping');
-                        openGalleryPickerForEditor(); // Abre o modal unificado
+                        openGalleryPickerForEditor();
                     }
                 };
 
                 const marker = cm.markText(
-                    {line: idx, ch: match.index}, 
-                    {line: idx, ch: match.index + match[0].length}, 
+                    {line: idx, ch: match.index},
+                    {line: idx, ch: match.index + match[0].length},
                     {replacedWith: widget, handleMouseEvents: true, atomic: true}
                 );
                 imageMarkers.push(marker);
@@ -1382,6 +1442,9 @@ async function openManuscriptItem(uuid) {
             const btnMagicPlanning = document.getElementById('btn-magic-planning');
             if (btnMagicPlanning) btnMagicPlanning.classList.add('d-none');
 
+            const btnMagicReview = document.getElementById('btn-magic-review');
+            if (btnMagicReview) btnMagicReview.classList.add('d-none');
+
             easyMDE.codemirror.setOption("readOnly", true);
             if (!easyMDE.isPreviewActive()) easyMDE.togglePreview();
         } else {
@@ -1391,20 +1454,33 @@ async function openManuscriptItem(uuid) {
             const btnMagicWriting = document.getElementById('btn-magic-writing');
             const btnMagicPlanning = document.getElementById('btn-magic-planning');
             const btnSyncBible = document.getElementById('btn-sync-to-bible');
+            const btnMagicReview = document.getElementById('btn-magic-review');
 
             // AI Buttons
             if (manuscriptMode === 'writing') {
                 if (btnMagicWriting) btnMagicWriting.classList.remove('d-none');
                 if (btnMagicPlanning) btnMagicPlanning.classList.add('d-none');
+                if (btnMagicReview) btnMagicReview.classList.remove('d-none');
             } else {
                 if (btnMagicPlanning) btnMagicPlanning.classList.remove('d-none');
                 if (btnMagicWriting) btnMagicWriting.classList.add('d-none');
+                if (btnMagicReview) btnMagicReview.classList.add('d-none');
             }
             
             // Sync to Bible button only for Chapters and Scenes
             if (btnSyncBible) {
-                if (item.type === 'chapter' || item.type === 'scene') btnSyncBible.classList.remove('d-none');
-                else btnSyncBible.classList.add('d-none');
+                if (item.type === 'chapter' || item.type === 'scene') {
+                    btnSyncBible.classList.remove('d-none');
+                    if (item.summary && item.summary.trim() !== '') {
+                        btnSyncBible.classList.remove('btn-outline-info');
+                        btnSyncBible.classList.add('btn-outline-success');
+                    } else {
+                        btnSyncBible.classList.remove('btn-outline-success');
+                        btnSyncBible.classList.add('btn-outline-info');
+                    }
+                } else {
+                    btnSyncBible.classList.add('d-none');
+                }
             }
 
             easyMDE.codemirror.setOption("readOnly", false);
@@ -2700,6 +2776,10 @@ async function syncSectionToBible(uuid = null) {
         
         if (response.ok) {
             showToast('Sucesso', 'Resumo gerado e sincronizado!', 'success');
+            if (btn) {
+                btn.classList.remove('btn-outline-info');
+                btn.classList.add('btn-outline-success');
+            }
             // Se estivermos na tela da bíblia, recarregar apenas os dados para atualizar o accordion (sem resetar modo)
             if (!document.getElementById('bible-container').classList.contains('d-none')) {
                 loadBibleData();
@@ -3185,6 +3265,61 @@ async function generateAiPlanning() {
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="bi bi-stars"></i>';
+    }
+}
+
+function openReviewConfirmModal() {
+    const content = easyMDE ? easyMDE.value().trim() : '';
+    if (!content || content === '' || content.startsWith('# Planejamento')) {
+        showToast('Aviso', 'Nenhum conteúdo para revisar.', 'warning');
+        return;
+    }
+    const modal = new bootstrap.Modal(document.getElementById('writeReviewConfirmModal'));
+    modal.show();
+}
+
+async function reviewScene() {
+    if (!activeItemUuid) return;
+    const btn = document.getElementById('btn-magic-review');
+    const originalHtml = btn.innerHTML;
+
+    const fixGrammar = document.getElementById('review-fix-grammar').checked;
+    const removeSlop = document.getElementById('review-remove-slop').checked;
+
+    try {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+        const response = await fetch(`/projects/${projectUuid}/ai/review`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ content: easyMDE.value(), fix_grammar: fixGrammar, remove_slop: removeSlop })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            easyMDE.value(data.content);
+            saveManuscriptContent();
+            showToast('Sucesso', 'Texto revisado com sucesso!', 'success');
+        } else {
+            showToast('Aviso', data.error || 'Não foi possível revisar o texto.', 'warning');
+        }
+    } catch (e) {
+        console.error('Erro ao revisar:', e);
+        showToast('Erro', 'Falha na comunicação com o servidor.', 'danger');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-spellcheck"></i>';
+    }
+}
+
+function openWriteAiConfirmModal() {
+    const content = easyMDE ? easyMDE.value().trim() : '';
+    if (!content || content === '' || content.startsWith('# Planejamento')) {
+        writeAiScene();
+    } else {
+        const modal = new bootstrap.Modal(document.getElementById('writeAiConfirmModal'));
+        modal.show();
     }
 }
 

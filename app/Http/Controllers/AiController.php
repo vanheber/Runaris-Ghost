@@ -110,4 +110,58 @@ class AiController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function reviewScene(Request $request, $project_uuid)
+    {
+        try {
+            $project = Project::where('uuid', $project_uuid)->firstOrFail();
+            $gemini = new GeminiService($project);
+
+            $content = $request->input('content', '');
+            $fixGrammar = $request->boolean('fix_grammar', true);
+            $removeSlop = $request->boolean('remove_slop', true);
+
+            if (!$fixGrammar && !$removeSlop) {
+                return response()->json([
+                    'success' => true,
+                    'content' => $content
+                ]);
+            }
+
+            $systemInstructions = [];
+            $tasks = [];
+
+            if ($fixGrammar) {
+                $systemInstructions[] = "Você é um revisor de texto especializado em normas culta do português do Brasil.";
+                $tasks[] = "Corrija erros de ortografia, concordância, regência, crase, pontuação e gramática do português brasileiro.";
+            }
+
+            if ($removeSlop) {
+                $systemInstructions = array_merge($systemInstructions, LiteraryCraft::instructions());
+                $tasks[] = "Remova padrões de AI Slop conforme as regras do sistema.";
+            } else {
+                $tasks[] = "Preserve integralmente as escolhas estilísticas do autor. NÃO altere metáforas, estruturas ou dicção — apenas corrija erros gramaticais objetivos.";
+            }
+
+            $prompt = "Revise o texto literário abaixo.\n\n"
+                    . "TAREFAS:\n"
+                    . implode("\n", array_map(fn($t) => "- {$t}", $tasks)) . "\n\n"
+                    . "REGRAS:\n"
+                    . "- Preserve o estilo e a voz do autor.\n"
+                    . "- Não adicione nem remova conteúdo narrativo.\n"
+                    . "- Não inclua explicações, notas ou comentários.\n"
+                    . "- Devolva APENAS o texto revisado, sem formatação adicional.\n\n"
+                    . "--- TEXTO PARA REVISÃO ---\n{$content}\n--- FIM DO TEXTO ---";
+
+            $reviewed = $gemini->generate($prompt, 'gemini-3.1-flash-lite', $systemInstructions);
+
+            return response()->json([
+                'success' => true,
+                'content' => $reviewed
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

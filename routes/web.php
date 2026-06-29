@@ -85,6 +85,7 @@ Route::prefix('projects')->group(function () {
         Route::post('/{project_uuid}/ai/card', [\App\Http\Controllers\AiController::class, 'suggestCard']);
         Route::post('/{project_uuid}/ai/planning', [\App\Http\Controllers\AiController::class, 'generatePlanning']);
         Route::post('/{project_uuid}/ai/scene', [\App\Http\Controllers\AiController::class, 'writeScene']);
+        Route::post('/{project_uuid}/ai/review', [\App\Http\Controllers\AiController::class, 'reviewScene']);
     });
 });
 
