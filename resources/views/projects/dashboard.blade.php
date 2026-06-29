@@ -818,8 +818,8 @@ let activeProjectCoverUuid = "{{ $project->cover_image_uuid }}";
 
 document.addEventListener('DOMContentLoaded', function() {
     const bootstrapToolbar = [
-        { name: "undo", action: EasyMDE.undo, className: "bi bi-arrow-counterclockwise", title: "Desfazer (Ctrl+Z)" },
-        { name: "redo", action: EasyMDE.redo, className: "bi bi-arrow-clockwise", title: "Refazer (Ctrl+Y)" },
+        { name: "undo", action: function(editor) { editor.codemirror.undo(); }, className: "bi bi-arrow-counterclockwise", title: "Desfazer (Ctrl+Z)" },
+        { name: "redo", action: function(editor) { editor.codemirror.redo(); }, className: "bi bi-arrow-clockwise", title: "Refazer (Ctrl+Y)" },
         "|",
         { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: "Negrito" },
         { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: "Itálico" },
