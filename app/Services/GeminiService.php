@@ -32,11 +32,11 @@ class GeminiService
      * Send a generation request to the Gemini API.
      * 
      * @param string $prompt The user prompt instructions.
-     * @param string $model (e.g. gemini-3.1-flash-lite or gemini-3.1-pro)
+     * @param string $model (e.g. gemini-2.5-flash or gemini-2.5-pro)
      * @param array $systemInstruction Optional system instruction array (roleplay/context).
      * @return string Generative content string.
      */
-    public function generate(string $prompt, string $model = 'gemini-3.1-flash-lite', array $systemInstruction = null): string
+    public function generate(string $prompt, string $model = 'gemini-2.5-flash', ?array $systemInstruction = null): string
     {
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$this->apiKey}";
         
@@ -118,7 +118,7 @@ class GeminiService
             "Sua resposta deve ser estritamente em JSON."
         ];
 
-        $response = $this->generate($prompt, 'gemini-3.1-flash-lite', $system);
+        $response = $this->generate($prompt, 'gemini-2.5-flash', $system);
         
         // Clean markdown if present
         $json = preg_replace('/```json\n?|\n?```/', '', $response);
