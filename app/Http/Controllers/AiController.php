@@ -13,8 +13,7 @@ class AiController extends Controller
     public function suggestCard(Request $request, $project_uuid)
     {
         try {
-            $project = Project::where('uuid', $project_uuid)->firstOrFail();
-            $gemini = new GeminiService($project);
+            $gemini = GeminiService::forProject($project_uuid);
 
             $context = $gemini->buildMasterContext();
             
@@ -48,8 +47,7 @@ class AiController extends Controller
     public function generatePlanning(Request $request, $project_uuid)
     {
         try {
-            $project = Project::where('uuid', $project_uuid)->firstOrFail();
-            $gemini = new GeminiService($project);
+            $gemini = GeminiService::forProject($project_uuid);
 
             $context = $gemini->buildMasterContext();
             $sceneTitle = $request->input('title', 'Cena Sem Título');
@@ -74,8 +72,7 @@ class AiController extends Controller
     public function writeScene(Request $request, $project_uuid)
     {
         try {
-            $project = Project::where('uuid', $project_uuid)->firstOrFail();
-            $gemini = new GeminiService($project);
+            $gemini = GeminiService::forProject($project_uuid);
 
             $context = $gemini->buildMasterContext();
             $sceneTitle = $request->input('title', 'Cena Sem Título');
@@ -114,8 +111,7 @@ class AiController extends Controller
     public function reviewScene(Request $request, $project_uuid)
     {
         try {
-            $project = Project::where('uuid', $project_uuid)->firstOrFail();
-            $gemini = new GeminiService($project);
+            $gemini = GeminiService::forProject($project_uuid);
 
             $content = $request->input('content', '');
             $fixGrammar = $request->boolean('fix_grammar', true);

@@ -5,18 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\ManuscriptItem;
 use App\Services\ManuscriptService;
-use App\Services\ProjectManager;
 use Illuminate\Http\Request;
 
 class ManuscriptController extends Controller
 {
     protected $manuscriptService;
-    protected $projectManager;
 
-    public function __construct(ManuscriptService $manuscriptService, ProjectManager $projectManager)
+    public function __construct(ManuscriptService $manuscriptService)
     {
         $this->manuscriptService = $manuscriptService;
-        $this->projectManager = $projectManager;
     }
 
     /**
@@ -25,7 +22,6 @@ class ManuscriptController extends Controller
     public function index($project_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $tree = $this->manuscriptService->getTree($project);
         return response()->json($tree);
     }
@@ -36,7 +32,6 @@ class ManuscriptController extends Controller
     public function store(Request $request, $project_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $request->validate([
             'title' => 'required|string',
@@ -55,7 +50,6 @@ class ManuscriptController extends Controller
     public function show($project_uuid, string $uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $item = ManuscriptItem::where('uuid', $uuid)->firstOrFail();
         $content = $this->manuscriptService->getContent($project, $uuid);
 
@@ -71,7 +65,6 @@ class ManuscriptController extends Controller
     public function update(Request $request, $project_uuid, string $uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $request->validate(['content' => 'required|string']);
 
         $this->manuscriptService->saveContent($project, $uuid, $request->input('content'));
@@ -86,7 +79,6 @@ class ManuscriptController extends Controller
     public function updateTitle(Request $request, $project_uuid, string $uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $request->validate(['title' => 'required|string']);
 
         $item = $this->manuscriptService->updateTitle($project, $uuid, $request->input('title'));
@@ -100,7 +92,6 @@ class ManuscriptController extends Controller
     public function destroy($project_uuid, string $uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $this->manuscriptService->deleteItem($project, $uuid);
 
         return response()->json(['status' => 'success']);
@@ -109,7 +100,6 @@ class ManuscriptController extends Controller
     public function sort(Request $request, $project_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $request->validate(['sorting' => 'required|array']);
 
         $this->manuscriptService->updateOrder($project, $request->input('sorting'));
@@ -123,7 +113,6 @@ class ManuscriptController extends Controller
     public function getPlanning($project_uuid, string $uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $content = $this->manuscriptService->getPlanning($project, $uuid);
 
         return response()->json(['content' => $content]);
@@ -135,7 +124,6 @@ class ManuscriptController extends Controller
     public function savePlanning(Request $request, $project_uuid, string $uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $request->validate(['content' => 'required|string']);
 
         $this->manuscriptService->savePlanning($project, $uuid, $request->input('content'));
@@ -150,8 +138,7 @@ class ManuscriptController extends Controller
     {
         try {
             $project = Project::where('uuid', $project_uuid)->firstOrFail();
-            $this->projectManager->switchToProject($project);
-            
+                
             $item = ManuscriptItem::where('uuid', $uuid)->firstOrFail();
             $content = $this->manuscriptService->getContent($project, $uuid);
 
@@ -159,7 +146,7 @@ class ManuscriptController extends Controller
                 return response()->json(['error' => 'Conteúdo muito curto para gerar resumo.'], 400);
             }
 
-            $gemini = new \App\Services\GeminiService($project);
+            $gemini = \App\Services\GeminiService::forProject($project_uuid);
             $prompt = "Você é um editor literário especialista em análise estrutural. " .
                       "Abaixo está o texto de um capítulo/cena intitulado '{$item->title}':\n\n" .
                       "--- INÍCIO DO TEXTO ---\n{$content}\n--- FIM DO TEXTO ---\n\n" .

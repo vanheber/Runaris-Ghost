@@ -14,10 +14,7 @@ class BibleController extends Controller
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
         
-        // Load tree with summaries
-        $projectManager = app(\App\Services\ProjectManager::class);
-        $projectManager->switchToProject($project);
-        
+
         $manuscriptService = app(\App\Services\ManuscriptService::class);
         $tree = $manuscriptService->getTree($project);
 
@@ -52,10 +49,7 @@ class BibleController extends Controller
         try {
             $project = Project::where('uuid', $project_uuid)->firstOrFail();
             
-            // Reconnect to project DB to get summaries
-            $projectManager = app(\App\Services\ProjectManager::class);
-            $projectManager->switchToProject($project);
-            
+    
             $items = \App\Models\ManuscriptItem::whereNotNull('summary')
                         ->where('summary', '!=', '')
                         ->orderBy('order')
@@ -70,7 +64,7 @@ class BibleController extends Controller
                 $consolidatedSummaries .= "### {$item->title}\n{$item->summary}\n\n";
             }
 
-            $gemini = new \App\Services\GeminiService($project);
+            $gemini = \App\Services\GeminiService::forProject($project_uuid);
             $prompt = "Abaixo estão os resumos individuais de cada capítulo/cena do projeto '{$project->name}':\n\n" .
                       $consolidatedSummaries . "\n\n" .
                       "SUA TAREFA: Consolide essas informações em um único 'Resumo Narrativo / Cerebelo' mestre. " .
@@ -98,11 +92,7 @@ class BibleController extends Controller
     {
         try {
             $project = Project::where('uuid', $project_uuid)->firstOrFail();
-            $gemini = new \App\Services\GeminiService($project);
-
-            // Coletar texto bruto dos manuscritos para enviar pra IA
-            $projectManager = app(\App\Services\ProjectManager::class);
-            $projectManager->switchToProject($project);
+            $gemini = \App\Services\GeminiService::forProject($project_uuid);
 
             $sections = \App\Models\ManuscriptItem::whereIn('type', ['section', 'chapter', 'scene'])
                             ->orderBy('order')

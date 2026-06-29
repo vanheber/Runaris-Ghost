@@ -7,17 +7,14 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Card;
 use App\Services\CardService;
-use App\Services\ProjectManager;
 
 class CardController extends Controller
 {
     protected $cardService;
-    protected $projectManager;
 
-    public function __construct(CardService $cardService, ProjectManager $projectManager)
+    public function __construct(CardService $cardService)
     {
         $this->cardService = $cardService;
-        $this->projectManager = $projectManager;
     }
 
     /**
@@ -26,7 +23,6 @@ class CardController extends Controller
     public function index(Request $request, $project_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $cards = Card::where('type', $request->type)->orderBy('title')->get();
         return response()->json($cards);
@@ -54,7 +50,6 @@ class CardController extends Controller
     public function show($project_uuid, $card_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         $content = $this->cardService->getMarkdownBody($project, $card);
@@ -71,7 +66,6 @@ class CardController extends Controller
     public function update(Request $request, $project_uuid, $card_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         $updatedCard = $this->cardService->updateCardContent($project, $card, $request->content);
@@ -85,7 +79,6 @@ class CardController extends Controller
     public function updateTitle(Request $request, $project_uuid, $card_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         $updatedCard = $this->cardService->updateCardTitle($project, $card, $request->title);
@@ -99,7 +92,6 @@ class CardController extends Controller
     public function updateType(Request $request, $project_uuid, $card_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         $updatedCard = $this->cardService->updateCardType($project, $card, $request->type);
@@ -117,7 +109,6 @@ class CardController extends Controller
         ]);
 
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         
         $file = $request->file('image');
@@ -171,7 +162,6 @@ class CardController extends Controller
         ]);
 
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         $card->update(['image_uuid' => $request->image_uuid]);
@@ -185,7 +175,6 @@ class CardController extends Controller
     public function getGraphData($project_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $cards = Card::select('uuid', 'title', 'type')->get();
         $links = \DB::connection('sqlite_project')->table('card_connections')->select('card_uuid as source', 'related_card_uuid as target')->get();
@@ -202,7 +191,6 @@ class CardController extends Controller
     public function syncConnections(Request $request, $project_uuid, $card_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         $input_connections = $request->input('connections', []);
@@ -249,7 +237,6 @@ class CardController extends Controller
     public function getCardConnections($project_uuid, $card_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         return response()->json($card->connections->map(function($c) {
@@ -268,7 +255,6 @@ class CardController extends Controller
     public function searchCards(Request $request, $project_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $query = $request->input('q');
         $exclude = $request->input('exclude', []);
@@ -287,7 +273,6 @@ class CardController extends Controller
     public function suggest(Request $request, $project_uuid, $card_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         $content = $this->cardService->getMarkdownBody($project, $card);
@@ -296,7 +281,7 @@ class CardController extends Controller
         $otherCards = Card::where('uuid', '!=', $card_uuid)->get(['uuid', 'title', 'type']);
         
         try {
-            $gemini = new \App\Services\GeminiService($project);
+            $gemini = \App\Services\GeminiService::forProject($project_uuid);
             $suggestions = $gemini->suggestConnections($card, $content, $otherCards);
             
             return response()->json($suggestions);
@@ -311,7 +296,6 @@ class CardController extends Controller
     public function destroy($project_uuid, $card_uuid)
     {
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
-        $this->projectManager->switchToProject($project);
         
         $card = Card::where('uuid', $card_uuid)->firstOrFail();
         $this->cardService->deleteCard($project, $card);

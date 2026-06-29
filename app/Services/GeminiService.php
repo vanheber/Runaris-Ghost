@@ -22,6 +22,12 @@ class GeminiService
         }
     }
 
+    public static function forProject(string $projectUuid): self
+    {
+        $project = Project::where('uuid', $projectUuid)->firstOrFail();
+        return new self($project);
+    }
+
     /**
      * Send a generation request to the Gemini API.
      * 

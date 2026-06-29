@@ -1137,61 +1137,34 @@ function initSplit() {
 
 // Sidebars Toggle Logic
 function toggleSidebar(side) {
+    const idx = side === 'left' ? 0 : 2;
+    const gutterIdx = side === 'left' ? 0 : 1;
     const paneId = side === 'left' ? 'left-sidebar' : 'right-panel';
     const toggleBtnId = side === 'left' ? 'left-sidebar-toggle' : 'right-sidebar-toggle';
-    
+
     const pane = document.getElementById(paneId);
     const btn = document.getElementById(toggleBtnId);
     const icon = btn.querySelector('i');
-    
+
     const isCollapsed = pane.classList.toggle('collapsed');
-    
-    // Get current sizes from Split.js
     let currentSizes = splitInstance.getSizes();
-    
+
     if (isCollapsed) {
         icon.className = side === 'left' ? 'bi bi-layout-sidebar' : 'bi bi-layout-sidebar-reverse';
-        
-        // Pin button to edge
-        if (side === 'left') {
-            btn.style.right = 'auto';
-            btn.style.left = '10px';
-            currentSizes[1] += currentSizes[0]; // Give space to center
-            currentSizes[0] = 0;
-        } else {
-            btn.style.left = 'auto';
-            btn.style.right = '10px';
-            currentSizes[1] += currentSizes[2]; // Give space to center
-            currentSizes[2] = 0;
-        }
-
-        // Hide gutter
-        const gutters = document.querySelectorAll('.gutter');
-        if (side === 'left') gutters[0].style.display = 'none';
-        else gutters[1].style.display = 'none';
-        
+        btn.style.right = side === 'left' ? 'auto' : '10px';
+        btn.style.left = side === 'left' ? '10px' : 'auto';
+        currentSizes[1] += currentSizes[idx];
+        currentSizes[idx] = 0;
+        document.querySelectorAll('.gutter')[gutterIdx].style.display = 'none';
     } else {
         icon.className = side === 'left' ? 'bi bi-layout-sidebar-inset' : 'bi bi-layout-sidebar-inset-reverse';
-        
-        // Restore internal position
-        if (side === 'left') {
-            btn.style.left = '';
-            btn.style.right = '12px';
-            currentSizes[0] = 20;
-            currentSizes[1] -= 20;
-        } else {
-            btn.style.right = '';
-            btn.style.left = '12px';
-            currentSizes[2] = 20;
-            currentSizes[1] -= 20;
-        }
-
-        const gutters = document.querySelectorAll('.gutter');
-        if (side === 'left') gutters[0].style.display = 'block';
-        else gutters[1].style.display = 'block';
+        btn.style.right = side === 'left' ? '12px' : '';
+        btn.style.left = side === 'left' ? '' : '12px';
+        currentSizes[idx] = 20;
+        currentSizes[1] -= 20;
+        document.querySelectorAll('.gutter')[gutterIdx].style.display = 'block';
     }
-    
-    // Update Split.js
+
     splitInstance.setSizes(currentSizes);
 }
 
