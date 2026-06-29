@@ -136,8 +136,7 @@ class SettingsController extends Controller
                 $files = [$target, $target . '-wal', $target . '-shm'];
                 foreach ($files as $file) {
                     if (file_exists($file)) {
-                        $relative = str_replace(storage_path('app/'), '', $file);
-                        Storage::disk('local')->delete($relative);
+                        unlink($file);
                     }
                 }
             }
@@ -161,7 +160,7 @@ class SettingsController extends Controller
             // Remove install lock so the wizard can run again
             $lockFile = storage_path('install.lock');
             if (file_exists($lockFile)) {
-                Storage::disk('local')->delete('install.lock');
+                unlink($lockFile);
             }
 
             // Unlock .env for re-configuration

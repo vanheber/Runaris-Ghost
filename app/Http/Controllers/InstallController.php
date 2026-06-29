@@ -23,7 +23,7 @@ class InstallController extends Controller
     public function index()
     {
         // If already installed, redirect to home
-        if (Storage::disk('local')->exists('install.lock')) {
+        if (file_exists(storage_path('install.lock'))) {
             return redirect('/');
         }
 
