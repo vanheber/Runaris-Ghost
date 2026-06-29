@@ -168,10 +168,6 @@
         </div>
     </div>
     <style>
-        [data-bs-theme="dark"] .logo-light { display: none; }
-        [data-bs-theme="light"] .logo-dark { display: none; }
-        [data-bs-theme="solar-light"] .logo-dark { display: none; }
-        
         .logo-light, .logo-dark {
             max-height: 40px;
             width: auto;

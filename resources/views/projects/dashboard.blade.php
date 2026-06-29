@@ -3256,7 +3256,7 @@ async function generateAiPlanning() {
         
         if (data.success) {
             easyMDE.value(data.planning);
-            saveManuscriptContent(); 
+            saveActiveItem(); 
         } else {
             alert(data.error);
         }
@@ -3299,7 +3299,7 @@ async function reviewScene() {
 
         if (data.success) {
             easyMDE.value(data.content);
-            saveManuscriptContent();
+            saveActiveItem();
             showToast('Sucesso', 'Texto revisado com sucesso!', 'success');
         } else {
             showToast('Aviso', data.error || 'Não foi possível revisar o texto.', 'warning');
@@ -3350,7 +3350,7 @@ async function writeAiScene() {
             } else {
                 easyMDE.value(easyMDE.value() + "\n\n" + data.content);
             }
-            saveManuscriptContent();
+            saveActiveItem();
         } else {
             alert(data.error);
         }
@@ -3446,19 +3446,6 @@ async function applySelectedAISuggestions() {
     await saveConnections();
     
     // Fecha o modal
-    const modalEl = document.getElementById('aiConnectionsModal');
-    const modal = bootstrap.Modal.getInstance(modalEl);
-    if (modal) modal.hide();
-}
-
-function applyAISuggestion(uuid, title, type) {
-    // Mantido por compatibilidade se necessário, mas o novo fluxo usa checkboxes
-    if (!currentConnections.some(c => c.uuid === uuid)) {
-        currentConnections.push({ uuid, title, type });
-        renderConnections();
-        saveConnections();
-    }
-    
     const modalEl = document.getElementById('aiConnectionsModal');
     const modal = bootstrap.Modal.getInstance(modalEl);
     if (modal) modal.hide();
