@@ -4,7 +4,7 @@ Shared domain vocabulary and stack conventions for agents working on this projec
 
 ## What this is
 
-Runaris Ghost is a **Santuário Digital para Autores** — a local-first, open-source creative writing platform focused on immersion, manuscript organization, and AI co-writing (Google Gemini). Everything runs locally via SQLite. Zero telemetry. Donation-ware under MIT license.
+Runaris Ghost is a **Santuário Digital para Autores** — a local-first, open-source creative writing platform focused on immersion, manuscript organization, and AI co-writing (Google Gemini). Everything runs locally via SQLite. Zero telemetry. Donation-ware under GPL-3.0 license.
 
 ## Key terms
 

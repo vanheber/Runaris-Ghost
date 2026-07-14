@@ -1,17 +1,28 @@
-# 🕯️ Runaris Ghost - v1.1
+# 🕯️ Runaris Ghost — v1.0-Alpha
 
-**Runaris Ghost** é um Santuário Digital para Autores. Uma plataforma de escrita criativa focada em imersão, organização e cooperação com Inteligência Artificial.
+**Runaris Ghost** é um Santuário Digital para Autores. Uma plataforma de escrita criativa local-first, focada em imersão, organização dos seus manuscritos e, opcionalmente, cooperação com Inteligência Artificial como assistente de escrita.
+
+> [!CAUTION]
+> **Versão Alpha — Assuma o risco.** Este é o primeiro lançamento público. Muitos bugs, arestas e comportamentos inesperados podem acontecer. Use com cautela e mantenha backups dos seus projetos.
+
+> [!IMPORTANT]
+> **I.A. é opcional e coadjuvante.** O Runaris Ghost **não escreve a sua história por você.** Se ativada, a IA funciona exclusivamente como:
+> - **Assistente de escrita** — gera parágrafos a partir do seu planejamento
+> - **Revisor** — corrige português e remove clichês mecânicos (AI slop)
+> - **Organizador** — sugere ideias, conflitos e reviravoltas com base no que você escreveu
+>
+> O cérebro criativo é **sempre o seu.**
 
 > [!NOTE]
-> **Open Source & Donation-Ware**: Este software é gratuito e de código aberto. Se você aprecia o trabalho e deseja apoiar a continuidade do projeto, visite o site oficial: [runaris.com.br/ghost](https://runaris.com.br/ghost/).
+> **Open Source & Donation-Ware**: Este software é gratuito e de código aberto sob licença **GPL-3.0**. Se você aprecia o trabalho e deseja apoiar a continuidade do projeto, considere fazer uma doação: [paypal.com/donate/?business=vanheber@gmail.com](https://www.paypal.com/donate/?business=vanheber@gmail.com).
 
 ---
 
-Este projeto é regido pela comunidade e focado na liberdade criativa:
+## Filosofia
 
-1.  **Código Aberto (Open Source)**: O código fonte está disponível sob a licença [MIT](LICENSE). Você é livre para auditar, modificar e redistribuir.
-2.  **Soberania de Dados**: Tudo roda localmente. Suas histórias pertencem a você, não a um servidor em nuvem.
-3.  **Comunidade**: O suporte é colaborativo. Bugs e melhorias são discutidos e resolvidos coletivamente.
+1. **Código Aberto (GPL-3.0)**: Você é livre para auditar, modificar e redistribuir. O software é seu tanto quanto nosso.
+2. **Soberania de Dados**: Seu manuscrito é armazenado em **Markdown puro (.md)** — formato simples, legível por humanos, não proprietário e não compilado. Nenhum serviço cloud detém seus textos. Você pode abrir, editar e transportar seus arquivos com qualquer editor de texto.
+3. **Sem dependência de cloud**: Instale na sua máquina local, numa VPS, ou numa hospedagem compartilhada — você escolhe. Zero telemetria, zero lock-in.
 
 ---
 
@@ -73,6 +84,6 @@ Interessado em ajudar? Veja nosso arquivo [CONTRIBUTING.md](CONTRIBUTING.md) par
 
 ---
 
-&copy; 2024-2026 [Runaris Ghost](https://runaris.com.br/ghost/). Desenvolvido com alma por [vanheber](https://github.com/vanheber).
+&copy; 2024-2026 Runaris Ghost. Desenvolvido com alma por [vanheber](https://github.com/vanheber).
 
 **Isenção de Garantia**: Este software é fornecido "como está" (AS IS), sem garantias de qualquer tipo, expressas ou implícitas. O desenvolvedor não oferece suporte técnico direto e não se responsabiliza por perda de dados ou mau funcionamento decorrente do uso ou modificação do código.
