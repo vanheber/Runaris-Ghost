@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $project->name . ' - Workspace')
+@section('title', $project->name . ' - ' . __('Workspace'))
 @section('project-header-title')
     <span class="ms-2 ps-2 border-start border-secondary border-opacity-25 small text-body-secondary fw-medium d-none d-md-inline text-author-meta">
         {{ strtoupper($project->name) }}
@@ -13,15 +13,15 @@
 <div class="container-fluid px-4">
     <!-- Secondary Navbar for Worldbuilding -->
     <div class="d-flex align-items-center gap-2 border-bottom border-secondary border-opacity-10 world-navbar overflow-x-auto text-nowrap scroll-custom world-navbar-sticky">
-        <a id="nav-scenario" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('scenario')" title="Geografia"><i class="bi bi-geo-alt me-1 text-primary"></i> Geografia</a>
-        <a id="nav-character" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('character')" title="Personagens"><i class="bi bi-people me-1 text-primary"></i> Personagens</a>
-        <a id="nav-lore" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('lore')" title="Lore"><i class="bi bi-mortarboard me-1 text-primary"></i> Lore</a>
-        <a id="nav-object" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('object')" title="Objetos"><i class="bi bi-gem me-1 text-primary"></i> Objetos</a>
-        <a id="nav-gallery" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openGallery()" title="Galeria"><i class="bi bi-images me-1 text-primary"></i> Galeria</a>
-        <a id="nav-connections" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openGraph()" title="Conexões"><i class="bi bi-diagram-3 me-1 text-primary"></i> Conexões</a>
-        <a id="nav-bible" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openBible()" title="Bíblia"><i class="bi bi-book me-1 text-primary"></i> Bíblia</a>
-        <a id="nav-export" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openExport()" title="Exportar"><i class="bi bi-cloud-download me-1 text-primary"></i> Exportar</a>
-        <a id="nav-backup" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openBackup()" title="Backup"><i class="bi bi-shield-check me-1 text-primary"></i> Backup</a>
+        <a id="nav-scenario" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('scenario')" title="{{ __('Geografia') }}"><i class="bi bi-geo-alt me-1 text-primary"></i> {{ __('Geografia') }}</a>
+        <a id="nav-character" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('character')" title="{{ __('Personagens') }}"><i class="bi bi-people me-1 text-primary"></i> {{ __('Personagens') }}</a>
+        <a id="nav-lore" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('lore')" title="{{ __('Lore') }}"><i class="bi bi-mortarboard me-1 text-primary"></i> {{ __('Lore') }}</a>
+        <a id="nav-object" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="loadCards('object')" title="{{ __('Objetos') }}"><i class="bi bi-gem me-1 text-primary"></i> {{ __('Objetos') }}</a>
+        <a id="nav-gallery" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openGallery()" title="{{ __('Galeria') }}"><i class="bi bi-images me-1 text-primary"></i> {{ __('Galeria') }}</a>
+        <a id="nav-connections" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openGraph()" title="{{ __('Conexões') }}"><i class="bi bi-diagram-3 me-1 text-primary"></i> {{ __('Conexões') }}</a>
+        <a id="nav-bible" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openBible()" title="{{ __('Bíblia') }}"><i class="bi bi-book me-1 text-primary"></i> {{ __('Bíblia') }}</a>
+        <a id="nav-export" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openExport()" title="{{ __('Exportar') }}"><i class="bi bi-cloud-download me-1 text-primary"></i> {{ __('Exportar') }}</a>
+        <a id="nav-backup" class="btn btn-sm border-0 px-3 py-2 bg-body-tertiary shadow-sm text-secondary nav-world hover-lift" href="#" onclick="openBackup()" title="{{ __('Backup') }}"><i class="bi bi-shield-check me-1 text-primary"></i> {{ __('Backup') }}</a>
     </div>
 
     <style>
@@ -85,7 +85,7 @@
         
         <!-- Sidebar Esquerda -->
         <div id="left-sidebar" class="split-pane card bg-body-tertiary border-0 shadow-sm p-4 sidebar-sticky">
-            <button id="left-sidebar-toggle" class="btn-ghost-card position-absolute toggle-btn-left" onclick="toggleSidebar('left')" title="Navegação">
+            <button id="left-sidebar-toggle" class="btn-ghost-card position-absolute toggle-btn-left" onclick="toggleSidebar('left')" title="{{ __('Navegação') }}">
                 <i class="bi bi-layout-sidebar-inset"></i>
             </button>
 
@@ -93,12 +93,12 @@
 
                 <!-- Sessão: Escrita -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="text-body-secondary small text-uppercase fw-bold mb-0 ls-wide cp" onclick="showEmptyState('manuscript')">Manuscrito</h6>
+                    <h6 class="text-body-secondary small text-uppercase fw-bold mb-0 ls-wide cp" onclick="showEmptyState('manuscript')">{{ __('Manuscrito') }}</h6>
                     <div class="d-flex gap-2">
-                        <button class="btn btn-link text-primary p-0" onclick="createNewItem('scene')" title="Nova Cena (Raiz)">
+                        <button class="btn btn-link text-primary p-0" onclick="createNewItem('scene')" title="{{ __('Nova Cena (Raiz)') }}">
                             <i class="bi bi-file-earmark-plus"></i>
                         </button>
-                        <button class="btn btn-link text-primary p-0" onclick="createNewItem('section')" title="Nova Seção">
+                        <button class="btn btn-link text-primary p-0" onclick="createNewItem('section')" title="{{ __('Nova Seção') }}">
                             <i class="bi bi-folder-plus"></i>
                         </button>
                     </div>
@@ -106,7 +106,7 @@
 
                 <div id="manuscript-tree-container" class="small manuscript-tree">
                     <div id="manuscript-tree-root" class="list-group list-group-flush">
-                        <div class="text-ghost-muted italic small py-2">Carregando manuscrito...</div>
+                        <div class="text-ghost-muted italic small py-2">{{ __('Carregando manuscrito...') }}</div>
                     </div>
                 </div>
             </div>
@@ -122,14 +122,14 @@
                             <div class="d-flex flex-column">
                                 <h3 id="current-item-title" class="fw-bold mb-0 cp-title" onclick="enableTitleEdit()">Título</h3>
                                 <div id="manuscript-mode-toggle" class="d-flex gap-2 mt-1 d-none">
-                                    <button id="btn-mode-writing" class="btn btn-xs btn-outline-primary active py-0 px-2 small fs-xs" onclick="setManuscriptMode('writing')">ESCRITA</button>
-                                    <button id="btn-mode-planning" class="btn btn-xs btn-outline-secondary btn-planning py-0 px-2 small fs-xs" onclick="setManuscriptMode('planning')">PLANEJAMENTO</button>
+                                    <button id="btn-mode-writing" class="btn btn-xs btn-outline-primary active py-0 px-2 small fs-xs" onclick="setManuscriptMode('writing')">{{ __('ESCRITA') }}</button>
+                                    <button id="btn-mode-planning" class="btn btn-xs btn-outline-secondary btn-planning py-0 px-2 small fs-xs" onclick="setManuscriptMode('planning')">{{ __('PLANEJAMENTO') }}</button>
                                 </div>
                             </div>
                             <input type="text" id="title-edit-input" class="form-control form-control-lg bg-transparent border-0 text-body fw-bold d-none p-0 ms-2 fs-author-title" onblur="saveTitleEdit()" onkeyup="if(event.key==='Enter') saveTitleEdit()">
                         </div>
                         <div id="save-status" class="text-body-secondary small d-flex align-items-center gap-3">
-                            <button id="btn-magic-planning" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="generateAiPlanning()" title="Sugerir ideias">
+                            <button id="btn-magic-planning" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="generateAiPlanning()" title="{{ __('Sugerir ideias') }}">
                                 <i class="bi bi-stars"></i>
                             </button>
                             <button id="btn-magic-writing" class="btn btn-outline-info btn-icon-round d-none me-1" onclick="openWriteAiConfirmModal()" title="Escritor Fantasma">
@@ -153,7 +153,7 @@
 
                     <!-- Connection Management Area -->
                     <div id="card-connections-editor" class="mt-4 pt-3 border-top border-secondary border-opacity-10 d-none">
-                        <h6 class="text-primary small text-uppercase fw-bold mb-3 ls-wide">Relacionamentos</h6>
+                        <h6 class="text-primary small text-uppercase fw-bold mb-3 ls-wide">{{ __('Relacionamentos') }}</h6>
                         <div id="active-connections" class="d-flex flex-wrap gap-2 mb-3">
                             <!-- Conexões atuais -->
                         </div>
@@ -185,7 +185,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-book me-2 text-primary fs-4"></i>
-                            <h3 class="fw-bold mb-0">Bíblia do Projeto</h3>
+                            <h3 class="fw-bold mb-0">{{ __('Bíblia do Projeto') }}</h3>
                         </div>
                         <div class="d-flex align-items-center gap-3">
                             <div id="bible-save-status" class="text-body-secondary small">
@@ -222,7 +222,7 @@
                         <div class="tab-pane fade" id="bible-cerebellum" role="tabpanel">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
-                                    <h6 class="fw-bold mb-1">Cerebelo do Projeto</h6>
+                                    <h6 class="fw-bold mb-1">{{ __('Cerebelo do Projeto') }}</h6>
                                     <p class="text-body-secondary small mb-0">Macro-narrativa consolidada para contexto global da IA.</p>
                                 </div>
                                 <button id="btn-sync-cerebellum" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm" onclick="syncCerebellum()">
@@ -314,8 +314,8 @@
                         <div class="col-md-3">
                             <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
                                 <i class="bi bi-book fs-1 text-primary mb-3"></i>
-                                <h5 class="fw-bold">Kindle (ePub)</h5>
-                                <p class="small text-body-secondary mb-4">Dispositivos e-reader.</p>
+                                <h5 class="fw-bold">{{ __('Kindle (ePub)') }}</h5>
+                                <p class="small text-body-secondary mb-4">{{ __('Dispositivos e-reader.') }}</p>
                                 <div class="form-check form-switch fs-4">
                                     <input class="form-check-input" type="checkbox" id="export-epub" checked>
                                 </div>
@@ -325,8 +325,8 @@
                         <div class="col-md-3">
                             <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
                                 <i class="bi bi-file-pdf fs-1 text-danger mb-3"></i>
-                                <h5 class="fw-bold">Impressão (PDF)</h5>
-                                <p class="small text-body-secondary mb-4">Leitura e impressão.</p>
+                                <h5 class="fw-bold">{{ __('Impressão (PDF)') }}</h5>
+                                <p class="small text-body-secondary mb-4">{{ __('Leitura e impressão.') }}</p>
                                 <div class="form-check form-switch fs-4">
                                     <input class="form-check-input" type="checkbox" id="export-pdf" checked>
                                 </div>
@@ -336,8 +336,8 @@
                         <div class="col-md-3">
                             <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
                                 <i class="bi bi-browser-chrome fs-1 text-success mb-3"></i>
-                                <h5 class="fw-bold">Leitor Web (HTML)</h5>
-                                <p class="small text-body-secondary mb-4">Leitor interativo.</p>
+                                <h5 class="fw-bold">{{ __('Leitor Web (HTML)') }}</h5>
+                                <p class="small text-body-secondary mb-4">{{ __('Leitor interativo.') }}</p>
                                 <div class="form-check form-switch fs-4">
                                     <input class="form-check-input" type="checkbox" id="export-html" checked>
                                 </div>
@@ -347,8 +347,8 @@
                         <div class="col-md-3">
                             <div class="card h-100 border-0 shadow-sm p-4 bg-body d-flex flex-column align-items-center text-center">
                                 <i class="bi bi-markdown fs-1 text-info mb-3"></i>
-                                <h5 class="fw-bold">Manuscrito (.md)</h5>
-                                <p class="small text-body-secondary mb-4">Fontes organizadas.</p>
+                                <h5 class="fw-bold">{{ __('Manuscrito (.md)') }}</h5>
+                                <p class="small text-body-secondary mb-4">{{ __('Fontes organizadas.') }}</p>
                                 <div class="form-check form-switch fs-4">
                                     <input class="form-check-input" type="checkbox" id="export-markdown" checked>
                                 </div>
@@ -359,7 +359,7 @@
 
                     <div class="text-center mt-auto py-4 border-top">
                         <button id="btn-run-export" class="btn btn-primary btn-lg rounded-pill px-5 shadow" onclick="runExportBatch()">
-                            <i class="bi bi-gear-wide-connected me-2"></i> Gerar Arquivos Selecionados
+                            <i class="bi bi-gear-wide-connected me-2"></i> {{ __('Gerar Arquivos Selecionados') }}
                         </button>
                     </div>
                 </div>
@@ -376,30 +376,30 @@
                     </div>
 
                     <div class="card border-0 shadow-sm p-4 bg-body mb-4">
-                        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-shield-check me-2"></i> Backup do Projeto</h5>
+                        <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-shield-check me-2"></i> {{ __('Backup do Projeto') }}</h5>
                         <p class="text-body-secondary">
-                            Este recurso gera um arquivo ZIP contendo todo o seu trabalho organizado de forma legível. 
-                            Ao contrário do banco de dados, aqui os arquivos usam os <strong>títulos reais</strong> das cenas e lore.
+                            {{ __('Este recurso gera um arquivo ZIP contendo todo o seu trabalho organizado de forma legível.') }}
+                            {{ __('Ao contrário do banco de dados, aqui os arquivos usam os títulos reais das cenas e lore.') }}
                         </p>
                         
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <div class="p-3 border border-secondary border-opacity-10 rounded bg-body-tertiary">
-                                    <h6 class="fw-bold mb-2 small text-uppercase opacity-75">O que está incluído:</h6>
+                                    <h6 class="fw-bold mb-2 small text-uppercase opacity-75">{{ __('O que está incluído:') }}</h6>
                                     <ul class="list-unstyled mb-0 small">
-                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Manuscrito (Markdown estruturado)</li>
-                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Worldbuilding (Personagens, Locais, Lore)</li>
-                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Bíblia do Projeto & Resumos</li>
-                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> Galeria de Imagens</li>
+                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> {{ __('Manuscrito (Markdown estruturado)') }}</li>
+                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> {{ __('Worldbuilding (Personagens, Locais, Lore)') }}</li>
+                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> {{ __('Bíblia do Projeto & Resumos') }}</li>
+                                        <li class="mb-1"><i class="bi bi-check2 text-success me-2"></i> {{ __('Galeria de Imagens') }}</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col-md-6 d-flex align-items-center justify-content-center">
                                 <div class="text-center">
                                     <a href="{{ url('/projects/'.$project->uuid.'/export/backup') }}" class="btn btn-primary btn-lg rounded-pill px-5 shadow hover-lift">
-                                        <i class="bi bi-download me-2"></i> Baixar Backup Completo
+                                        <i class="bi bi-download me-2"></i> {{ __('Baixar Backup Completo') }}
                                     </a>
-                                    <p class="x-small text-body-secondary mt-3 italic">Formato: ZIP (Markdown + Assets)</p>
+                                    <p class="x-small text-body-secondary mt-3 italic">{{ __('Formato: ZIP (Markdown + Assets)') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -408,15 +408,15 @@
                     <!-- Snapshot & Rollback System -->
                     <div class="card border-0 shadow-sm p-4 bg-body mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-clock-history me-2"></i> Snapshots & Rollback</h5>
+                            <h5 class="fw-bold mb-0 text-primary"><i class="bi bi-clock-history me-2"></i> {{ __('Snapshots & Rollback') }}</h5>
                             <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="createProjectSnapshot()">
-                                <i class="bi bi-camera me-1"></i> Criar Novo Snapshot
+                                <i class="bi bi-camera me-1"></i> {{ __('Criar Novo Snapshot') }}
                             </button>
                         </div>
                         
                         <p class="text-body-secondary small mb-4">
-                            Snapshots são cópias de segurança locais do estado exato do seu projeto (incluindo o banco de dados SQLite). 
-                            Use-os para criar pontos de restauração antes de grandes mudanças.
+                            {{ __('Snapshots são cópias de segurança locais do estado exato do seu projeto (incluindo o banco de dados SQLite).') }}
+                            {{ __('Use-os para criar pontos de restauração antes de grandes mudanças.') }}
                         </p>
 
                         <div id="snapshots-list-container" class="border rounded bg-body-tertiary overflow-hidden">
@@ -424,14 +424,14 @@
                                 <table class="table table-hover mb-0 small">
                                     <thead class="bg-dark bg-opacity-10">
                                         <tr>
-                                            <th class="ps-3 py-2">Data</th>
-                                            <th class="py-2">Tamanho</th>
-                                            <th class="py-2 text-end pe-3">Ações</th>
+                                            <th class="ps-3 py-2">{{ __('Data') }}</th>
+                                            <th class="py-2">{{ __('Tamanho') }}</th>
+                                            <th class="py-2 text-end pe-3">{{ __('Ações') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody id="snapshots-table-body">
                                         <tr>
-                                            <td colspan="3" class="text-center py-4 text-ghost-muted italic">Carregando snapshots...</td>
+                                            <td colspan="3" class="text-center py-4 text-ghost-muted italic">{{ __('Carregando snapshots...') }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -439,15 +439,15 @@
                         </div>
 
                         <div class="mt-4 pt-3 border-top border-secondary border-opacity-10">
-                            <h6 class="fw-bold mb-3 small text-uppercase opacity-75">Importar Projeto / Restaurar Backup</h6>
+                            <h6 class="fw-bold mb-3 small text-uppercase opacity-75">{{ __('Importar Projeto / Restaurar Backup') }}</h6>
                             <form action="{{ url('/projects/'.$project->uuid.'/restore') }}" method="POST" enctype="multipart/form-data" class="d-flex gap-3 align-items-end">
                                 @csrf
                                 <div class="flex-grow-1">
-                                    <label class="form-label x-small text-body-secondary fw-bold text-uppercase">Selecionar Arquivo ZIP</label>
+                                    <label class="form-label x-small text-body-secondary fw-bold text-uppercase">{{ __('Selecionar Arquivo ZIP') }}</label>
                                     <input type="file" name="backup_file" class="form-control form-control-sm bg-body-tertiary border-secondary border-opacity-25" accept=".zip">
                                 </div>
-                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-4 shadow-sm" onclick="return confirm('ATENÇÃO: Isso substituirá TODO o conteúdo atual deste projeto pelo conteúdo do backup. Deseja continuar?')">
-                                    <i class="bi bi-upload me-1"></i> Restaurar do Arquivo
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-4 shadow-sm" onclick="return confirm('{{ __('ATENÇÃO: Isso substituirá TODO o conteúdo atual deste projeto pelo conteúdo do backup. Deseja continuar?') }}')">
+                                    <i class="bi bi-upload me-1"></i> {{ __('Restaurar do Arquivo') }}
                                 </button>
                             </form>
                         </div>
@@ -464,7 +464,7 @@
                     <!-- Navigation Help Overlay -->
                     <div class="position-absolute bottom-0 start-0 p-3 z-2">
                         <div class="badge bg-dark bg-opacity-50 backdrop-blur p-2 small border border-secondary border-opacity-25 pe-none">
-                            <i class="bi bi-mouse me-2"></i> Scroll: Zoom | <i class="bi bi-arrows-move mx-2"></i> Arraste: Mover | <i class="bi bi-hand-index mx-2"></i> Clique: Abrir
+                            <i class="bi bi-mouse me-2"></i> {{ __('Scroll: Zoom') }} | <i class="bi bi-arrows-move mx-2"></i> {{ __('Arraste: Mover') }} | <i class="bi bi-hand-index mx-2"></i> {{ __('Clique: Abrir') }}
                         </div>
                     </div>
                 </div>
@@ -473,14 +473,14 @@
                     <div class="opacity-10 mb-4">
                         <i id="empty-icon" class="bi bi-feather display-1"></i>
                     </div>
-                    <h2 id="empty-title" class="fw-bold mb-3">Onde a história começa?</h2>
+                    <h2 id="empty-title" class="fw-bold mb-3">{{ __('Onde a história começa?') }}</h2>
                     <p id="empty-desc" class="text-body-secondary mb-4 max-w-md mx-auto">
-                        Cada pixel foi pensado para o seu foco. Arraste as bordas ou colapse as barras laterais no topo para imersão total.
+                        {{ __('Cada pixel foi pensado para o seu foco. Arraste as bordas ou colapse as barras laterais no topo para imersão total.') }}
                     </p>
                     <div id="empty-actions" class="d-flex gap-3">
-                        <button class="btn btn-primary" onclick="loadCards('scenario')">Geografia</button>
-                        <button class="btn btn-primary" onclick="loadCards('lore')">Lore</button>
-                        <button class="btn btn-outline-secondary border-secondary border-opacity-50" onclick="showEmptyState('manuscript')">Manuscrito</button>
+                        <button class="btn btn-primary" onclick="loadCards('scenario')">{{ __('Geografia') }}</button>
+                        <button class="btn btn-primary" onclick="loadCards('lore')">{{ __('Lore') }}</button>
+                        <button class="btn btn-outline-secondary border-secondary border-opacity-50" onclick="showEmptyState('manuscript')">{{ __('Manuscrito') }}</button>
                     </div>
                 </div>
 
@@ -494,14 +494,14 @@
                         <div class="d-flex gap-2 align-items-center">
                             <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-25 search-input-w-sm">
                                 <span class="input-group-text bg-transparent border-0 px-2"><i class="bi bi-search opacity-50"></i></span>
-                                <input type="text" id="cards-search" class="form-control border-0 bg-transparent ps-0" placeholder="Filtrar..." oninput="filterCards(this.value)">
+                                <input type="text" id="cards-search" class="form-control border-0 bg-transparent ps-0" placeholder="{{ __('Filtrar...') }}" oninput="filterCards(this.value)">
                             </div>
 
-                             <button class="btn btn-outline-info btn-icon-round me-1" onclick="suggestAiCard()" title="Sugerir Ficha">
+                             <button class="btn btn-outline-info btn-icon-round me-1" onclick="suggestAiCard()" title="{{ __('Sugerir Ficha') }}">
                                 <i class="bi bi-stars"></i>
                             </button>
 
-                            <button class="btn btn-primary btn-icon-round" onclick="createCard()" title="Nova Ficha">
+                            <button class="btn btn-primary btn-icon-round" onclick="createCard()" title="{{ __('Nova Ficha') }}">
                                 <i class="bi bi-plus-lg"></i>
                             </button>
                         </div>
@@ -519,12 +519,12 @@
                     <div class="d-flex justify-content-between align-items-center mb-4 flex-shrink-0">
                         <div class="d-flex align-items-center">
                             <i class="bi bi-images me-2 text-primary fs-4"></i>
-                            <h3 class="fw-bold mb-0">Galeria do Projeto</h3>
+                            <h3 class="fw-bold mb-0">{{ __('Galeria do Projeto') }}</h3>
                         </div>
                         <div class="d-flex gap-2 align-items-center">
                             <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-25 search-input-w-md">
                                 <span class="input-group-text bg-transparent border-0 px-2"><i class="bi bi-search opacity-50"></i></span>
-                                <input type="text" id="gallery-search" class="form-control border-0 bg-transparent ps-0" placeholder="Buscar arte..." oninput="filterGallery(this.value)">
+                                <input type="text" id="gallery-search" class="form-control border-0 bg-transparent ps-0" placeholder="{{ __('Buscar arte...') }}" oninput="filterGallery(this.value)">
                             </div>
                             <input type="file" id="gallery-upload-input" class="d-none" accept="image/*" onchange="uploadImage(this)">
                             <button class="btn btn-primary btn-icon-round" title="Upload" onclick="document.getElementById('gallery-upload-input').click()">
@@ -544,53 +544,53 @@
 
         <!-- Painel Direita (Estatísticas e IA) -->
         <div id="right-panel" class="split-pane card bg-body-tertiary border-0 shadow-sm p-4 sidebar-sticky">
-            <button id="right-sidebar-toggle" class="btn-ghost-card position-absolute toggle-btn-right" onclick="toggleSidebar('right')" title="Estatísticas">
+            <button id="right-sidebar-toggle" class="btn-ghost-card position-absolute toggle-btn-right" onclick="toggleSidebar('right')" title="{{ __('Estatísticas') }}">
                 <i class="bi bi-layout-sidebar-inset-reverse"></i>
             </button>
 
             <div class="sidebar-content mt-4 overflow-y-auto scroll-custom">
-                <h6 class="text-body-secondary small text-uppercase fw-bold mb-3">Item Details</h6>
+                <h6 class="text-body-secondary small text-uppercase fw-bold mb-3">{{ __('Detalhes do Item') }}</h6>
                 <div id="item-stats" class="small text-body-secondary">
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Tipo:</span>
+                        <span>{{ __('Tipo:') }}</span>
                         <span id="stat-type" class="text-accent fw-bold">-</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span>Palavras:</span>
+                        <span>{{ __('Palavras:') }}</span>
                         <span id="stat-word-count" class="text-accent fw-bold">0</span>
                     </div>
                 </div>
 
                 <!-- Painel Conteúdo Dinâmico (Listas/Estatísticas) -->
                 <div id="dynamic-context-panel" class="mt-4 pt-4 border-top border-secondary border-opacity-10 d-none">
-                    <h6 id="dynamic-title" class="text-body-secondary small text-uppercase fw-bold mb-3">CONTEÚDO</h6>
+                    <h6 id="dynamic-title" class="text-body-secondary small text-uppercase fw-bold mb-3">{{ __('CONTEÚDO') }}</h6>
                     <div id="dynamic-content" class="small text-body-secondary">
                         <!-- Conteúdo dinâmico -->
                     </div>
                 </div>
                 <!-- Markdown Help (Hidden by default) -->
                 <div id="markdown-tips" class="mt-4 pt-4 border-top border-secondary border-opacity-10 d-none">
-                    <h6 class="text-primary small text-uppercase fw-bold mb-3 ls-wide">Guia de Formatação</h6>
+                    <h6 class="text-primary small text-uppercase fw-bold mb-3 ls-wide">{{ __('Guia de Formatação') }}</h6>
                     <div class="small text-body-secondary">
                         <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
                             <code># Título</code>
-                            <span class="x-small opacity-75">H1 (Principal)</span>
+                            <span class="x-small opacity-75">{{ __('H1 (Principal)') }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
                             <code>## Subtítulo</code>
-                            <span class="x-small opacity-75">H2 (Seção)</span>
+                            <span class="x-small opacity-75">{{ __('H2 (Seção)') }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
                             <code>**Negrito**</code>
-                            <span class="x-small opacity-75">Destaque</span>
+                            <span class="x-small opacity-75">{{ __('Destaque') }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
                             <code>*Itálico*</code>
-                            <span class="x-small opacity-75">Ênfase</span>
+                            <span class="x-small opacity-75">{{ __('Ênfase') }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
                             <code>> Citação</code>
-                            <span class="x-small opacity-75">Pensamento</span>
+                            <span class="x-small opacity-75">{{ __('Pensamento') }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 pb-1 border-bottom border-secondary border-opacity-10">
                             <code>-- Texto</code>
@@ -621,15 +621,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-body-tertiary border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fs-6 text-uppercase fw-bold text-info ls-wide" id="writeAiConfirmModalLabel">Escritor Fantasma</h5>
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-info ls-wide" id="writeAiConfirmModalLabel">{{ __('Escritor Fantasma') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-4">
-                <p class="mb-0 text-body">A IA irá gerar ou complementar o texto desta cena com base no planejamento e no universo do projeto. Deseja continuar?</p>
+                <p class="mb-0 text-body">{{ __('A IA irá gerar ou complementar o texto desta cena com base no planejamento e no universo do projeto. Deseja continuar?') }}</p>
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-info px-4 rounded-pill" onclick="writeAiScene()" data-bs-dismiss="modal">Escrever Cena</button>
+                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                <button type="button" class="btn btn-info px-4 rounded-pill" onclick="writeAiScene()" data-bs-dismiss="modal">{{ __('Escrever Cena') }}</button>
             </div>
         </div>
     </div>
@@ -640,23 +640,23 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-body-tertiary border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fs-6 text-uppercase fw-bold text-warning ls-wide" id="writeReviewConfirmModalLabel">Revisor</h5>
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-warning ls-wide" id="writeReviewConfirmModalLabel">{{ __('Revisor') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-4">
-                <p class="mb-3 text-body">A IA irá revisar o texto atual da cena. Escolha o que deseja revisar:</p>
+                <p class="mb-3 text-body">{{ __('A IA irá revisar o texto atual da cena. Escolha o que deseja revisar:') }}</p>
                 <div class="form-check mb-2">
                     <input class="form-check-input" type="checkbox" id="review-fix-grammar" checked>
-                    <label class="form-check-label" for="review-fix-grammar">Corrigir gramática e ortografia</label>
+                    <label class="form-check-label" for="review-fix-grammar">{{ __('Corrigir gramática e ortografia') }}</label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="review-remove-slop" checked>
-                    <label class="form-check-label" for="review-remove-slop">Remover padrões de AI Slop (clichês, travessões, advérbios)</label>
+                    <label class="form-check-label" for="review-remove-slop">{{ __('Remover padrões de AI Slop (clichês, travessões, advérbios)') }}</label>
                 </div>
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-warning px-4 rounded-pill" onclick="reviewScene()" data-bs-dismiss="modal">Revisar Texto</button>
+                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                <button type="button" class="btn btn-warning px-4 rounded-pill" onclick="reviewScene()" data-bs-dismiss="modal">{{ __('Revisar Texto') }}</button>
             </div>
         </div>
     </div>
@@ -667,15 +667,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-body-tertiary border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fs-6 text-uppercase fw-bold text-danger ls-wide" id="deleteConfirmModalLabel">Confirmar Exclusão</h5>
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-danger ls-wide" id="deleteConfirmModalLabel">{{ __('Confirmar Exclusão') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-4">
-                <p class="mb-0 text-body">Tem certeza que deseja excluir este item e todo o conteúdo dentro dele? Esta ação <strong>não pode ser desfeita</strong>.</p>
+                <p class="mb-0 text-body">{{ __('Tem certeza que deseja excluir este item e todo o conteúdo dentro dele?') }} {{ __('Esta ação não pode ser desfeita.') }}</p>
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="confirmDeleteBtn" class="btn btn-danger px-4 rounded-pill" onclick="confirmDeleteManuscriptItem()">Excluir Permanentemente</button>
+                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger px-4 rounded-pill" onclick="confirmDeleteManuscriptItem()">{{ __('Excluir Permanentemente') }}</button>
             </div>
         </div>
     </div>
@@ -686,15 +686,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-body-tertiary border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fs-6 text-uppercase fw-bold text-danger ls-wide" id="galleryDeleteModalLabel">Excluir Imagem</h5>
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-danger ls-wide" id="galleryDeleteModalLabel">{{ __('Excluir Imagem') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-4">
-                <p class="mb-0 text-body">Deseja realmente excluir esta imagem? Esta ação removerá o arquivo permanentemente do projeto.</p>
+                <p class="mb-0 text-body">{{ __('Deseja realmente excluir esta imagem? Esta ação removerá o arquivo permanentemente do projeto.') }}</p>
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="confirmGalleryDeleteBtn" class="btn btn-danger px-4 rounded-pill" onclick="confirmDeleteGalleryItem()">Excluir Imagem</button>
+                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                <button type="button" id="confirmGalleryDeleteBtn" class="btn btn-danger px-4 rounded-pill" onclick="confirmDeleteGalleryItem()">{{ __('Excluir Imagem') }}</button>
             </div>
         </div>
     </div>
@@ -705,12 +705,12 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-body-tertiary border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fs-6 text-uppercase fw-bold text-primary ls-wide" id="galleryRenameModalLabel">Renomear Imagem</h5>
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-primary ls-wide" id="galleryRenameModalLabel">{{ __('Renomear Imagem') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-4">
                 <div class="mb-3 text-start">
-                    <label for="new-image-name" class="form-label small text-body-secondary fw-bold text-uppercase">Novo Nome</label>
+                    <label for="new-image-name" class="form-label small text-body-secondary fw-bold text-uppercase">{{ __('Novo Nome') }}</label>
                     <div class="input-group">
                         <input type="text" class="form-control bg-body border-0 shadow-sm" id="new-image-name">
                         <span class="input-group-text bg-secondary bg-opacity-10 border-0 fw-bold opacity-75" id="image-ext-preview">.PNG</span>
@@ -718,8 +718,8 @@
                 </div>
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="confirmGalleryRenameBtn" class="btn btn-primary px-4 rounded-pill" onclick="confirmRenameGalleryItem()">Salvar Nome</button>
+                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                <button type="button" id="confirmGalleryRenameBtn" class="btn btn-primary px-4 rounded-pill" onclick="confirmRenameGalleryItem()">{{ __('Salvar Nome') }}</button>
             </div>
         </div>
     </div>
@@ -730,15 +730,15 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-body-tertiary border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fs-6 text-uppercase fw-bold text-danger ls-wide" id="cardDeleteModalLabel">Excluir Ficha</h5>
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-danger ls-wide" id="cardDeleteModalLabel">{{ __('Excluir Ficha') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-4">
-                <p class="mb-0 text-body">Deseja realmente excluir esta ficha? Todos os dados vinculados a ela e seu arquivo serão perdidos permanentemente.</p>
+                <p class="mb-0 text-body">{{ __('Deseja realmente excluir esta ficha? Todos os dados vinculados a ela e seu arquivo serão perdidos permanentemente.') }}</p>
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="confirmCardDeleteBtn" class="btn btn-danger px-4 rounded-pill" onclick="confirmDeleteCard()">Excluir Ficha</button>
+                <button type="button" class="btn btn-link link-secondary text-decoration-none" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                <button type="button" id="confirmCardDeleteBtn" class="btn btn-danger px-4 rounded-pill" onclick="confirmDeleteCard()">{{ __('Excluir Ficha') }}</button>
             </div>
         </div>
     </div>
@@ -749,14 +749,14 @@
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content bg-body-tertiary border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fs-6 text-uppercase fw-bold text-primary ls-wide" id="galleryPickerModalLabel">Selecionar da Galeria</h5>
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-primary ls-wide" id="galleryPickerModalLabel">{{ __('Selecionar da Galeria') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-4">
                 <div class="mb-4">
                     <div class="input-group input-group-sm rounded-pill overflow-hidden border border-secondary border-opacity-50 search-input-w-lg">
                         <span class="input-group-text bg-transparent border-0 px-2"><i class="bi bi-search opacity-50"></i></span>
-                        <input type="text" id="gallery-picker-search" class="form-control border-0 bg-transparent ps-0" placeholder="Procurar na galeria..." oninput="filterGalleryPicker(this.value)">
+                        <input type="text" id="gallery-picker-search" class="form-control border-0 bg-transparent ps-0" placeholder="{{ __('Procurar na galeria...') }}" oninput="filterGalleryPicker(this.value)">
                     </div>
                 </div>
                 <div id="gallery-picker-grid" class="row row-cols-3 row-cols-md-4 g-3">
@@ -775,7 +775,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-body-tertiary border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fs-6 text-uppercase fw-bold text-primary ls-wide">Sugestões do Fantasma</h5>
+                <h5 class="modal-title fs-6 text-uppercase fw-bold text-primary ls-wide">{{ __('Sugestões do Fantasma') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div id="ai-suggestions-list" class="modal-body py-4">
@@ -818,22 +818,22 @@ let activeProjectCoverUuid = "{{ $project->cover_image_uuid }}";
 
 document.addEventListener('DOMContentLoaded', function() {
     const bootstrapToolbar = [
-        { name: "undo", action: function(editor) { editor.codemirror.undo(); }, className: "bi bi-arrow-counterclockwise", title: "Desfazer (Ctrl+Z)" },
-        { name: "redo", action: function(editor) { editor.codemirror.redo(); }, className: "bi bi-arrow-clockwise", title: "Refazer (Ctrl+Y)" },
+        { name: "undo", action: function(editor) { editor.codemirror.undo(); }, className: "bi bi-arrow-counterclockwise", title: window.__("Undo (Ctrl+Z)") },
+        { name: "redo", action: function(editor) { editor.codemirror.redo(); }, className: "bi bi-arrow-clockwise", title: window.__("Redo (Ctrl+Y)") },
         "|",
-        { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: "Negrito" },
-        { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: "Itálico" },
-        { name: "heading", action: EasyMDE.toggleHeadingSmaller, className: "bi bi-type-h1", title: "Título" },
+        { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: window.__("Bold") },
+        { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: window.__("Italic") },
+        { name: "heading", action: EasyMDE.toggleHeadingSmaller, className: "bi bi-type-h1", title: window.__("Heading") },
         "|",
-        { name: "quote", action: EasyMDE.toggleBlockquote, className: "bi bi-quote", title: "Citação" },
-        { name: "unordered-list", action: EasyMDE.toggleUnorderedList, className: "bi bi-list-ul", title: "Lista Genérica" },
-        { name: "ordered-list", action: EasyMDE.toggleOrderedList, className: "bi bi-list-ol", title: "Lista Numerada" },
+        { name: "quote", action: EasyMDE.toggleBlockquote, className: "bi bi-quote", title: window.__("Quote") },
+        { name: "unordered-list", action: EasyMDE.toggleUnorderedList, className: "bi bi-list-ul", title: window.__("Unordered List") },
+        { name: "ordered-list", action: EasyMDE.toggleOrderedList, className: "bi bi-list-ol", title: window.__("Ordered List") },
         "|",
         {
             name: "gallery-image",
             action: (editor) => openGalleryPickerForEditor(),
             className: "bi bi-image",
-            title: "Inserir imagem da galeria",
+            title: window.__("Insert gallery image"),
         },
         "|",
         {
@@ -844,41 +844,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 const container = wrapper.closest('.EasyMDEContainer');
                 const isActive = container.classList.toggle('pure-md-mode');
                 
-                // Seleciona o ícone e o botão pai (que está na toolbar)
-                // Usamos o container para garantir que pegamos o botão certo
                 const btnIcon = container.querySelector('.bi-markdown, .bi-pencil-square');
                 const btn = btnIcon.parentElement;
                 
                 if (isActive) {
-                    // MODO RAIO-X: Texto Puro (Markdown nativo sem overlays)
                     cm.setOption("mode", "markdown");
                     cm.removeOverlay(literaryOverlay);
                     
-                    // Troca Visual do Botão
                     btnIcon.className = "bi bi-pencil-square";
-                    btn.title = "Voltar ao Editor Literário";
+                    btn.title = window.__("Back to Literary Editor");
                     btn.classList.add('active');
                     
-                    // Limpa imagens fantasma no MD Puro
                     renderGhostImages();
                 } else {
-                    // MODO LITERÁRIO: Markdown + Overlays Customizados
                     cm.setOption("mode", "gfm");
                     cm.addOverlay(literaryOverlay);
                     
-                    // Troca Visual do Botão
                     btnIcon.className = "bi bi-markdown";
-                    btn.title = "Ver MD Puro (Raio-X)";
+                    btn.title = window.__("View Raw MD (X-Ray)");
                     btn.classList.remove('active');
                     
-                    // Renderiza imagens fantasma
                     setTimeout(renderGhostImages, 100);
                 }
             },
             className: "bi bi-markdown",
-            title: "Ver MD Puro (Raio-X)"
+            title: window.__("View Raw MD (X-Ray)")
         },
-        { name: "guide", action: "https://www.markdownguide.org/basic-syntax/", className: "bi bi-question-circle", title: "Guia Markdown" }
+        { name: "guide", action: "https://www.markdownguide.org/basic-syntax/", className: "bi bi-question-circle", title: window.__("Markdown Guide") }
     ];
 
     easyMDE = new EasyMDE({
@@ -887,7 +879,7 @@ document.addEventListener('DOMContentLoaded', function() {
         autosave: { enabled: false },
         status: false,
         autoDownloadFontAwesome: false,
-        placeholder: "Use sua criatividade...",
+        placeholder: window.__("Use your creativity..."),
         toolbar: bootstrapToolbar,
         codeMirrorOptions: {
             viewportMargin: Infinity
@@ -927,7 +919,7 @@ document.addEventListener('DOMContentLoaded', function() {
         autosave: { enabled: false },
         status: false,
         autoDownloadFontAwesome: false,
-        placeholder: "Pense na bíblia como o DNA do seu projeto...",
+        placeholder: window.__("Think of the bible as your project's DNA..."),
         toolbar: bootstrapToolbar,
         codeMirrorOptions: {
             viewportMargin: Infinity
@@ -942,43 +934,43 @@ document.addEventListener('DOMContentLoaded', function() {
         autosave: { enabled: false },
         status: false,
         autoDownloadFontAwesome: false,
-        placeholder: "O resumo narrativo será gerado aqui...",
+        placeholder: window.__("The narrative summary will be generated here..."),
         codeMirrorOptions: {
             viewportMargin: Infinity
         },
         toolbar: [
-            { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: "Negrito" },
-            { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: "Itálico" },
+            { name: "bold", action: EasyMDE.toggleBold, className: "bi bi-type-bold", title: window.__("Bold") },
+            { name: "italic", action: EasyMDE.toggleItalic, className: "bi bi-type-italic", title: window.__("Italic") },
             "|",
             "|",
             { 
                 name: "sync", 
                 action: syncBibleWithAI, 
                 className: "bi bi-arrow-repeat", 
-                title: "Sincronizar com Manuscrito" 
+                title: window.__("Sync with Manuscript") 
             }
         ]
     });
 
     easyMDE.codemirror.on("change", () => {
         if (!activeItemUuid) return;
-        showSaveStatus('Salvando...', 'bi-arrow-repeat spin');
+        showSaveStatus(window.__('Saving...'), 'bi-arrow-repeat spin');
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(saveActiveItem, 1500);
 
-        // Refresh ghost images com debounce curto
+        // Refresh ghost images with short debounce
         clearTimeout(imageRefreshTimeout);
         imageRefreshTimeout = setTimeout(renderGhostImages, 300);
     });
 
     bibleEditor.codemirror.on("change", () => {
-        showBibleSaveStatus('Salvando...', 'bi-arrow-repeat spin');
+        showBibleSaveStatus(window.__('Saving...'), 'bi-arrow-repeat spin');
         clearTimeout(bibleSaveTimeout);
         bibleSaveTimeout = setTimeout(saveBibleContent, 1500);
     });
 
     bibleSummaryEditor.codemirror.on("change", () => {
-        showBibleSaveStatus('Salvando...', 'bi-arrow-repeat spin');
+        showBibleSaveStatus(window.__('Saving...'), 'bi-arrow-repeat spin');
         clearTimeout(bibleSaveTimeout);
         bibleSaveTimeout = setTimeout(saveBibleContent, 1500);
     });
@@ -1007,7 +999,7 @@ function renderGhostImages() {
             const alt = match[1];
             const urlOrName = match[2];
             
-            // Resolve o UUID e nome do item (cache ou extração direta da URL)
+            // Resolve item UUID and name (cache or direct URL extraction)
             let item = currentGalleryItems.find(i => {
                 if (i.name === urlOrName || i.uuid === urlOrName) return true;
                 if (urlOrName.includes(i.uuid)) return true;
@@ -1029,7 +1021,7 @@ function renderGhostImages() {
             if (itemUuid) {
                 const widget = document.createElement('div');
                 widget.className = 'ghost-image-widget animate-fade-in';
-                widget.title = "Clique para trocar esta imagem";
+                widget.title = window.__('Click to swap this image');
                 widget.innerHTML = `<img src="/projects/${projectUuid}/gallery/${itemUuid}/image/thumb" alt="${alt}"><div class="ghost-image-caption">${alt || itemName}</div>`;
 
                 widget.onclick = (e) => {
@@ -1082,33 +1074,33 @@ function showEmptyState(category) {
     const contents = {
         'scenario': {
             icon: 'bi-map',
-            title: 'Mapeie seu Mundo',
-            desc: 'A geografia define os limites do possível. Crie desertos, cidades ou reinos inteiros antes de começar a jornada.',
-            btn: `<button class="btn btn-ghost-primary" onclick="createCard('scenario')">Novo Cenário</button>`
+            title: window.__('Map Your World'),
+            desc: window.__('Geography defines the limits of possibility. Create deserts, cities, or entire kingdoms before starting the journey.'),
+            btn: `<button class="btn btn-ghost-primary" onclick="createCard('scenario')">${window.__('New Scenario')}</button>`
         },
         'character': {
             icon: 'bi-people',
-            title: 'Dê Alma à História',
-            desc: 'Quem são os seus protagonistas? Quais seus desejos e segredos? Comece criando as fichas de personagens.',
-            btn: `<button class="btn btn-ghost-primary" onclick="createCard('character')">Novo Personagem</button>`
+            title: window.__('Give Soul to the Story'),
+            desc: window.__('Who are your protagonists? What are their desires and secrets? Start creating character cards.'),
+            btn: `<button class="btn btn-ghost-primary" onclick="createCard('character')">${window.__('New Character')}</button>`
         },
         'object': {
             icon: 'bi-gem',
-            title: 'Artefatos e Itens',
-            desc: 'Espadas lendárias, cartas perdidas ou relíquias antigas. Registre os objetos que movem a trama.',
-            btn: `<button class="btn btn-ghost-primary" onclick="createCard('object')">Novo Objeto</button>`
+            title: window.__('Artifacts and Items'),
+            desc: window.__('Legendary swords, lost letters, or ancient relics. Record the objects that drive the plot.'),
+            btn: `<button class="btn btn-ghost-primary" onclick="createCard('object')">${window.__('New Object')}</button>`
         },
         'lore': {
             icon: 'bi-mortarboard',
-            title: 'Lore e Cultura',
-            desc: 'Mitos, religiões, eventos históricos ou sistemas de magia. Documente o conhecimento que molda o mundo.',
-            btn: `<button class="btn btn-ghost-primary" onclick="createCard('lore')">Nova Lore</button>`
+            title: window.__('Lore and Culture'),
+            desc: window.__('Myths, religions, historical events, or magic systems. Document the knowledge that shapes the world.'),
+            btn: `<button class="btn btn-ghost-primary" onclick="createCard('lore')">${window.__('New Lore')}</button>`
         },
         'manuscript': {
             icon: 'bi-diagram-3',
-            title: 'Estruture sua Trama',
-            desc: 'Defina a sequência de capítulos e cenas para construir o esqueleto da sua narrativa antes de escrever.',
-            btn: '<button class="btn btn-primary" onclick="createChapter()">Adicionar Capítulo</button>'
+            title: window.__('Structure Your Plot'),
+            desc: window.__('Define the sequence of chapters and scenes to build the skeleton of your narrative before writing.'),
+            btn: '<button class="btn btn-primary" onclick="createChapter()">' + window.__('Add Chapter') + '</button>'
         }
     };
 
@@ -1189,7 +1181,7 @@ async function loadManuscript() {
     root.innerHTML = '';
     
     if (tree.length === 0) {
-        root.innerHTML = '<p class="text-ghost-muted italic py-2 px-1">Nenhum item ainda.</p>';
+        root.innerHTML = '<p class="text-ghost-muted italic py-2 px-1">' + window.__('No items yet.') + '</p>';
         showEmptyState('manuscript');
         return;
     }
@@ -1217,12 +1209,12 @@ function renderTreeNodes(nodes, container) {
                 </div>
                 <div class="node-actions d-flex gap-1">
                     ${!node.is_system && node.type !== 'scene' ? `
-                        <button class="btn btn-link btn-sm p-0 text-primary btn-node-action" type="button" title="Adicionar ${node.type === 'section' ? 'Capítulo' : 'Cena'}" onclick="event.preventDefault(); event.stopPropagation(); createNewItem('${node.type === 'section' ? 'chapter' : 'scene'}', '${node.uuid}')">
+                        <button class="btn btn-link btn-sm p-0 text-primary btn-node-action" type="button" title={window.__('Add ') + (node.type === 'section' ? window.__('Chapter') : window.__('Scene'))} onclick="event.preventDefault(); event.stopPropagation(); createNewItem('${node.type === 'section' ? 'chapter' : 'scene'}', '${node.uuid}')">
                             <i class="bi bi-plus-lg"></i>
                         </button>
                     ` : ''}
                     ${!node.is_system ? `
-                    <button class="btn btn-link btn-sm p-0 text-danger btn-node-action" type="button" title="Excluir" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" onclick="event.preventDefault(); event.stopPropagation(); itemToDeleteUuid = '${node.uuid}'">
+                    <button class="btn btn-link btn-sm p-0 text-danger btn-node-action" type="button" title="Delete" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal" onclick="event.preventDefault(); event.stopPropagation(); itemToDeleteUuid = '${node.uuid}'">
                         <i class="bi bi-trash"></i>
                     </button>
                     ` : ''}
@@ -1274,7 +1266,7 @@ function initDraggable() {
 }
 
 async function createNewItem(type, parentUuid = null) {
-    const titles = { 'section': 'Nova Seção', 'chapter': 'Novo Capítulo', 'scene': 'Nova Cena' };
+    const titles = { 'section': window.__('New Section'), 'chapter': window.__('New Chapter'), 'scene': window.__('New Scene') };
     const response = await fetch(`/projects/${projectUuid}/manuscript`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
@@ -1437,7 +1429,7 @@ async function openManuscriptItem(uuid) {
         }
 
     } catch (error) {
-        console.error('Erro ao carregar item:', error);
+        console.error('Error loading item:', error);
     }
 }
 
@@ -1489,28 +1481,28 @@ function setManuscriptMode(mode) {
 }
 
 async function loadManuscriptContent() {
-    showSaveStatus('Carregando...', 'bi-arrow-repeat spin');
+    showSaveStatus(window.__('Loading...'), 'bi-arrow-repeat spin');
     try {
         const response = await fetch(`/projects/${projectUuid}/manuscript/${activeItemUuid}`);
         const data = await response.json();
         easyMDE.value(data.content);
-        showSaveStatus('Salvo', 'bi-check2-all');
+        showSaveStatus(window.__('Saved'), 'bi-check2-all');
         setTimeout(renderGhostImages, 200);
     } catch (error) {
-        showSaveStatus('Erro ao carregar', 'bi-exclamation-triangle text-danger');
+        showSaveStatus(window.__('Load error'), 'bi-exclamation-triangle text-danger');
     }
 }
 
 async function loadManuscriptPlanning() {
-    showSaveStatus('Carregando...', 'bi-arrow-repeat spin');
+    showSaveStatus(window.__('Loading...'), 'bi-arrow-repeat spin');
     try {
         const response = await fetch(`/projects/${projectUuid}/manuscript/${activeItemUuid}/planning`);
         const data = await response.json();
-        easyMDE.value(data.content || "# Planejamento da Cena\n\nDescreva aqui os pontos chaves, objetivos e conflitos desta seção.");
-        showSaveStatus('Salvo', 'bi-check2-all');
+        easyMDE.value(data.content || "# Scene Planning\n\nDescribe key points, objectives, and conflicts for this section.");
+        showSaveStatus(window.__('Saved'), 'bi-check2-all');
         setTimeout(renderGhostImages, 200);
     } catch (error) {
-        showSaveStatus('Erro ao carregar', 'bi-exclamation-triangle text-danger');
+        showSaveStatus(window.__('Load error'), 'bi-exclamation-triangle text-danger');
     }
 }
 
@@ -1583,8 +1575,8 @@ async function confirmDeleteManuscriptItem() {
         itemToDeleteUuid = null;
         loadManuscript();
     } catch (error) {
-        console.error('Erro ao excluir:', error);
-        alert('Erro ao excluir item.');
+        console.error('Error deleting:', error);
+        alert(window.__('Error deleting item.'));
     } finally {
         btn.disabled = false;
         btn.innerText = originalText;
@@ -1617,7 +1609,7 @@ async function loadCards(type) {
     // Update headers
     const titles = { 'scenario': 'Geografia / Cenários', 'character': 'Personagens / Elenco', 'lore': 'Lore / Conhecimento', 'object': 'Itens / Objetos' };
     const icons = { 'scenario': 'bi-geo-alt', 'character': 'bi-people', 'lore': 'bi-mortarboard', 'object': 'bi-gem' };
-    document.getElementById('cards-grid-title').innerText = titles[type] || 'Fichas';
+    document.getElementById('cards-grid-title').innerText = titles[type] || window.__('Cards');
     document.getElementById('cards-grid-icon').className = `bi ${icons[type]} me-2 text-primary fs-4`;
 
     const response = await fetch(`/projects/${projectUuid}/cards?type=${type}`);
@@ -1627,7 +1619,7 @@ async function loadCards(type) {
 }
 
 function updateRightPanelForCards(type, cards) {
-    const titles = { 'scenario': 'Cenários', 'character': 'Personagens', 'lore': 'Lore', 'object': 'Itens' };
+    const titles = { 'scenario': 'Scenarios', 'character': 'Characters', 'lore': 'Lore', 'object': 'Itens' };
     
     // Only hide item-stats if nothing is being edited
     if (!activeItemUuid) {
@@ -1641,7 +1633,7 @@ function updateRightPanelForCards(type, cards) {
     const dynamicContent = document.getElementById('dynamic-content');
     
     if (cards.length === 0) {
-        dynamicContent.innerHTML = '<div class="opacity-50 italic">Nenhum item cadastrado.</div>';
+        dynamicContent.innerHTML = '<div class="opacity-50 italic">' + window.__('No items registered.') + '</div>';
         return;
     }
 
@@ -1671,8 +1663,8 @@ function renderCards(cards) {
         col.className = 'col animate-fade-in';
         col.style.animationDelay = `${index * 0.05}s`;
         
-        const placeholders = { 'scenario': 'Mapa', 'character': 'Personagem', 'lore': 'Lore', 'object': 'Item' };
-        const label = placeholders[card.type] || 'Ficha';
+        const placeholders = { 'scenario': window.__('Map'), 'character': window.__('Character'), 'lore': window.__('Lore'), 'object': window.__('Item') };
+        const label = placeholders[card.type] || window.__('Card');
         const thumbUrl = card.image_uuid ? `/projects/${projectUuid}/gallery/${card.image_uuid}/image/thumb` : `https://placehold.co/400x400/1e1e2e/6272a4?text=${label}`;
 
         col.innerHTML = `
@@ -1714,7 +1706,7 @@ function renderCards(cards) {
                             </ul>
                         </div>
                         
-                        <button class="btn btn-ghost-card btn-sm text-danger p-1" title="Excluir Ficha" data-bs-toggle="modal" data-bs-target="#cardDeleteModal" onclick="cardToDeleteUuid = '${card.uuid}'">
+                        <button class="btn btn-ghost-card btn-sm text-danger p-1" title={window.__('Delete Card')} data-bs-toggle="modal" data-bs-target="#cardDeleteModal" onclick="cardToDeleteUuid = '${card.uuid}'">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -1730,14 +1722,14 @@ async function createCard() {
     const response = await fetch(`/projects/${projectUuid}/cards`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-        body: JSON.stringify({ title: `Novo(a) ${activeCardCategory}`, type: activeCardCategory })
+        body: JSON.stringify({ title: window.__('New {0}').replace('{0}', activeCardCategory), type: activeCardCategory })
     });
     const card = await response.json();
     await loadCards(activeCardCategory);
 }
 
 async function moveCard(cardUuid, newType) {
-    if (!confirm(`Deseja mover esta ficha para a categoria ${newType}?`)) return;
+    if (!confirm(window.__('Move this card to {0} category?').replace('{0}', newType))) return;
     
     try {
         const response = await fetch(`/projects/${projectUuid}/cards/${cardUuid}/type`, {
@@ -1750,7 +1742,7 @@ async function moveCard(cardUuid, newType) {
         });
         
         if (response.ok) {
-            toast('Ficha movida com sucesso!', 'success');
+            toast(window.__('Card moved successfully!'), 'success');
             
             // Immediate UI removal for smoothness
             const cardEl = document.getElementById(`grid-card-${cardUuid}`);
@@ -1762,8 +1754,8 @@ async function moveCard(cardUuid, newType) {
             await loadCards(activeCardCategory); // Full refresh
         }
     } catch (error) {
-        console.error('Erro ao mover ficha:', error);
-        toast('Erro ao mover ficha.', 'error');
+        console.error('Error moving card:', error);
+        toast(window.__('Error moving card.'), 'error');
     }
 }
 
@@ -1788,13 +1780,13 @@ async function uploadCardImage(cardUuid, input) {
         if (response.ok) {
             loadCards(activeCardCategory);
         } else {
-            alert('Erro ao enviar imagem.');
+            alert(window.__('Error uploading image.'));
             cardElement.style.opacity = "1";
             cardElement.style.pointerEvents = "auto";
         }
     } catch (e) {
         console.error(e);
-        alert('Erro na conexão.');
+        alert(window.__('Connection error.'));
         cardElement.style.opacity = "1";
         cardElement.style.pointerEvents = "auto";
     }
@@ -1827,8 +1819,8 @@ async function confirmDeleteCard() {
         cardToDeleteUuid = null;
         loadCards(activeCardCategory);
     } catch (error) {
-        console.error('Erro ao excluir:', error);
-        alert('Erro ao excluir ficha.');
+        console.error('Error deleting:', error);
+        alert(window.__('Error deleting card.'));
     } finally {
         btn.disabled = false;
         btn.innerText = originalText;
@@ -1889,7 +1881,7 @@ function renderGalleryPicker(items) {
     grid.innerHTML = '';
     
     if (items.length === 0) {
-        grid.innerHTML = '<div class="col-12 text-center py-4 text-body-secondary animate-fade-in">Nenhuma imagem encontrada.</div>';
+        grid.innerHTML = '<div class="col-12 text-center py-4 text-body-secondary animate-fade-in">' + window.__('No images found.') + '</div>';
         return;
     }
 
@@ -1958,7 +1950,7 @@ async function selectImageFromPicker(imageUuid, filename) {
         
         loadCards(activeCardCategory);
     } catch (error) {
-        console.error('Erro ao vincular imagem:', error);
+        console.error('Error linking image:', error);
     }
 }
 
@@ -2017,7 +2009,7 @@ async function openItem(uuid, type) {
 
     easyMDE.value(data.content);
     
-    showSaveStatus('Salvo', 'bi-check2-all');
+    showSaveStatus(window.__('Saved'), 'bi-check2-all');
 }
 
 async function saveActiveItem() {
@@ -2033,7 +2025,7 @@ async function saveActiveItem() {
 
     const item = await response.json();
     document.getElementById('stat-word-count').innerText = item.word_count || 0;
-    showSaveStatus('Salvo', 'bi-check2-all');
+    showSaveStatus(window.__('Saved'), 'bi-check2-all');
 }
 
 function showSaveStatus(text, iconClass) {
@@ -2098,13 +2090,13 @@ function updateRightPanelForGallery() {
 async function loadGallery() {
     try {
         const response = await fetch(`/projects/${projectUuid}/gallery`);
-        if (!response.ok) throw new Error('Falha ao carregar galeria');
+        if (!response.ok) throw new Error(window.__('Failed to load gallery'));
         currentGalleryItems = await response.json();
         renderGallery(currentGalleryItems);
         updateRightPanelForGallery();
         renderGhostImages();
     } catch (error) {
-        console.error('Erro na galeria:', error);
+        console.error('Error in gallery:', error);
         const galleryItemsEl = document.getElementById('gallery-items');
         if (galleryItemsEl) {
             galleryItemsEl.innerHTML = '<div class="col-12 text-center text-muted p-5">Erro ao carregar galeria. Tente novamente.</div>';
@@ -2143,10 +2135,10 @@ function renderGallery(items) {
                 <div class="card-body p-2 d-flex justify-content-between align-items-center flex-wrap gap-1">
                     <span class="small text-truncate text-body-secondary fw-bold flex-grow-1 mw-100px" title="${item.name}">${displayName}</span>
                     <div class="d-flex gap-1">
-                        <button class="btn btn-ghost-card btn-sm text-primary p-1" title="Renomear" data-bs-toggle="modal" data-bs-target="#galleryRenameModal" onclick="prepareRenameImage('${item.uuid}', '${displayName.replace(/'/g, "\\'")}', '${extension}')">
+                        <button class="btn btn-ghost-card btn-sm text-primary p-1" title={window.__('Rename')} data-bs-toggle="modal" data-bs-target="#galleryRenameModal" onclick="prepareRenameImage('${item.uuid}', '${displayName.replace(/'/g, "\\'")}', '${extension}')">
                             <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-ghost-card btn-sm text-danger p-1" title="Excluir" data-bs-toggle="modal" data-bs-target="#galleryDeleteModal" onclick="galleryItemToDeleteUuid = '${item.uuid}'">
+                        <button class="btn btn-ghost-card btn-sm text-danger p-1" title="Delete" data-bs-toggle="modal" data-bs-target="#galleryDeleteModal" onclick="galleryItemToDeleteUuid = '${item.uuid}'">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -2215,11 +2207,11 @@ async function uploadImage(input) {
         if (response.ok) {
             loadGallery();
         } else {
-            alert('Erro ao enviar imagem.');
+            alert(window.__('Error uploading image.'));
         }
     } catch (e) {
         console.error(e);
-        alert('Erro na conexão.');
+        alert(window.__('Connection error.'));
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalContent;
@@ -2251,8 +2243,8 @@ async function confirmDeleteGalleryItem() {
         galleryItemToDeleteUuid = null;
         loadGallery();
     } catch (error) {
-        console.error('Erro ao excluir:', error);
-        alert('Erro ao excluir imagem.');
+        console.error('Error deleting:', error);
+        alert(window.__('Error deleting image.'));
     } finally {
         btn.disabled = false;
         btn.innerText = originalText;
@@ -2293,8 +2285,8 @@ async function confirmRenameGalleryItem() {
         galleryItemToRenameUuid = null;
         loadGallery();
     } catch (error) {
-        console.error('Erro ao renomear:', error);
-        alert('Erro ao renomear imagem.');
+        console.error('Error renaming:', error);
+        alert(window.__('Error renaming image.'));
     } finally {
         btn.disabled = false;
         btn.innerText = originalText;
@@ -2436,7 +2428,7 @@ async function searchConnections(query) {
         }
         resultsPanel.classList.remove('d-none');
     } catch (error) {
-        console.error('Erro na busca:', error);
+        console.error('Error in search:', error);
         resultsPanel.innerHTML = '<div class="p-2 text-danger x-small italic text-center">Erro na busca</div>';
         resultsPanel.classList.remove('d-none');
     }
@@ -2570,7 +2562,7 @@ async function loadBibleData() {
         renderBibleAccordion(data.manuscript_tree);
         
     } catch (error) {
-        console.error('Erro ao carregar bíblia:', error);
+        console.error('Error loading bible:', error);
     }
 }
 
@@ -2604,14 +2596,14 @@ function renderBibleItem(item, parentType = null) {
                         <i class="bi bi-folder2-open text-primary fs-5"></i>
                         <h5 class="fw-bold mb-0 text-primary small text-uppercase ls-wide">${item.title}</h5>
                         ${showSync ? `
-                        <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100 ms-1" data-uuid="${item.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${item.uuid}')" title="Sincronizar esta seção">
+                        <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100 ms-1" data-uuid="${item.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${item.uuid}')" title={window.__('Sync this section')}>
                             <i class="bi bi-journal-arrow-up"></i>
                         </span>` : ''}
                     </div>
                 </div>
                 ${showSync && hasSummary ? `<div class="mb-3 p-2 bg-primary bg-opacity-5 rounded border-start border-primary border-3 small italic text-body-secondary mx-2">${item.summary}</div>` : ''}
                 <div class="ps-2">
-                    ${childrenHtml || '<div class="text-ghost-muted x-small italic ps-4 pb-3">Seção vazia.</div>'}
+                    ${childrenHtml || '<div class="text-ghost-muted x-small italic ps-4 pb-3">Empty section.</div>'}
                 </div>
             </div>
         `;
@@ -2640,18 +2632,18 @@ function renderChapterAccordionHtml(chapter, childrenHtml, showSync = true) {
                         <i class="bi bi-journal-bookmark text-info"></i>
                         <span class="fw-bold text-truncate" style="max-width: 250px;">${chapter.title}</span>
                         ${showSync ? `
-                        <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100 ms-1" data-uuid="${chapter.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${chapter.uuid}')" title="Sincronizar este capítulo">
+                        <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100 ms-1" data-uuid="${chapter.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${chapter.uuid}')" title={window.__('Sync this chapter')}>
                             <i class="bi bi-journal-arrow-up"></i>
                         </span>` : ''}
                     </div>
-                    ${chapter.children && chapter.children.length > 0 ? `<span class="badge bg-secondary bg-opacity-10 text-body-secondary ms-auto me-3 fw-normal small">${chapter.children.length} cenas</span>` : ''}
+                    ${chapter.children && chapter.children.length > 0 ? `<span class="badge bg-secondary bg-opacity-10 text-body-secondary ms-auto me-3 fw-normal small">${chapter.children.length} window.__('scenes')</span>` : ''}
                 </button>
             </h2>
             <div id="collapse-bible-${chapter.uuid}" class="accordion-collapse collapse" data-bs-parent="#bible-manuscript-accordion">
                 <div class="accordion-body bg-body">
                     ${showSync && hasChapterSummary ? `<div class="mb-4 p-3 bg-info bg-opacity-5 rounded border-start border-info border-4 small">${chapter.summary}</div>` : ''}
                     <div class="scenes-list">
-                        ${childrenHtml || '<div class="text-ghost-muted x-small italic ps-4">Sem cenas neste capítulo.</div>'}
+                        ${childrenHtml || '<div class="text-ghost-muted x-small italic ps-4">No scenes in this chapter.</div>'}
                     </div>
                 </div>
             </div>
@@ -2667,7 +2659,7 @@ function renderSceneHtml(scene, parentType, showSync = true) {
                 <i class="bi bi-text-paragraph text-ghost-muted small"></i>
                 <span class="fw-bold small">${scene.title}</span>
                 ${showSync ? `
-                <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100" data-uuid="${scene.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${scene.uuid}')" title="Sincronizar esta cena">
+                <span role="button" class="btn btn-xs btn-outline-primary border-0 btn-sync-bible-item p-0 opacity-75 hover-opacity-100" data-uuid="${scene.uuid}" onclick="event.stopPropagation(); syncSectionToBible('${scene.uuid}')" title={window.__('Sync this scene')}>
                     <i class="bi bi-journal-arrow-up"></i>
                 </span>` : ''}
             </div>
@@ -2709,7 +2701,7 @@ async function syncSectionToBible(uuid = null) {
         const data = await response.json();
         
         if (response.ok) {
-            showToast('Sucesso', 'Resumo gerado e sincronizado!', 'success');
+            showToast(window.__('Success'), window.__('Summary generated and synced!'), 'success');
             if (btn) {
                 btn.classList.remove('btn-outline-info');
                 btn.classList.add('btn-outline-success');
@@ -2719,11 +2711,11 @@ async function syncSectionToBible(uuid = null) {
                 loadBibleData();
             }
         } else {
-            showToast('Aviso', data.error || 'Não foi possível gerar o resumo.', 'warning');
+            showToast(window.__('Warning'), data.error || window.__('Could not generate summary.'), 'warning');
         }
     } catch (error) {
-        console.error('Erro ao sincronizar:', error);
-        showToast('Erro', 'Falha na comunicação com o servidor.', 'danger');
+        console.error('Error syncing:', error);
+        showToast(window.__('Error'), window.__('Server communication failed.'), 'danger');
     } finally {
         if (btn && icon) {
             icon.className = 'bi bi-journal-arrow-up';
@@ -2753,13 +2745,13 @@ async function syncCerebellum() {
         
         if (response.ok) {
             bibleSummaryEditor.value(data.summary);
-            showToast('Sucesso', 'Cerebelo atualizado com base nos resumos individuais!', 'success');
+            showToast(window.__('Success'), window.__('Cerebellum updated based on individual summaries!'), 'success');
         } else {
-            showToast('Erro', data.error || 'Erro ao sincronizar cerebelo.', 'danger');
+            showToast(window.__('Error'), data.error || window.__('Error syncing cerebellum.'), 'danger');
         }
     } catch (error) {
-        console.error('Erro ao sincronizar cerebelo:', error);
-        showToast('Erro', 'Falha na conexão.', 'danger');
+        console.error('Error syncing cerebellum:', error);
+        showToast(window.__('Error'), window.__('Connection failed.'), 'danger');
     } finally {
         btn.innerHTML = originalText;
         btn.classList.remove('disabled');
@@ -2779,9 +2771,9 @@ async function saveBibleContent() {
                 summary: bibleSummaryEditor.value()
             })
         });
-        showBibleSaveStatus('Salvo', 'bi-check2-all');
+        showBibleSaveStatus(window.__('Saved'), 'bi-check2-all');
     } catch (error) {
-        showBibleSaveStatus('Erro ao salvar', 'bi-exclamation-triangle text-danger');
+        showBibleSaveStatus(window.__('Save error'), 'bi-exclamation-triangle text-danger');
     }
 }
 
@@ -2806,11 +2798,11 @@ async function syncBibleWithAI() {
             alert(data.error);
         } else {
             bibleSummaryEditor.value(data.summary);
-            showBibleSaveStatus('Sincronizado', 'bi-stars text-info');
+            showBibleSaveStatus(window.__('Synced'), 'bi-stars text-info');
         }
     } catch (error) {
-        console.error('Erro na sincronização:', error);
-        alert('Erro ao conectar com a IA.');
+        console.error('Error in sync:', error);
+        alert(window.__('Error connecting to AI.'));
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalHtml;
@@ -2855,7 +2847,7 @@ async function openExport() {
         const state = await response.json();
         renderExportResults(state);
     } catch (error) {
-        console.error('Erro ao carregar estado de exportação:', error);
+        console.error('Error loading export state:', error);
     }
 }
 
@@ -2921,7 +2913,7 @@ function loadProjectSnapshots() {
 }
 
 function createProjectSnapshot() {
-    showToast('Iniciando snapshot do projeto...', 'info');
+    showToast(window.__('Starting project snapshot...'), 'info');
     
     fetch(`/projects/${projectUuid}/snapshots`, {
         method: 'POST',
@@ -2930,23 +2922,23 @@ function createProjectSnapshot() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showToast('Snapshot criado com sucesso!', 'success');
+            showToast(window.__('Snapshot created successfully!'), 'success');
             loadProjectSnapshots();
         } else {
-            showToast('Falha ao criar snapshot: ' + (data.message || 'Erro desconhecido'), 'danger');
+            showToast(window.__('Failed to create snapshot:') + ' ' + (data.message || window.__('Unknown error')), 'danger');
         }
     })
     .catch(err => {
-        showToast('Erro de conexão ao criar snapshot.', 'danger');
+        showToast(window.__('Connection error creating snapshot.'), 'danger');
     });
 }
 
 function rollbackProject(snapshotName) {
-    if (!confirm(`Tem certeza que deseja restaurar o snapshot "${snapshotName}"? TODO o progresso atual desde este snapshot será perdido. O banco de dados e arquivos serão substituídos.`)) {
+    if (!confirm(window.__('Restore snapshot "{0}"? ALL progress since this snapshot will be lost. The database and files will be replaced.').replace('{0}', snapshotName))) {
         return;
     }
     
-    showToast('Restaurando snapshot... O sistema irá recarregar.', 'warning');
+    showToast(window.__('Restoring snapshot... The system will reload.'), 'warning');
     
     fetch(`/projects/${projectUuid}/rollback`, {
         method: 'POST',
@@ -2961,11 +2953,11 @@ function rollbackProject(snapshotName) {
         if (data.success) {
             window.location.reload();
         } else {
-            showToast(data.message || 'Falha no rollback.', 'danger');
+            showToast(data.message || window.__('Rollback failed.'), 'danger');
         }
     })
     .catch(err => {
-        showToast('Erro de conexão ao restaurar snapshot.', 'danger');
+        showToast(window.__('Connection error restoring snapshot.'), 'danger');
     });
 }
 
@@ -2993,11 +2985,11 @@ async function setProjectCover(imageUuid) {
             
             console.log('Capa do projeto atualizada com sucesso.');
         } else {
-            alert('Falha ao atualizar capa: ' + (data.message || 'Erro desconhecido'));
+            alert('Failed to update cover: ' + (data.message || 'Unknown error'));
         }
     } catch (error) {
-        console.error('Erro ao definir capa:', error);
-        alert('Erro ao definir capa do projeto.');
+        console.error('Error setting cover:', error);
+        alert(window.__('Error setting project cover.'));
     }
 }
 
@@ -3034,7 +3026,7 @@ async function saveExportMetadata() {
         // For the current page, we update any title-related elements.
 
     } catch(e) {
-        console.error('Falha ao salvar metadados', e);
+        console.error('Failed to save metadata', e);
     }
 }
 
@@ -3048,7 +3040,7 @@ async function runExportBatch() {
     if (document.getElementById('export-markdown').checked) formats.push('markdown');
 
     if (formats.length === 0) {
-        alert('Selecione ao menos um formato para exportar.');
+        alert(window.__('Select at least one format to export.'));
         return;
     }
 
@@ -3080,8 +3072,8 @@ async function runExportBatch() {
         renderExportResults(state);
 
     } catch (error) {
-        console.error('Erro no processamento:', error);
-        alert('Ocorreu um erro ao gerar os arquivos.');
+        console.error('Error processing:', error);
+        alert(window.__('An error occurred while generating files.'));
     } finally {
         btn.disabled = false;
         btn.innerHTML = originalHtml;
@@ -3157,11 +3149,11 @@ async function suggestAiCard() {
             await createRes.json();
             loadCards(activeCardCategory || type); // refresh grid
         } else {
-            alert(data.error || 'Erro ao sugerir ficha');
+            alert(data.error || window.__('Error suggesting card'));
         }
     } catch (e) {
         console.error(e);
-        alert('Erro na conexão com IA');
+        alert(window.__('AI connection error'));
     } finally {
         const btn = document.querySelector('[onclick="suggestAiCard()"]');
         if (btn) {
@@ -3195,7 +3187,7 @@ async function generateAiPlanning() {
             alert(data.error);
         }
     } catch (e) {
-        alert('Erro ao gerar planejamento');
+        alert(window.__('Error generating planning'));
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="bi bi-stars"></i>';
@@ -3205,7 +3197,7 @@ async function generateAiPlanning() {
 function openReviewConfirmModal() {
     const content = easyMDE ? easyMDE.value().trim() : '';
     if (!content || content === '' || content.startsWith('# Planejamento')) {
-        showToast('Aviso', 'Nenhum conteúdo para revisar.', 'warning');
+        showToast(window.__('Warning'), window.__('No content to review.'), 'warning');
         return;
     }
     const modal = new bootstrap.Modal(document.getElementById('writeReviewConfirmModal'));
@@ -3234,13 +3226,13 @@ async function reviewScene() {
         if (data.success) {
             easyMDE.value(data.content);
             saveActiveItem();
-            showToast('Sucesso', 'Texto revisado com sucesso!', 'success');
+            showToast(window.__('Success'), window.__('Text reviewed successfully!'), 'success');
         } else {
-            showToast('Aviso', data.error || 'Não foi possível revisar o texto.', 'warning');
+            showToast(window.__('Warning'), data.error || window.__('Could not review text.'), 'warning');
         }
     } catch (e) {
-        console.error('Erro ao revisar:', e);
-        showToast('Erro', 'Falha na comunicação com o servidor.', 'danger');
+        console.error('Error reviewing:', e);
+        showToast(window.__('Error'), window.__('Server communication failed.'), 'danger');
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="bi bi-spellcheck"></i>';
@@ -3289,7 +3281,7 @@ async function writeAiScene() {
             alert(data.error);
         }
     } catch (e) {
-        alert('Erro ao escrever cena');
+        alert(window.__('Error writing scene'));
     } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="bi bi-magic"></i>';
@@ -3312,8 +3304,8 @@ async function suggestAIConnections() {
         
         renderAISuggestions(suggestions);
     } catch (error) {
-        console.error('Erro ao buscar sugestões:', error);
-        alert('Falha ao obter sugestões da IA.');
+        console.error('Error fetching suggestions:', error);
+        alert(window.__('Failed to get AI suggestions.'));
     } finally {
         loading.classList.add('d-none');
     }

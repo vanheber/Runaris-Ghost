@@ -30,7 +30,7 @@
 <body class="antialiased d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg border-bottom sticky-top py-0 bg-body-tertiary navbar-custom">
         <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center py-0" href="{{ url('/projects') }}" title="Projetos">
+            <a class="navbar-brand d-flex align-items-center py-0" href="{{ url('/projects') }}" title="{{ __('Projetos') }}">
                 <img src="{{ asset('assets/images/lg-ghost-hz-color.svg') }}" class="logo-light" alt="Runaris Ghost">
                 <img src="{{ asset('assets/images/lg-ghost-hz-color-inverted.svg') }}" class="logo-dark" alt="Runaris Ghost">
                 @yield('project-header-title')
@@ -44,32 +44,32 @@
                 @yield('project-nav')
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link px-2 {{ Request::is('projects') ? 'active' : '' }}" href="{{ url('/projects') }}">Projetos</a>
+                        <a class="nav-link px-2 {{ Request::is('projects') ? 'active' : '' }}" href="{{ url('/projects') }}">{{ __('Projetos') }}</a>
                     </li>
                     
                     <!-- Theme Switcher -->
                     <li class="nav-item dropdown ms-lg-3">
                         <button class="btn btn-link nav-link dropdown-toggle d-flex align-items-center px-2" id="bd-theme" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
                             <i class="bi bi-palette2 me-2"></i>
-                            <span class="d-lg-none">Tema</span>
+                            <span class="d-lg-none">{{ __('Tema') }}</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 bg-body-tertiary p-2" aria-labelledby="bd-theme">
-                            <li><button type="button" class="dropdown-item d-flex align-items-center rounded mb-1" data-bs-theme-value="dark"><i class="bi bi-moon-stars-fill me-2 opacity-50"></i> Escuro</button></li>
-                            <li><button type="button" class="dropdown-item d-flex align-items-center rounded mb-1" data-bs-theme-value="light"><i class="bi bi-sun-fill me-2 opacity-50"></i> Claro</button></li>
-                            <li><button type="button" class="dropdown-item d-flex align-items-center rounded" data-bs-theme-value="solar-light"><i class="bi bi-brightness-high-fill me-2 opacity-50"></i> Solarizado Claro</button></li>
+                            <li><button type="button" class="dropdown-item d-flex align-items-center rounded mb-1" data-bs-theme-value="dark"><i class="bi bi-moon-stars-fill me-2 opacity-50"></i> {{ __('Escuro') }}</button></li>
+                            <li><button type="button" class="dropdown-item d-flex align-items-center rounded mb-1" data-bs-theme-value="light"><i class="bi bi-sun-fill me-2 opacity-50"></i> {{ __('Claro') }}</button></li>
+                            <li><button type="button" class="dropdown-item d-flex align-items-center rounded" data-bs-theme-value="solar-light"><i class="bi bi-brightness-high-fill me-2 opacity-50"></i> {{ __('Solarizado Claro') }}</button></li>
                         </ul>
                     </li>
 
                     <li class="nav-item ms-lg-3">
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createProjectModal">
-                            <i class="bi bi-plus-lg me-1"></i> Novo Projeto
+                            <i class="bi bi-plus-lg me-1"></i> {{ __('Novo Projeto') }}
                         </button>
                     </li>
                     @if(\App\Models\SystemSetting::getSetting('use_local_password', 'true') === 'true')
                         <li class="nav-item ms-lg-3">
                             <form action="{{ route('logout') }}" method="POST" id="logout-form" class="d-none">@csrf</form>
                             <a href="#" class="nav-link px-0 text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="bi bi-box-arrow-right me-1"></i> Sair
+                                <i class="bi bi-box-arrow-right me-1"></i> {{ __('Sair') }}
                             </a>
                         </li>
                     @endif
@@ -87,17 +87,17 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <div class="col-md-4 d-flex align-items-center">
                     <span class="text-body-secondary small me-3">
-                        &copy; {{ date('Y') }} <a href="https://runaris.com.br/ghost/" target="_blank" class="text-body-secondary text-decoration-none hover-primary">Runaris Ghost</a>. | <a href="{{ url('/eula') }}" class="text-body-secondary text-decoration-none small opacity-75 hover-opacity-100">Termos e Licença</a>
+                        &copy; {{ date('Y') }} <a href="https://runaris.com.br/ghost/" target="_blank" class="text-body-secondary text-decoration-none hover-primary">Runaris Ghost</a>. | <a href="{{ url('/eula') }}" class="text-body-secondary text-decoration-none small opacity-75 hover-opacity-100">{{ __('Termos e Licença') }}</a>
                     </span>
                 </div>
                 
                 <div class="col-md-4 d-flex justify-content-center">
-                    <span class="text-body-secondary small opacity-50">Sua jornada, suas regras.</span>
+                    <span class="text-body-secondary small opacity-50">{{ __('Sua jornada, suas regras.') }}</span>
                 </div>
 
                 <ul class="nav col-md-4 justify-content-end list-unstyled d-flex mb-0">
                     <li class="ms-3">
-                        <a class="text-body-secondary lh-1" href="{{ url('/settings') }}" title="Configurações do Sistema">
+                        <a class="text-body-secondary lh-1" href="{{ url('/settings') }}" title="{{ __('Configurações do Sistema') }}">
                             <i class="bi bi-gear-fill"></i>
                         </a>
                     </li>
@@ -105,6 +105,17 @@
             </div>
         </div>
     </footer>
+
+    <!-- Global Translations for JS -->
+    <script id="lang-json" type="application/json">@json(collect(File::json(base_path('lang/'.app()->getLocale().'.json')))->map(fn($v, $k) => $v))</script>
+    <script>
+        (function() {
+            const translations = (() => {
+                try { return JSON.parse(document.getElementById('lang-json').textContent); } catch(e) { return {}; }
+            })();
+            window.__ = function(key) { return translations[key] || key; };
+        })();
+    </script>
 
     <!-- Global Theme Toggle Script -->
     <script>
@@ -146,22 +157,22 @@
                 <form action="{{ url('/projects') }}" method="POST">
                     @csrf
                     <div class="modal-header border-0 p-0 mb-4">
-                        <h5 class="modal-title fw-bold">Criar Nova História</h5>
+                        <h5 class="modal-title fw-bold">{{ __('Criar Nova História') }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-0">
                         <div class="mb-3">
-                            <label for="name" class="form-label text-body-secondary small text-uppercase fw-bold">Título da Obra</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Ex: As Crônicas de Runaris" required>
+                            <label for="name" class="form-label text-body-secondary small text-uppercase fw-bold">{{ __('Título da Obra') }}</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="{{ __('Ex: As Crônicas de Runaris') }}" required>
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label text-body-secondary small text-uppercase fw-bold">Sinopse Curta</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Uma breve descrição da sua jornada..."></textarea>
+                            <label for="description" class="form-label text-body-secondary small text-uppercase fw-bold">{{ __('Sinopse Curta') }}</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="{{ __('Uma breve descrição da sua jornada...') }}"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer border-0 p-0 mt-4">
-                        <button type="button" class="btn btn-link text-body-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary px-4">Começar Jornada</button>
+                        <button type="button" class="btn btn-link text-body-secondary text-decoration-none" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                        <button type="submit" class="btn btn-primary px-4">{{ __('Começar Jornada') }}</button>
                     </div>
                 </form>
             </div>

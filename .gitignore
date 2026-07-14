@@ -40,3 +40,6 @@ yarn-error.log
 # Improve skill generated plans
 /plans/
 /advisor-plans/
+
+# Design files
+/design

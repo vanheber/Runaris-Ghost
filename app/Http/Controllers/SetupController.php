@@ -62,12 +62,12 @@ class SetupController extends Controller
 
             Auth::login($user);
 
-            return response()->json(['status' => true, 'message' => 'Configuração concluída! Bem-vindo ao Runaris Ghost.']);
+            return response()->json(['status' => true, 'message' => __('Configuração concluída! Bem-vindo ao Runaris Ghost.')]);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Setup Create User Error: " . $e->getMessage());
             return response()->json([
                 'status' => false, 
-                'message' => 'Erro interno: ' . $e->getMessage()
+                'message' => __('Erro interno:') . ' ' . $e->getMessage()
             ], 500);
         }
     }
@@ -97,6 +97,6 @@ class SetupController extends Controller
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return redirect('/setup')->with('success', 'App reiniciado com sucesso!');
+        return redirect('/setup')->with('success', __('App reiniciado com sucesso!'));
     }
 }

@@ -143,7 +143,7 @@ class ManuscriptController extends Controller
             $content = $this->manuscriptService->getContent($project, $uuid);
 
             if (empty($content) || strlen($content) < 50) {
-                return response()->json(['error' => 'Conteúdo muito curto para gerar resumo.'], 400);
+                return response()->json(['error' => __('Conteúdo muito curto para gerar resumo.')], 400);
             }
 
             $gemini = \App\Services\GeminiService::forProject($project_uuid);

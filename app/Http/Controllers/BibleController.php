@@ -38,7 +38,7 @@ class BibleController extends Controller
         
         $project->update($updateData);
 
-        return response()->json(['message' => 'Bíblia atualizada com sucesso.']);
+        return response()->json(['message' => __('Bíblia atualizada com sucesso.')]);
     }
 
     /**
@@ -56,7 +56,7 @@ class BibleController extends Controller
                         ->get();
             
             if ($items->isEmpty()) {
-                return response()->json(['error' => 'Nenhum resumo de capítulo encontrado. Sincronize os capítulos individualmente primeiro.'], 400);
+                return response()->json(['error' => __('Nenhum resumo de capítulo encontrado. Sincronize os capítulos individualmente primeiro.')], 400);
             }
 
             $consolidatedSummaries = "";
@@ -108,7 +108,7 @@ class BibleController extends Controller
             }
 
             if (empty(trim($fullText))) {
-                return response()->json(['error' => 'Manuscrito vazio. Escreva algo primeiro antes de sincronizar.'], 400);
+                return response()->json(['error' => __('Manuscrito vazio. Escreva algo primeiro antes de sincronizar.')], 400);
             }
 
             $prompt = "Abaixo está o conteúdo bruto do manuscrito da obra em andamento.\n\n" .
@@ -126,7 +126,7 @@ class BibleController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Sincronização concluída.',
+                'message' => __('Sincronização concluída.'),
                 'summary' => $newSummary
             ]);
 

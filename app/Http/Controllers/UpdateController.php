@@ -30,9 +30,9 @@ class UpdateController extends Controller
     {
         try {
             $this->updateService->runUpdate();
-            return redirect('/settings?tab=system')->with('success', 'Sistema atualizado com sucesso para a versão mais recente.');
+            return redirect('/settings?tab=system')->with('success', __('Sistema atualizado com sucesso para a versão mais recente.'));
         } catch (\Exception $e) {
-            return redirect('/settings?tab=system')->with('error', 'Falha na atualização: ' . $e->getMessage());
+            return redirect('/settings?tab=system')->with('error', __('Falha na atualização:') . ' ' . $e->getMessage());
         }
     }
 
@@ -43,9 +43,9 @@ class UpdateController extends Controller
     {
         try {
             $this->updateService->rollback();
-            return redirect('/settings?tab=system')->with('success', 'Restauração concluída. O sistema voltou ao estado anterior à atualização.');
+            return redirect('/settings?tab=system')->with('success', __('Restauração concluída. O sistema voltou ao estado anterior à atualização.'));
         } catch (\Exception $e) {
-            return redirect('/settings?tab=system')->with('error', 'Falha ao restaurar: ' . $e->getMessage());
+            return redirect('/settings?tab=system')->with('error', __('Falha ao restaurar:') . ' ' . $e->getMessage());
         }
     }
 }

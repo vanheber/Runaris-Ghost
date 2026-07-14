@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-bs-theme="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrar - Runaris Ghost</title>
+    <title>{{ __('Entrar - Runaris Ghost') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -84,23 +84,23 @@
             @csrf
             
             <div class="mb-3">
-                <input type="email" name="email" class="form-control" placeholder="E-mail" value="{{ old('email') }}" required autofocus>
+                <input type="email" name="email" class="form-control" placeholder="{{ __('E-mail') }}" value="{{ old('email') }}" required autofocus>
             </div>
             
             <div class="mb-4">
-                <input type="password" name="password" class="form-control" placeholder="Senha" required>
+                <input type="password" name="password" class="form-control" placeholder="{{ __('Senha') }}" required>
             </div>
 
             @if ($errors->any())
                 <div class="text-danger small mb-3">
-                    Credenciais incorretas.
+                    {{ __('Credenciais incorretas.') }}
                 </div>
             @endif
 
-            <button type="submit" class="btn btn-brand">Entrar no Santuário</button>
+            <button type="submit" class="btn btn-brand">{{ __('Entrar no Santuário') }}</button>
             
             <div class="mt-4">
-                <p class="text-secondary small">Esqueceu sua senha? <a href="#" class="text-primary text-decoration-none">Suporte</a></p>
+                <p class="text-secondary small">{{ __('Esqueceu sua senha?') }} <a href="#" class="text-primary text-decoration-none">{{ __('Suporte') }}</a></p>
             </div>
         </form>
     </div>

@@ -32,7 +32,7 @@ class SettingsController extends Controller
                 $parsedown = new \Parsedown();
                 $docContent = $parsedown->text($content);
             } else {
-                $docContent = '<div class="alert alert-warning">Arquivo de documentação não encontrado (docs/USER_MANUAL.md).</div>';
+                $docContent = '<div class="alert alert-warning">' . __('Arquivo de documentação não encontrado (docs/USER_MANUAL.md).') . '</div>';
             }
         }
 
@@ -54,7 +54,7 @@ class SettingsController extends Controller
 
         \App\Models\SystemSetting::setSetting('gemini_api_key', $request->input('gemini_api_key'));
 
-        return redirect('/settings?tab=ai')->with('success', 'Configurações de IA salvas com sucesso.');
+        return redirect('/settings?tab=ai')->with('success', __('Configurações de IA salvas com sucesso.'));
     }
 
     /**
@@ -68,7 +68,7 @@ class SettingsController extends Controller
             return response()->download($backupPath)->deleteFileAfterSend(true);
         }
 
-        return redirect()->back()->with('error', 'Falha ao gerar o backup do sistema.');
+        return redirect()->back()->with('error', __('Falha ao gerar o backup do sistema.'));
     }
 
     /**
@@ -111,7 +111,7 @@ class SettingsController extends Controller
             \Illuminate\Support\Facades\Storage::disk('local')->deleteDirectory('backups');
             return response()->json(['status' => true, 'next' => 'database']);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Erro ao limpar arquivos: ' . $e->getMessage()], 500);
+            return response()->json(['status' => false, 'message' => __('Erro ao limpar arquivos:') . ' ' . $e->getMessage()], 500);
         }
     }
 
@@ -144,8 +144,19 @@ class SettingsController extends Controller
             return response()->json(['status' => true, 'next' => 'finalize']);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Factory Reset - DB Cleanup Error: " . $e->getMessage());
-            return response()->json(['status' => false, 'message' => 'Erro ao limpar banco: ' . $e->getMessage()], 500);
+            return response()->json(['status' => false, 'message' => __('Erro ao limpar banco:') . ' ' . $e->getMessage()], 500);
         }
+    }
+
+    /**
+     * Update the interface locale.
+     */
+    public function setLocale(Request $request)
+    {
+        $request->validate(['locale' => 'required|string|in:pt_BR,en,es']);
+        \App\Models\SystemSetting::setSetting('system_locale', $request->locale);
+        app()->setLocale($request->locale);
+        return redirect('/settings?tab=general')->with('success', __('Idioma alterado.'));
     }
 
     /**
@@ -172,7 +183,7 @@ class SettingsController extends Controller
 
             return response()->json(['status' => true]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Erro na finalização: ' . $e->getMessage()], 500);
+            return response()->json(['status' => false, 'message' => __('Erro na finalização:') . ' ' . $e->getMessage()], 500);
         }
     }
 }

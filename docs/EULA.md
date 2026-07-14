@@ -6,7 +6,7 @@
 Este é um acordo legal entre você (o "Usuário") e A. W. VanHeber para o uso do software Runaris Ghost.
 
 ### 1. Licenciamento
-O Runaris Ghost é distribuído sob a **Licença MIT**. Você é livre para usar, copiar, modificar, mesclar, publicar, distribuir, sublicenciar e/ou vender cópias do Software, desde que o aviso de direitos autorais e este aviso de permissão sejam incluídos em todas as cópias ou partes substanciais do Software.
+O Runaris Ghost é distribuído sob a **Licença Pública Geral GNU (GPL) versão 3**. Você é livre para usar, modificar e distribuir o Software, desde que todas as obras derivadas sejam distribuídas sob a mesma licença. Consulte o arquivo LICENSE para detalhes completos.
 
 ### 2. Propriedade Intelectual
 O código-fonte e o design original são de autoria de A. W. VanHeber e contribuidores da comunidade. O software é fornecido "como está", sem garantia de qualquer tipo.

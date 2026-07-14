@@ -48,14 +48,14 @@ class InstallController extends Controller
             if (!is_writable($dbDir)) {
                 return response()->json([
                     'status' => false,
-                    'message' => "O diretório database/ não tem permissão de escrita. Por favor, ajuste as permissões para continuar."
+                    'message' => __("O diretório database/ não tem permissão de escrita. Por favor, ajuste as permissões para continuar.")
                 ]);
             }
-            return response()->json(['status' => true, 'message' => 'Tudo pronto! O SQLite pode ser inicializado.']);
+            return response()->json(['status' => true, 'message' => __('Tudo pronto! O SQLite pode ser inicializado.')]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Erro ao verificar diretório: ' . $e->getMessage()
+                'message' => __('Erro ao verificar diretório:') . ' ' . $e->getMessage()
             ]);
         }
     }
@@ -106,13 +106,13 @@ class InstallController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Banco de dados SQLite inicializado e pronto!'
+                'message' => __('Banco de dados SQLite inicializado e pronto!')
             ]);
         } catch (\Exception $e) {
             Log::error("Install - DB Config Error: " . $e->getMessage());
             return response()->json([
                 'status' => false,
-                'message' => 'Erro ao inicializar SQLite: ' . $e->getMessage()
+                'message' => __('Erro ao inicializar SQLite:') . ' ' . $e->getMessage()
             ], 500);
         }
     }
@@ -128,12 +128,12 @@ class InstallController extends Controller
 
             Auth::login($user);
 
-            return response()->json(['status' => true, 'message' => 'Usuário administrador criado com sucesso!']);
+            return response()->json(['status' => true, 'message' => __('Usuário administrador criado com sucesso!')]);
         } catch (\Exception $e) {
             Log::error("Install - Create Admin Error: " . $e->getMessage());
             return response()->json([
                 'status' => false,
-                'message' => 'Erro ao criar usuário: ' . $e->getMessage()
+                'message' => __('Erro ao criar usuário:') . ' ' . $e->getMessage()
             ], 500);
         }
     }
@@ -170,12 +170,12 @@ class InstallController extends Controller
             $envWriter = new EnvWriter();
             $envWriter->lockEnvFile();
 
-            return response()->json(['status' => true, 'message' => 'Instalação finalizada!']);
+            return response()->json(['status' => true, 'message' => __('Instalação finalizada!')]);
         } catch (\Exception $e) {
             Log::error("Install - Finalize Error: " . $e->getMessage());
             return response()->json([
                 'status' => false,
-                'message' => 'Erro na finalização: ' . $e->getMessage()
+                'message' => __('Erro na finalização:') . ' ' . $e->getMessage()
             ], 500);
         }
     }

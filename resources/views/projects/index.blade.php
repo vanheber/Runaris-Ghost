@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Meus Projetos - Runaris Ghost')
+@section('title', __('Meus Projetos - Runaris Ghost'))
 
 @section('content')
 <div class="container mt-3">
@@ -9,8 +9,8 @@
         <div class="col-lg-9">
             <div class="d-flex justify-content-between align-items-end mb-4">
                 <div>
-                    <h1 class="fw-bold mb-2">Suas Histórias</h1>
-                    <p class="text-body-secondary mb-0">Continue sua jornada literária ou comece uma nova aventura.</p>
+                    <h1 class="fw-bold mb-2">{{ __('Suas Histórias') }}</h1>
+                    <p class="text-body-secondary mb-0">{{ __('Continue sua jornada literária ou comece uma nova aventura.') }}</p>
                 </div>
                 <div class="d-none d-md-block">
                     <span class="badge rounded-pill bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-10 px-3 py-2">
@@ -22,10 +22,10 @@
     @if($projects->isEmpty())
     <div class="card bg-body-tertiary border-0 shadow-sm p-5 text-center my-5 animate-fade-in">
         <i class="bi bi-journal-plus fs-1 text-primary mb-3 d-block"></i>
-        <h3 class="fw-bold">Nenhum projeto encontrado</h3>
-        <p class="text-body-secondary mb-4">Você ainda não iniciou sua primeira obra. Que tal começarmos hoje?</p>
+        <h3 class="fw-bold">{{ __('Nenhum projeto encontrado') }}</h3>
+        <p class="text-body-secondary mb-4">{{ __('Você ainda não iniciou sua primeira obra. Que tal começarmos hoje?') }}</p>
         <button class="btn btn-primary btn-lg rounded-pill" data-bs-toggle="modal" data-bs-target="#createProjectModal">
-            <i class="bi bi-pencil-square me-2"></i> Criar Meu Primeiro Projeto
+            <i class="bi bi-pencil-square me-2"></i> {{ __('Criar Meu Primeiro Projeto') }}
         </button>
     </div>
     @else
@@ -55,10 +55,10 @@
                                 <i class="bi bi-file-earmark-image fs-1 opacity-50 mb-2"></i>
                                 <span class="small text-body-secondary fw-bold d-block mb-3 fs-9">1600x2560</span>
                                 <div class="d-flex gap-2 z-2" onclick="event.preventDefault(); event.stopPropagation();">
-                                    <button class="btn btn-ghost-card btn-icon-round" title="Selecionar da Galeria" onclick="openGalleryForCover('{{ $project->uuid }}')">
+                                    <button class="btn btn-ghost-card btn-icon-round" title="{{ __('Selecionar da Galeria') }}" onclick="openGalleryForCover('{{ $project->uuid }}')">
                                         <i class="bi bi-images"></i>
                                     </button>
-                                    <button class="btn btn-ghost-card btn-icon-round" title="Upload Nova Capa" onclick="openCoverModal('{{ $project->uuid }}')">
+                                    <button class="btn btn-ghost-card btn-icon-round" title="{{ __('Upload Nova Capa') }}" onclick="openCoverModal('{{ $project->uuid }}')">
                                         <i class="bi bi-upload fs-5"></i>
                                     </button>
                                 </div>
@@ -72,7 +72,7 @@
                             <div class="p-4 d-flex flex-column h-100">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h5 class="fw-bold text-project-title mb-0" style="font-size: 1.15rem; line-height: 1.3;">{{ $project->name }}</h5>
-                                    <button class="btn btn-link text-body-secondary opacity-50 hover-danger p-0" title="Excluir Projeto" onclick="event.preventDefault(); event.stopPropagation(); openDeleteProjectModal('{{ $project->uuid }}', '{{ addslashes($project->name) }}')">
+                                    <button class="btn btn-link text-body-secondary opacity-50 hover-danger p-0" title="{{ __('Excluir Projeto') }}" onclick="event.preventDefault(); event.stopPropagation(); openDeleteProjectModal('{{ $project->uuid }}', '{{ addslashes($project->name) }}')">
                                         <i class="bi bi-trash fs-5"></i>
                                     </button>
                                 </div>
@@ -81,12 +81,12 @@
                                 </span>
                                 
                                 <p class="text-body-secondary small line-clamp-3 mb-4">
-                                    {{ $project->description ?? 'Sem sinopse definida. Clique aqui para começar a mapear a sua obra literária e descrever o enredo.' }}
+                                    {{ $project->description ?? __('Sem sinopse definida. Clique aqui para começar a mapear a sua obra literária e descrever o enredo.') }}
                                 </p>
                                 
                                 <div class="mt-auto pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
                                     <span class="badge bg-primary bg-opacity-10 text-primary small fw-bold font-monospace">UUID: {{ substr($project->uuid, 0, 8) }}</span>
-                                    <span class="text-primary fw-bold small">Abrir <i class="bi bi-arrow-right ms-1"></i></span>
+                                    <span class="text-primary fw-bold small">{{ __('Abrir') }} <i class="bi bi-arrow-right ms-1"></i></span>
                                 </div>
                             </div>
                         </a>
@@ -102,7 +102,7 @@
     <div class="col-lg-3 mt-4 mt-lg-0 news-sidebar">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="fw-bold mb-0 text-uppercase ls-wide fs-7 text-primary">
-                <i class="bi bi-lightning-charge-fill me-1"></i> O Pulso do Autor
+                <i class="bi bi-lightning-charge-fill me-1"></i> {{ __('O Pulso do Autor') }}
             </h5>
         </div>
         
@@ -120,16 +120,16 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-body-tertiary border-0 shadow-lg">
                 <div class="modal-header border-secondary border-opacity-10">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-image"></i> Configurar Capa</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-image"></i> {{ __('Configurar Capa') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4 text-center">
                     <input type="file" id="coverUploadInput" class="d-none" accept="image/*" onchange="handleCoverUpload(this)">
-                    <div id="coverLoading" class="d-none my-4"><div class="spinner-border text-primary"></div><p class="mt-3 text-body-secondary small fw-bold">Processando imagem em alta qualidade (1600x2560)...</p></div>
+                    <div id="coverLoading" class="d-none my-4"><div class="spinner-border text-primary"></div><p class="mt-3 text-body-secondary small fw-bold">{{ __('Processando imagem em alta qualidade (1600x2560)...') }}</p></div>
                     <div id="coverOptions">
-                        <p class="text-body-secondary mb-4">O formato nativo da Amazon KDP possui largura de 1600px e altura de 2560px. Qualquer imagem enviada aqui será automaticamente redimensionada a esses limites e salva em formato JPG para otimizar os bytes da sua exportação EPUB e PDF.</p>
+                        <p class="text-body-secondary mb-4">{{ __('O formato nativo da Amazon KDP possui largura de 1600px e altura de 2560px. Qualquer imagem enviada aqui será automaticamente redimensionada a esses limites e salva em formato JPG para otimizar os bytes da sua exportação EPUB e PDF.') }}</p>
                         <button class="btn btn-primary rounded-pill w-100 mb-2 py-2" onclick="document.getElementById('coverUploadInput').click()">
-                            <i class="bi bi-cloud-arrow-up me-2"></i> Fazer Upload de Imagem
+                            <i class="bi bi-cloud-arrow-up me-2"></i> {{ __('Fazer Upload de Imagem') }}
                         </button>
                     </div>
                 </div>
@@ -142,7 +142,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content bg-body-tertiary border-0 shadow-lg">
                 <div class="modal-header border-secondary border-opacity-10">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-images"></i> Escolher da Galeria</h5>
+                    <h5 class="modal-title fw-bold"><i class="bi bi-images"></i> {{ __('Escolher da Galeria') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -159,23 +159,23 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-body-tertiary border-0 shadow-lg">
                 <div class="modal-header border-secondary border-opacity-10">
-                    <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle"></i> Destruir Projeto</h5>
+                    <h5 class="modal-title fw-bold text-danger"><i class="bi bi-exclamation-triangle"></i> {{ __('Destruir Projeto') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
                     <p class="text-body-secondary mb-4">
-                        Esta ação é <strong>permanente</strong>. Todos os manuscritos, fichas, imagens e bíblia do mundo serão deletados para sempre.
+                        {{ __('Esta ação é permanente. Todos os manuscritos, fichas, imagens e bíblia do mundo serão deletados para sempre.') }}
                     </p>
                     
                     <div class="mb-3">
-                        <label class="form-label small text-uppercase fw-bold opacity-75">Confirme digitando o título:</label>
+                        <label class="form-label small text-uppercase fw-bold opacity-75">{{ __('Confirme digitando o título:') }}</label>
                         <p class="mb-2 fw-bold text-primary" id="deleteProjectNameDisplay"></p>
-                        <input type="text" class="form-control" id="deleteProjectInput" placeholder="Digite o nome aqui..." oninput="validateProjectDeleteName()">
+                        <input type="text" class="form-control" id="deleteProjectInput" placeholder="{{ __('Digite o nome aqui...') }}" oninput="validateProjectDeleteName()">
                     </div>
                 </div>
                 <div class="modal-footer border-0 p-4 pt-0">
-                    <button type="button" class="btn btn-link text-body-secondary text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" id="confirmDeleteBtn" class="btn btn-danger px-4 disabled" onclick="confirmDestroyProject()">Destruir Permanentemente</button>
+                    <button type="button" class="btn btn-link text-body-secondary text-decoration-none" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                    <button type="button" id="confirmDeleteBtn" class="btn btn-danger px-4 disabled" onclick="confirmDestroyProject()">{{ __('Destruir Permanentemente') }}</button>
                 </div>
             </div>
         </div>
@@ -206,7 +206,7 @@
             const items = await response.json();
             
             if (items.length === 0) {
-                grid.innerHTML = '<div class="text-center text-body-secondary py-4 w-100">Galeria vazia. Faça o upload pelo outro botão ou dentro do projeto.</div>';
+                grid.innerHTML = '<div class="text-center text-body-secondary py-4 w-100">'+window.__('Galeria vazia. Faça o upload pelo outro botão ou dentro do projeto.')+'</div>';
                 return;
             }
             
@@ -218,7 +218,7 @@
                 </div>
             `).join('');
         } catch(e) {
-            grid.innerHTML = '<div class="text-danger text-center py-4 w-100">Erro ao carregar a galeria de imagens.</div>';
+            grid.innerHTML = '<div class="text-danger text-center py-4 w-100">'+window.__('Erro ao carregar a galeria de imagens.')+'</div>';
         }
     }
 
@@ -234,7 +234,7 @@
             });
             window.location.reload();
         } catch(e) {
-            alert('Falha ao definir capa.');
+            alert(window.__('Falha ao definir capa.'));
         }
     }
 
@@ -269,7 +269,7 @@
                 window.location.reload();
             }
         } catch (e) {
-            alert('Falha interna ao processar ou vincular a capa do projeto.');
+            alert(window.__('Falha interna ao processar ou vincular a capa do projeto.'));
             document.getElementById('coverOptions').classList.remove('d-none');
             document.getElementById('coverLoading').classList.add('d-none');
         }
@@ -301,7 +301,7 @@
         if (document.getElementById('confirmDeleteBtn').classList.contains('disabled')) return;
 
         const btn = document.getElementById('confirmDeleteBtn');
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Destruindo...';
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> '+window.__('Destruindo...');
         btn.classList.add('disabled');
 
         try {
@@ -317,8 +317,8 @@
                 window.location.reload();
             }
         } catch(e) {
-            alert('Falha ao excluir o projeto.');
-            btn.innerHTML = 'Destruir Permanentemente';
+            alert(window.__('Falha ao excluir o projeto.'));
+            btn.innerHTML = window.__('Destruir Permanentemente');
             btn.classList.remove('disabled');
         }
     }
@@ -359,7 +359,7 @@
                         ${item.content ? `<div class="bento-content line-clamp-2">${item.content}</div>` : ''}
                     </div>
                     <div class="bento-footer z-1">
-                        <i class="bi ${footerIcon}"></i> ${item.type === 'video' ? 'Assistir' : 'Ler mais'}
+                        <i class="bi ${footerIcon}"></i> ${item.type === 'video' ? window.__('Assistir') : window.__('Ler mais')}
                     </div>
                 </a>
             `;
@@ -370,9 +370,9 @@
         const feedContainer = document.getElementById('bento-news-feed');
         feedContainer.innerHTML = `
             <div class="bento-item large">
-                <div class="bento-title">Santuário Offline</div>
-                <div class="bento-content small">O feed de notícias não pôde ser carregado. Continue escrevendo sua história com foco total.</div>
-                <div class="bento-footer mt-3"><i class="bi bi-shield-check"></i> Modo Imersivo Ativo</div>
+                <div class="bento-title">${window.__('Santuário Offline')}</div>
+                <div class="bento-content small">${window.__('O feed de notícias não pôde ser carregado. Continue escrevendo sua história com foco total.')}</div>
+                <div class="bento-footer mt-3"><i class="bi bi-shield-check"></i> ${window.__('Modo Imersivo Ativo')}</div>
             </div>
         `;
     }

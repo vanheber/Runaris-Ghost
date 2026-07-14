@@ -31,7 +31,7 @@ class AiController extends Controller
             $data = json_decode($jsonStr, true);
             if (!$data) {
                 // Tenta extrair qualquer formato embutido
-                throw new \Exception("A resposta não veio em formato JSON suportado.");
+                throw new \Exception(__("A resposta não veio em formato JSON suportado."));
             }
 
             return response()->json([
@@ -50,7 +50,7 @@ class AiController extends Controller
             $gemini = GeminiService::forProject($project_uuid);
 
             $context = $gemini->buildMasterContext();
-            $sceneTitle = $request->input('title', 'Cena Sem Título');
+            $sceneTitle = $request->input('title', __('Cena Sem Título'));
 
             $prompt = "Você é um mestre da narração e estruturação dramática. Baseie-se na Bíblia deste projeto:\n\n{$context}\n\n" .
                       "O autor quer planejar uma nova cena/capítulo com o título '{$sceneTitle}'.\n" .
@@ -75,7 +75,7 @@ class AiController extends Controller
             $gemini = GeminiService::forProject($project_uuid);
 
             $context = $gemini->buildMasterContext();
-            $sceneTitle = $request->input('title', 'Cena Sem Título');
+            $sceneTitle = $request->input('title', __('Cena Sem Título'));
             $planning = $request->input('planning', '');
 
             $prompt = "Você é um romancista premiado e excepcionalmente criativo, atuando como ghostwriter. " .

@@ -87,7 +87,7 @@ class ProjectController extends Controller
             'description' => $request->input('description')
         ]);
 
-        return redirect()->back()->with('success', 'Configurações atualizadas com sucesso.');
+        return redirect()->back()->with('success', __('Configurações atualizadas com sucesso.'));
     }
 
     /**
@@ -135,7 +135,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Capa atualizada com sucesso.',
+            'message' => __('Capa atualizada com sucesso.'),
             'cover_image_uuid' => $project->cover_image_uuid,
             'cover_url' => url("/projects/{$project->uuid}/gallery/{$project->cover_image_uuid}/image/thumb")
         ]);
@@ -269,7 +269,7 @@ class ProjectController extends Controller
         
         $project->delete();
 
-        return response()->json(['success' => true, 'message' => 'Projeto destruido permanentemente.']);
+        return response()->json(['success' => true, 'message' => __('Projeto destruido permanentemente.')]);
     }
 
     /**
@@ -293,7 +293,7 @@ class ProjectController extends Controller
             return response()->json(['success' => true, 'name' => $name]);
         }
 
-        return response()->json(['success' => false, 'message' => 'Falha ao criar snapshot.'], 500);
+        return response()->json(['success' => false, 'message' => __('Falha ao criar snapshot.')], 500);
     }
 
     /**
@@ -305,7 +305,7 @@ class ProjectController extends Controller
         $snapshotName = $request->input('snapshot');
 
         if (!$snapshotName) {
-            return response()->json(['success' => false, 'message' => 'Nenhum snapshot selecionado.'], 400);
+            return response()->json(['success' => false, 'message' => __('Nenhum snapshot selecionado.')], 400);
         }
 
         $success = $this->backupService->restoreSnapshot($project, $snapshotName);
@@ -314,7 +314,7 @@ class ProjectController extends Controller
             return response()->json(['success' => true]);
         }
 
-        return response()->json(['success' => false, 'message' => 'Falha ao restaurar snapshot.'], 500);
+        return response()->json(['success' => false, 'message' => __('Falha ao restaurar snapshot.')], 500);
     }
 
     /**
@@ -325,15 +325,15 @@ class ProjectController extends Controller
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
         
         if (!$request->hasFile('backup_file')) {
-            return redirect()->back()->with('error', 'Nenhum arquivo enviado.');
+            return redirect()->back()->with('error', __('Nenhum arquivo enviado.'));
         }
 
         $success = $this->backupService->restoreFromUpload($project, $request->file('backup_file')->getRealPath());
 
         if ($success) {
-            return redirect()->back()->with('success', 'Projeto restaurado com sucesso!');
+            return redirect()->back()->with('success', __('Projeto restaurado com sucesso!'));
         }
 
-        return redirect()->back()->with('error', 'Falha ao restaurar backup. Verifique se o arquivo é um ZIP válido do Runaris Ghost.');
+        return redirect()->back()->with('error', __('Falha ao restaurar backup. Verifique se o arquivo é um ZIP válido do Runaris Ghost.'));
     }
 }

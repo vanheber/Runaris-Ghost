@@ -1103,3 +1103,275 @@ body .node-row:hover .node-actions {
     0%, 100% { opacity: 0.2; }
     50% { opacity: 0.4; }
 }
+
+/* =========================================================
+   Instalador (Install + Setup)
+   Tela cheia, glass-card centralizado, orbs flutuantes
+   ========================================================= */
+
+:root {
+    --brand: #6366f1;
+    --brand2: #a855f7;
+    --bg: #0f172a;
+}
+
+.installer-page {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: #f8fafc;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+body.setup-page {
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    color: #f8fafc;
+    overflow: hidden;
+    margin: 0;
+    background: none;
+    background-image: none;
+}
+
+.setup-logo {
+    height: 48px;
+    width: auto;
+}
+
+.installer-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.5);
+    padding: 3rem;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--brand), var(--brand2));
+}
+
+/* Orbs flutuantes de fundo */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+}
+
+.orb-1 {
+    width: 500px;
+    height: 500px;
+    background: rgba(99, 102, 241, 0.12);
+    top: -150px;
+    left: -100px;
+    animation: orbDrift 20s ease-in-out infinite;
+}
+
+.orb-2 {
+    width: 400px;
+    height: 400px;
+    background: rgba(168, 85, 247, 0.1);
+    bottom: -100px;
+    right: -100px;
+    animation: orbDrift 25s ease-in-out infinite reverse;
+}
+
+@keyframes orbDrift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -20px); }
+}
+
+/* Logo animado */
+.ghost-icon {
+    width: 64px;
+    filter: drop-shadow(0 0 16px rgba(111, 66, 193, 0.4));
+    animation: ghostFloat 6s ease-in-out infinite;
+}
+
+@keyframes ghostFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Brand name gradient */
+.brand-logo {
+    font-weight: 800;
+    font-size: 2.5rem;
+    letter-spacing: -0.05em;
+    background: linear-gradient(135deg, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Letter spacing utility */
+.ls-wide {
+    letter-spacing: 2px;
+}
+
+/* Progress pips */
+.progress-bar-wrap {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 2rem;
+}
+
+.progress-bar-wrap .pip {
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.4s;
+}
+
+.progress-bar-wrap .pip.done {
+    background: var(--brand);
+}
+
+.progress-bar-wrap .pip.active {
+    background: linear-gradient(90deg, var(--brand), var(--brand2));
+}
+
+/* Steps */
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+    animation: stepFadeIn 0.5s ease;
+}
+
+@keyframes stepFadeIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Botão gradient principal */
+.btn-brand {
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    border: none;
+    color: #fff;
+    padding: 0.7rem 1.8rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-brand:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.35);
+    color: #fff;
+}
+
+.btn-brand:disabled {
+    opacity: 0.5;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Form controls dark */
+.installer-page .form-control,
+.installer-page .form-select {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+}
+
+.installer-page .form-control:focus,
+.installer-page .form-select:focus {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: var(--brand);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    color: #fff;
+}
+
+/* Requirement list */
+.req-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.req-item .bi {
+    font-size: 1.1rem;
+}
+
+.req-ok { color: #22c55e; }
+.req-fail { color: #ef4444; }
+.req-warn { color: #eab308; }
+
+/* Database option card */
+.db-option {
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 1.2rem;
+    text-align: center;
+    transition: all 0.25s;
+}
+
+.db-option:hover {
+    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.db-option.selected {
+    border-color: var(--brand);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+/* Password warning */
+.password-warning {
+    border: 1px solid rgba(234, 179, 8, 0.2);
+    background: rgba(234, 179, 8, 0.1);
+    color: #fde047;
+    padding: 0.8rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+/* Alert boxes */
+.alert-box {
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.alert-box.err {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+}
+
+.alert-box.ok {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: #86efac;
+}

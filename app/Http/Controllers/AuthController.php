@@ -41,7 +41,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'As credenciais fornecidas não correspondem aos nossos registros.',
+            'email' => __('As credenciais fornecidas não correspondem aos nossos registros.'),
         ])->onlyInput('email');
     }
 

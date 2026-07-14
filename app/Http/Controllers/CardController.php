@@ -37,7 +37,7 @@ class CardController extends Controller
         
         $card = $this->cardService->createCard(
             $project, 
-            $request->title ?? 'Nova Ficha',
+            $request->title ?? __('Nova Ficha'),
             $request->type ?? 'character'
         );
 
@@ -138,7 +138,7 @@ class CardController extends Controller
 
         // Create Gallery Item
         $galleryItem = \App\Models\GalleryItem::create([
-            'name' => "Capa: " . $card->title,
+            'name' => __('Capa:') . " " . $card->title,
             'file_path' => "{$projectPath}/{$fileName}",
             'thumb_path' => "{$projectPath}/{$thumbName}",
             'category' => 'card_cover',
