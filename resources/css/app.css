@@ -1380,6 +1380,14 @@ body.setup-page {
     font-size: 0.85rem;
 }
 
+/* Lightbox da galeria — acima do header (z-index: 10001) */
+#galleryLightbox.modal {
+    z-index: 10010;
+}
+#galleryLightbox.modal ~ .modal-backdrop {
+    z-index: 10009;
+}
+
 /* Alert boxes */
 .alert-box {
     padding: 0.8rem 1rem;

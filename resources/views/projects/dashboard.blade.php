@@ -700,6 +700,21 @@
     </div>
 </div>
 
+<!-- Lightbox de Imagem -->
+<div class="modal fade" id="galleryLightbox" tabindex="-1" aria-labelledby="galleryLightboxLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 shadow-none">
+            <div class="position-relative">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 z-3 p-3" data-bs-dismiss="modal" aria-label="Close" style="filter:drop-shadow(0 2px 4px rgba(0,0,0,.5))"></button>
+                <img id="lightbox-image" src="" alt="" class="w-100 rounded-3 shadow-lg" style="max-height:90vh;object-fit:contain;">
+            </div>
+            <div class="text-center mt-2">
+                <span id="lightbox-caption" class="small text-white text-opacity-75"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal de Renomear Imagem -->
 <div class="modal fade" id="galleryRenameModal" tabindex="-1" aria-labelledby="galleryRenameModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -2127,7 +2142,7 @@ function renderGallery(items) {
                     <img src="/projects/${projectUuid}/gallery/${item.uuid}/image/thumb" class="card-img-top object-fit-cover" alt="${displayName}">
                     <!-- Overlay de zoom/view -->
                     <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 opacity-0 transition-opacity text-white gallery-overlay">
-                        <a href="/projects/${projectUuid}/gallery/${item.uuid}/image" target="_blank" class="text-white p-2" onclick="event.stopPropagation()">
+                        <a href="javascript:void(0)" class="text-white p-2" onclick="event.stopPropagation();openLightbox('${item.uuid}', '${displayName.replace(/'/g, "\\'")}')">
                             <i class="bi bi-search fs-3"></i>
                         </a>
                     </div>
@@ -2150,16 +2165,26 @@ function renderGallery(items) {
         const overlay = col.querySelector('.gallery-overlay');
         
         card.onmouseenter = () => {
-            overlay.style.opacity = "1";
+            overlay.classList.remove('opacity-0');
             overlay.style.pointerEvents = "auto";
         };
         card.onmouseleave = () => {
-            overlay.style.opacity = "0";
+            overlay.classList.add('opacity-0');
             overlay.style.pointerEvents = "none";
         };
 
         grid.appendChild(col);
     });
+}
+
+function openLightbox(uuid, name) {
+    const img = document.getElementById('lightbox-image');
+    const cap = document.getElementById('lightbox-caption');
+    img.src = `/projects/${projectUuid}/gallery/${uuid}/image`;
+    img.alt = name;
+    cap.textContent = name;
+    const modal = new bootstrap.Modal(document.getElementById('galleryLightbox'));
+    modal.show();
 }
 
 function insertImageInEditor(uuid, displayName) {
