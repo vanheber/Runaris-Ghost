@@ -1,85 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="Mock Data" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Instalação — Runaris Ghost</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght    <style>
-        :root{--brand:#6366f1;--brand2:#a855f7;--bg:#0f172a}
-        *{box-sizing:border-box}
-        body{font-family:'Outfit',sans-serif;background:var(--bg);min-height:100vh;color:#f8fafc;overflow-x:hidden;margin:0}
-        .installer-bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
-        .installer-bg div{position:absolute;border-radius:50%;filter:blur(100px)}
-        .c1{width:500px;height:500px;background:rgba(99,102,241,.12);top:-150px;left:-100px;animation:drift 20s ease-in-out infinite}
-        .c2{width:400px;height:400px;background:rgba(168,85,247,.1);bottom:-100px;right:-100px;animation:drift 25s ease-in-out infinite reverse}
-                                .wrap{max-width:880px;margin:0 auto;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
-        .glass{background:rgba(30,41,59,.72);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:0 25px 60px -12px rgba(0,0,0,.5);padding:2.5rem;width:100%;position:relative;overflow:hidden}
-        .glass::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand2))}
-        .progress-bar-wrap{display:flex;gap:6px;margin-bottom:2rem}
-        .progress-bar-wrap .pip{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.08);transition:background .4s}
-        .progress-bar-wrap .pip.done{background:var(--brand)}
-        .progress-bar-wrap .pip.active{background:linear-gradient(90deg,var(--brand),var(--brand2))}
-        .step{display:none}.step.active{display:block;animation:fadeUp .5s ease}
-        .brand-logo{font-weight:800;font-size:2rem;letter-spacing:-.04em;background:linear-gradient(135deg,#fff,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .btn-brand{background:linear-gradient(135deg,var(--brand),var(--brand2));border:none;color:#fff;padding:.7rem 1.8rem;border-radius:12px;font-weight:600;transition:all .3s}
-        .btn-brand:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(99,102,241,.35);color:#fff}
-        .btn-brand:disabled{opacity:.5;transform:none;box-shadow:none}
-        .form-control,.form-select{background:rgba(15,23,42,.5);border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:12px;padding:.7rem 1rem}
-        .form-control:focus,.form-select:focus{background:rgba(15,23,42,.8);border-color:var(--brand);box-shadow:0 0 0 4px rgba(99,102,241,.1);color:#fff}
-        .req-item{display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
-        .req-item .bi{font-size:1.1rem}
-        .req-ok{color:#22c55e}.req-fail{color:#ef4444}.req-warn{color:#eab308}
-        .db-option{cursor:pointer;border:2px solid rgba(255,255,255,.06);border-radius:16px;padding:1.2rem;text-align:center;transition:all .25s}
-        .db-option:hover{border-color:rgba(99,102,241,.3);background:rgba(99,102,241,.05)}
-        .db-option.selected{border-color:var(--brand);background:rgba(99,102,241,.1)}
-        .password-warning{border:1px solid rgba(234,179,8,.2);background:rgba(234,179,8,.1);color:#fde047;padding:.8rem;border-radius:12px;font-size:.85rem}
-        .alert-box{padding:.8rem 1rem;border-radius:12px;font-size:.9rem;margin-top:.5rem}
-        .alert-box.err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5}
-        .alert-box.ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#86efac}
-    </style>
+    <meta name="csrf-token" content="Mock Data">
+    <title>Mock Data</title>
+    <script id="lang-json" type="application/json"></script>
+    <script>window.__=function(k){const t=JSON.parse(document.getElementById('lang-json').textContent);return t[k]||k;};</script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../public/build/assets/app-CVjFDuoy.css">
 </head>
-<body>
-<div class="installer-bg"><div class="c1"></div><div class="c2"></div></div>
+<body class="installer-page">
 
-<div class="wrap">
-<div class="glass">
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
 
-    <!-- Header -->
-    <div class="text-center mb-4">
-        <img src="{{ Vite::asset('resources/assets/images/ghost-icon-transparent.png') }}" alt="Runaris Ghost" style="width:64px;filter:drop-shadow(0 0 16px rgba(111,66,193,.4));animation:float 6s ease-in-out infinite" class="mb-2">
+<div class="installer-wrap">
+<main class="glass-card" role="main">
+
+    <header class="text-center mb-4">
+        <img src="../public/build/assets/ghost-icon-transparent-BctpTeNf.png" alt="Runaris Ghost" class="ghost-icon mb-2">
         <span class="brand-logo d-block">Runaris <span class="opacity-50">Ghost</span></span>
-        <p class="text-secondary small text-uppercase mb-0" style="letter-spacing:2px">Web Installer</p>
-    </div>
+        <p class="text-secondary small text-uppercase mb-0 ls-wide">Mock Data</p>
+    </header>
 
     <!-- Progress Pips -->
     <div class="progress-bar-wrap" id="pips"></div>
 
     <!-- STEP 0: Requirements -->
-    <div id="step-0" class="step">
+    <div id="step-0" class="step" aria-current="step">
         <div class="text-center mb-4">
-            <i class="bi bi-cpu display-4 text-primary d-block mb-3"></i>
-            <h3 class="fw-bold">Verificação do Servidor</h3>
-            <p class="text-secondary">Verificando se o servidor atende aos requisitos mínimos.</p>
+            <i class="bi bi-cpu display-4 text-primary d-block mb-3" aria-hidden="true"></i>
+            <h3 class="fw-bold">Mock Data</h3>
+            <p class="text-secondary">Mock Data</p>
         </div>
-        <div id="req-list" class="mb-4"><div class="text-center py-4"><span class="spinner-border spinner-border-sm me-2"></span>Analisando...</div></div>
+        <div id="req-list" class="mb-4" role="region" aria-live="polite"><div class="text-center py-4"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Mock Data</div></div>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-brand" id="btn-req-next" disabled onclick="goTo(1)">Próximo <i class="bi bi-arrow-right ms-1"></i></button>
+            <button class="btn btn-brand" id="btn-req-next" disabled onclick="goTo(1)">Mock Data <i class="bi bi-arrow-right ms-1"></i></button>
         </div>
     </div>
 
     <!-- STEP 1: Language -->
     <div id="step-1" class="step active">
         <div class="text-center mb-4">
-            <i class="bi bi-translate display-4 text-primary d-block mb-3"></i>
-            <h3 class="fw-bold">Idioma / Language</h3>
-            <p class="text-secondary">Escolha o idioma da interface.</p>
+            <i class="bi bi-translate display-4 text-primary d-block mb-3" aria-hidden="true"></i>
+            <h3 class="fw-bold">Mock Data</h3>
+            <p class="text-secondary">Mock Data</p>
         </div>
         <div class="row g-3 justify-content-center mb-4">
-            <div class="col-6 col-md-3"><button class="btn btn-outline-secondary w-100 p-3 rounded-4 border-opacity-10" onclick="pickLang('pt_BR')"><span class="fs-2 d-block mb-1">🇧🇷</span><span class="small fw-bold">Português (BR)</span></button></div>
-            <div class="col-6 col-md-3"><button class="btn btn-outline-secondary w-100 p-3 rounded-4 border-opacity-10" onclick="pickLang('pt_PT')"><span class="fs-2 d-block mb-1">🇵🇹</span><span class="small fw-bold">Português (PT)</span></button></div>
-            <div class="col-6 col-md-3"><button class="btn btn-outline-secondary w-100 p-3 rounded-4 border-opacity-10" onclick="pickLang('en')"><span class="fs-2 d-block mb-1">🇺🇸</span><span class="small fw-bold">English</span></button></div>
-            <div class="col-6 col-md-3"><button class="btn btn-outline-secondary w-100 p-3 rounded-4 border-opacity-10" onclick="pickLang('es')"><span class="fs-2 d-block mb-1">🇪🇸</span><span class="small fw-bold">Español</span></button></div>
+            <div class="col-6 col-md-3"><button class="btn btn-outline-secondary w-100 p-3 rounded-4 border-opacity-10" onclick="pickLang('pt_BR')" aria-label="Português do Brasil"><span class="fs-2 d-block mb-1" aria-hidden="true">🇧🇷</span><span class="small fw-bold">Português (BR)</span></button></div>
+            <div class="col-6 col-md-3"><button class="btn btn-outline-secondary w-100 p-3 rounded-4 border-opacity-10" onclick="pickLang('pt_PT')" aria-label="Português de Portugal"><span class="fs-2 d-block mb-1" aria-hidden="true">🇵🇹</span><span class="small fw-bold">Português (PT)</span></button></div>
+            <div class="col-6 col-md-3"><button class="btn btn-outline-secondary w-100 p-3 rounded-4 border-opacity-10" onclick="pickLang('en')" aria-label="English"><span class="fs-2 d-block mb-1" aria-hidden="true">🇺🇸</span><span class="small fw-bold">English</span></button></div>
+            <div class="col-6 col-md-3"><button class="btn btn-outline-secondary w-100 p-3 rounded-4 border-opacity-10" onclick="pickLang('es')" aria-label="Español"><span class="fs-2 d-block mb-1" aria-hidden="true">🇪🇸</span><span class="small fw-bold">Español</span></button></div>
         </div>
     </div>
 
@@ -87,28 +61,28 @@
     <!-- STEP 3: Database -->
     <div id="step-3" class="step">
         <div class="text-center mb-4">
-            <i class="bi bi-database-fill-check display-4 text-info d-block mb-3"></i>
-            <h3 class="fw-bold">Banco de Dados</h3>
-            <p class="text-secondary">O Runaris Ghost utiliza <strong>SQLite</strong> para garantir portabilidade e performance.</p>
+            <i class="bi bi-database-fill-check display-4 text-info d-block mb-3" aria-hidden="true"></i>
+            <h3 class="fw-bold">Mock Data</h3>
+            <p class="text-secondary">Mock Data</p>
         </div>
         
         <div class="p-4 rounded-4 bg-info bg-opacity-10 border border-info border-opacity-10 mb-4">
             <div class="d-flex align-items-start gap-3">
-                <i class="bi bi-info-circle-fill text-info fs-4"></i>
+                <i class="bi bi-info-circle-fill text-info fs-4" aria-hidden="true"></i>
                 <div>
-                    <h6 class="fw-bold mb-1">Por que SQLite?</h6>
-                    <p class="small text-secondary mb-0">Diferente de bancos tradicionais, o SQLite é um arquivo dentro do seu projeto. Isso facilita backups, migrações e garante que o app funcione em qualquer hospedagem sem configurações extras.</p>
+                    <h6 class="fw-bold mb-1">Mock Data</h6>
+                    <p class="small text-secondary mb-0">Mock Data</p>
                 </div>
             </div>
         </div>
 
-        <div id="db-msg" class="d-none alert-box mb-3"></div>
+        <div id="db-msg" class="d-none alert-box mb-3" role="alert"></div>
         
         <div class="d-flex justify-content-between align-items-center">
-            <button class="btn btn-link text-secondary text-decoration-none" onclick="goTo(1)"><i class="bi bi-arrow-left me-1"></i> Voltar</button>
+            <button class="btn btn-link text-secondary text-decoration-none" onclick="goTo(1)"><i class="bi bi-arrow-left me-1"></i> Mock Data</button>
             <div class="d-flex gap-2">
                 <button class="btn btn-brand px-4" id="btn-db-save" onclick="configureDb()">
-                    <i class="bi bi-gear-fill me-2"></i>Inicializar Banco de Dados
+                    <i class="bi bi-gear-fill me-2"></i>Mock Data
                 </button>
             </div>
         </div>
@@ -116,60 +90,62 @@
 
     <!-- STEP 4: Admin User -->
     <div id="step-4" class="step">
-        <h3 class="fw-bold mb-2">Perfil & Segurança</h3>
-        <p class="text-secondary mb-4">Crie sua conta de administrador.</p>
+        <h3 class="fw-bold mb-2">Mock Data</h3>
+        <p class="text-secondary mb-4">Mock Data</p>
         <form id="admin-form">
             <div class="row g-3 mb-3">
-                <div class="col-md-6"><label class="form-label text-uppercase small fw-bold opacity-50">Nome do Autor</label><input type="text" name="name" class="form-control" placeholder="Ex: Machado de Assis" required></div>
-                <div class="col-md-6"><label class="form-label text-uppercase small fw-bold opacity-50">E-mail</label><input type="email" name="email" class="form-control" placeholder="seu            </div>
+                <div class="col-md-6"><label for="admin-name" class="form-label text-uppercase small fw-bold opacity-50">Mock Data</label><input id="admin-name" type="text" name="name" class="form-control" placeholder="Mock Data" required></div>
+                <div class="col-md-6"><label for="admin-email" class="form-label text-uppercase small fw-bold opacity-50">Mock Data</label><input id="admin-email" type="email" name="email" class="form-control" placeholder="Mock Data" required></div>
+            </div>
             <div class="mb-3">
                 <div class="form-check form-switch fs-5 mb-3">
                     <input class="form-check-input" type="checkbox" id="use_pw" checked onchange="togglePw(this.checked)">
-                    <label class="form-check-label fs-6 fw-bold">Proteger com senha</label>
+                    <label class="form-check-label fs-6 fw-bold">Mock Data</label>
                 </div>
                 <div id="pw-fields">
                     <div class="row g-3">
-                        <div class="col-md-6"><input type="password" name="password" id="pw1" class="form-control" placeholder="Senha (mín. 8 caracteres)"></div>
-                        <div class="col-md-6"><input type="password" name="password_confirmation" id="pw2" class="form-control" placeholder="Confirmar senha"></div>
+                        <div class="col-md-6"><label for="pw1" class="visually-hidden">Mock Data</label><input type="password" name="password" id="pw1" class="form-control" placeholder="Mock Data"></div>
+                        <div class="col-md-6"><label for="pw2" class="visually-hidden">Mock Data</label><input type="password" name="password_confirmation" id="pw2" class="form-control" placeholder="Mock Data"></div>
                     </div>
                 </div>
-                <div id="pw-warn" class="password-warning d-none mt-3"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Atenção:</strong> Sem senha, qualquer pessoa com acesso ao servidor poderá editar seus manuscritos.</div>
+                <div id="pw-warn" class="password-warning d-none mt-3"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Mock Data</strong> Mock Data</div>
             </div>
-            <div id="admin-msg" class="d-none alert-box mb-3"></div>
+            <div id="admin-msg" class="d-none alert-box mb-3" role="alert"></div>
             <div class="d-flex justify-content-between">
-                <button type="button" class="btn btn-link text-secondary text-decoration-none" onclick="goTo(3)"><i class="bi bi-arrow-left me-1"></i> Voltar</button>
-                <button type="submit" class="btn btn-brand" id="btn-admin">Próximo <i class="bi bi-arrow-right ms-1"></i></button>
+                <button type="button" class="btn btn-link text-secondary text-decoration-none" onclick="goTo(3)"><i class="bi bi-arrow-left me-1"></i> Mock Data</button>
+                <button type="submit" class="btn btn-brand" id="btn-admin">Mock Data <i class="bi bi-arrow-right ms-1"></i></button>
             </div>
         </form>
     </div>
 
     <!-- STEP 5: AI -->
     <div id="step-5" class="step">
-        <h3 class="fw-bold mb-2">Inteligência Artificial <span class="badge bg-secondary bg-opacity-25 fw-normal fs-6">Opcional</span></h3>
-        <p class="text-secondary mb-4">O Runaris Ghost usa o Google Gemini para oferecer sugestões de escrita e brainstorm de personagens.</p>
+        <h3 class="fw-bold mb-2">Mock Data <span class="badge bg-secondary bg-opacity-25 fw-normal fs-6">Mock Data</span></h3>
+        <p class="text-secondary mb-4">Mock Data</p>
         <div class="mb-4 p-4 rounded-4 bg-info bg-opacity-10 border border-info border-opacity-10">
             <label class="form-label text-uppercase small fw-bold opacity-50">Google Gemini API Key</label>
             <input type="password" id="ai_key" class="form-control mb-3" placeholder="AIzaSy...">
-            <p class="small text-body-secondary mb-0"><i class="bi bi-info-circle"></i> Obtenha sua chave gratuita no <a href="https://aistudio.google.com/app/apikey" target="_blank" class="fw-bold text-info">Google AI Studio</a>.</p>
+            <p class="small text-body-secondary mb-0"><i class="bi bi-info-circle"></i> Mock Data <a href="https://aistudio.google.com/app/apikey" target="_blank" class="fw-bold text-info">Google AI Studio</a>.</p>
         </div>
         <div class="d-grid gap-2">
-            <button class="btn btn-brand" onclick="saveAi()">Ativar Inteligência Artificial</button>
-            <button class="btn btn-link text-secondary text-decoration-none" onclick="goTo(6)">Pular — não quero usar IA agora</button>
+            <button class="btn btn-brand" onclick="saveAi()">Mock Data</button>
+            <button class="btn btn-link text-secondary text-decoration-none" onclick="goTo(6)">Mock Data</button>
         </div>
     </div>
 
     <!-- STEP 6: Done -->
     <div id="step-6" class="step text-center">
-        <i class="bi bi-check-circle-fill display-1 text-success d-block mb-4"></i>
-        <h2 class="fw-bold mb-3">Instalação Concluída!</h2>
-        <p class="text-secondary mb-2">Seu Santuário Digital está pronto. Todas as configurações foram salvas e o servidor está protegido.</p>
-        <p class="text-secondary small mb-4 opacity-50">O arquivo .env foi travado (somente leitura). Para reconfigurar, use o Reset de Fábrica dentro do app.</p>
-        <button class="btn btn-brand btn-lg px-5" id="btn-finish" onclick="finalizeInstall()"><i class="bi bi-door-open me-2"></i>Entrar no Ghost</button>
+        <i class="bi bi-check-circle-fill display-1 text-success d-block mb-4" aria-hidden="true"></i>
+        <h2 class="fw-bold mb-3">Mock Data</h2>
+        <p class="text-secondary mb-2">Mock Data</p>
+        <p class="text-secondary small mb-4 opacity-50">Mock Data</p>
+        <button class="btn btn-brand btn-lg px-5" id="btn-finish" onclick="finalizeInstall()"><i class="bi bi-door-open me-2"></i>Mock Data</button>
     </div>
 
-</div>
+</main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 const STEPS=6, csrf=document.querySelector('meta[name="csrf-token"]').content;
 let current=0, selectedDb='sqlite', selectedLang='pt_BR';
@@ -178,17 +154,25 @@ function H(m){return{'Content-Type':'application/json','X-CSRF-TOKEN':csrf,'Acce
 
 // --- Navigation ---
 function goTo(s){
-    document.querySelectorAll('.step').forEach(el=>el.classList.remove('active'));
-    document.getElementById('step-'+s).classList.add('active');
+    document.querySelectorAll('.step').forEach(el=>{el.classList.remove('active');el.removeAttribute('aria-current');});
+    const next=document.getElementById('step-'+s);
+    next.classList.add('active');
+    next.setAttribute('aria-current','step');
     current=s;
     renderPips();
 }
 function renderPips(){
     const el=document.getElementById('pips');
+    el.setAttribute('role','progressbar');
+    el.setAttribute('aria-valuenow',current);
+    el.setAttribute('aria-valuemin','0');
+    el.setAttribute('aria-valuemax',STEPS);
+    el.setAttribute('aria-label','Progresso da instalação');
     el.innerHTML='';
     for(let i=0;i<STEPS;i++){
         const d=document.createElement('div');
         d.className='pip'+(i<current?' done':'')+(i===current?' active':'');
+        d.setAttribute('aria-current',i===current?'step':'false');
         el.appendChild(d);
     }
 }
@@ -213,16 +197,16 @@ async function checkReqs(){
         });
         // Permissions
         d.permissions.forEach(p=>{
-            html+=`<div class="req-item"><i class="bi bi-${p.ok?'check-circle-fill req-ok':'x-circle-fill req-fail'}"></i><span>${p.path} <small class="text-secondary">${p.ok?'writable':'sem permissão'}</small></span></div>`;
+            html+=`<div class="req-item"><i class="bi bi-${p.ok?'check-circle-fill req-ok':'x-circle-fill req-fail'}"></i><span>${p.path} <small class="text-secondary">${p.ok?'writable':window.__('sem permissão')}</small></span></div>`;
         });
         // .env
         const ev=d.env_writable;
-        html+=`<div class="req-item"><i class="bi bi-${ev.ok?'check-circle-fill req-ok':'x-circle-fill req-fail'}"></i><span>.env ${ev.exists?'':'(será criado)'}</span></div>`;
+        html+=`<div class="req-item"><i class="bi bi-${ev.ok?'check-circle-fill req-ok':'x-circle-fill req-fail'}"></i><span>.env ${ev.exists?'':'('+window.__('será criado')+')'}</span></div>`;
 
         document.getElementById('req-list').innerHTML=html;
         document.getElementById('btn-req-next').disabled=!d.can_proceed;
     }catch(e){
-        document.getElementById('req-list').innerHTML='<div class="alert-box err">Erro ao verificar requisitos.</div>';
+        document.getElementById('req-list').innerHTML='<div class="alert-box err">'+window.__('Erro ao verificar requisitos.')+'</div>';
     }
 }
 checkReqs();
@@ -235,15 +219,15 @@ function pickLang(l){selectedLang=l;goTo(3);}
 async function configureDb(){
     const msg=document.getElementById('db-msg');
     const btn=document.getElementById('btn-db-save');
-    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Inicializando Banco...';
+    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>'+window.__('Inicializando Banco...');
     msg.className='d-none';
     try{
         const r=await fetch('/install/database/configure',{method:'POST',headers:H(),body:JSON.stringify({driver:'sqlite'})});
         const d=await r.json();
         if(d.status){goTo(4);}
         else{msg.className='alert-box err';msg.textContent=d.message;}
-    }catch(e){msg.className='alert-box err';msg.textContent='Erro ao configurar banco.';}
-    finally{btn.disabled=false;btn.innerHTML='<i class="bi bi-gear-fill me-2"></i>Inicializar Banco de Dados';}
+    }catch(e){msg.className='alert-box err';msg.textContent=window.__('Erro ao configurar banco.');}
+    finally{btn.disabled=false;btn.innerHTML='<i class="bi bi-gear-fill me-2"></i>'+window.__('Inicializar Banco de Dados');}
 }
 
 // --- Step 4: Admin ---
@@ -259,15 +243,15 @@ document.getElementById('admin-form').onsubmit=async(e)=>{
     const btn=document.getElementById('btn-admin');
     const fd=new FormData(e.target);
     const payload={name:fd.get('name'),email:fd.get('email'),password:fd.get('password'),password_confirmation:fd.get('password_confirmation'),use_password:document.getElementById('use_pw').checked?1:0};
-    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Criando...';
+    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>'+window.__('Criando...');
     msg.className='d-none';
     try{
         const r=await fetch('/install/admin',{method:'POST',headers:H(),body:JSON.stringify(payload)});
         const d=await r.json();
         if(r.ok&&d.status){goTo(5);}
-        else{let m=d.message||'Erro.';if(d.errors)m=Object.values(d.errors).flat().join('<br>');msg.className='alert-box err';msg.innerHTML=m;}
-    }catch(er){msg.className='alert-box err';msg.textContent='Erro de conexão.';}
-    finally{btn.disabled=false;btn.innerHTML='Próximo <i class="bi bi-arrow-right ms-1"></i>';}
+        else{let m=d.message||window.__('Erro.');if(d.errors)m=Object.values(d.errors).flat().join('<br>');msg.className='alert-box err';msg.innerHTML=m;}
+    }catch(er){msg.className='alert-box err';msg.textContent=window.__('Erro de conexão.');}
+    finally{btn.disabled=false;btn.innerHTML=window.__('Próximo')+' <i class="bi bi-arrow-right ms-1"></i>';}
 };
 
 // --- Step 5: AI ---
@@ -281,7 +265,7 @@ async function saveAi(){
 // --- Step 6: Finalize ---
 async function finalizeInstall(){
     const btn=document.getElementById('btn-finish');
-    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>Finalizando...';
+    btn.disabled=true;btn.innerHTML='<span class="spinner-border spinner-border-sm me-2"></span>'+window.__('Finalizando...');
     try{await fetch('/install/finalize',{method:'POST',headers:H()});}catch(e){}
     window.location.href='/';
 }
