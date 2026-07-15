@@ -346,20 +346,25 @@
     function renderNews(news) {
         const feedContainer = document.getElementById('bento-news-feed');
         feedContainer.innerHTML = news.map(item => {
-            const style = item.image ? `style="background-image: url('${item.image}')"` : '';
-            const overlay = item.image ? '<div class="bento-overlay"></div>' : '';
             const footerIcon = item.type === 'video' ? 'bi-play-circle-fill' : 'bi-arrow-right-short';
+            const hasImage = !!item.image;
             
             return `
-                <a href="${item.url}" target="_blank" class="bento-item ${item.size || 'small'}" ${style}>
-                    <span class="badge-type">${item.type}</span>
-                    ${overlay}
-                    <div class="z-1">
+                <a href="${item.url}" target="_blank" class="bento-item ${item.size || 'small'}">
+                    ${hasImage ? `
+                    <div class="bento-item-image">
+                        <img src="${item.image}" alt="${item.title}" loading="lazy">
+                        <span class="badge-type">${item.type}</span>
+                    </div>` : `
+                    <div class="bento-item-image-placeholder">
+                        <span class="badge-type">${item.type}</span>
+                    </div>`}
+                    <div class="bento-item-body">
                         <div class="bento-title">${item.title}</div>
                         ${item.content ? `<div class="bento-content line-clamp-2">${item.content}</div>` : ''}
-                    </div>
-                    <div class="bento-footer z-1">
-                        <i class="bi ${footerIcon}"></i> ${item.type === 'video' ? window.__('Assistir') : window.__('Ler mais')}
+                        <div class="bento-footer">
+                            <i class="bi ${footerIcon}"></i> ${item.type === 'video' ? window.__('Assistir') : window.__('Ler mais')}
+                        </div>
                     </div>
                 </a>
             `;
