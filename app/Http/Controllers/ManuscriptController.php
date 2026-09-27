@@ -154,7 +154,7 @@ class ManuscriptController extends Controller
                       "Foque em fatos, mudanças de estado emocional dos personagens e revelações de plot. " .
                       "Não use introduções, vá direto ao resumo.";
 
-            $summary = $gemini->generate($prompt, 'gemini-2.5-flash');
+            $summary = $gemini->generate($prompt, \App\Services\GeminiService::FLASH);
             
             $item->update(['summary' => $summary]);
 

@@ -6,6 +6,17 @@ Shared domain vocabulary and stack conventions for agents working on this projec
 
 Runaris Ghost is a **Santuário Digital para Autores** — a local-first, open-source creative writing platform focused on immersion, manuscript organization, and AI co-writing (Google Gemini). Everything runs locally via SQLite. Zero telemetry. Donation-ware under GPL-3.0 license.
 
+## Environments
+
+Two instances run in parallel:
+
+| Instance | Machine | Nature |
+|---|---|---|
+| DEV | this machine (git clone) | development; `storage/app/private/projects` is a symlink to the Runaris-Vault repo; test changes here first |
+| User install | another machine | installed via the web installer as a normal user; used daily and updated through the normal user flow (Guardian Update System) |
+
+A change is only done when it works on **both**: never assume a git clone, shell/artisan access, or the vault symlink exists on the user install — and keep the update path working for a non-technical user.
+
 ## Key terms
 
 | Term | Meaning |

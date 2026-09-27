@@ -9,6 +9,11 @@ use Exception;
 
 class GeminiService
 {
+    public const FLASH = 'flash';
+    public const PRO = 'pro';
+    public const MODEL_FLASH = 'gemini-3.8-flash';
+    public const MODEL_PRO = 'gemini-3.1-pro-preview';
+
     protected $apiKey;
     protected $project;
 
@@ -32,12 +37,18 @@ class GeminiService
      * Send a generation request to the Gemini API.
      * 
      * @param string $prompt The user prompt instructions.
-     * @param string $model (e.g. gemini-2.5-flash or gemini-2.5-pro)
+     * @param string $model Tier (self::FLASH or self::PRO) or a literal model name.
      * @param array $systemInstruction Optional system instruction array (roleplay/context).
      * @return string Generative content string.
      */
-    public function generate(string $prompt, string $model = 'gemini-2.5-flash', ?array $systemInstruction = null): string
+    public function generate(string $prompt, string $model = self::FLASH, ?array $systemInstruction = null): string
     {
+        $model = match ($model) {
+            self::FLASH => SystemSetting::getSetting('gemini_model_flash', self::MODEL_FLASH),
+            self::PRO => SystemSetting::getSetting('gemini_model_pro', self::MODEL_PRO),
+            default => $model,
+        };
+
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$this->apiKey}";
         
         $payload = [
@@ -74,6 +85,29 @@ class GeminiService
         }
 
         throw new Exception("Resposta inesperada da API Gemini.");
+    }
+
+    /**
+     * Modelos disponíveis por tier, para o seletor em Configurações > IA.
+     */
+    public static function availableModels(string $tier): array
+    {
+        if ($tier === self::PRO) {
+            return [
+                'gemini-3.1-pro-preview' => 'Gemini 3.1 Pro (Recomendado)',
+                'gemini-2.5-pro' => 'Gemini 2.5 Pro',
+            ];
+        }
+
+        return [
+            'gemini-3.8-flash' => 'Gemini 3.8 Flash (Recomendado)',
+            'gemini-3.7-flash' => 'Gemini 3.7 Flash',
+            'gemini-3.6-flash' => 'Gemini 3.6 Flash',
+            'gemini-3.5-flash' => 'Gemini 3.5 Flash',
+            'gemini-3.5-flash-lite' => 'Gemini 3.5 Flash-Lite',
+            'gemini-2.5-flash' => 'Gemini 2.5 Flash',
+            'gemini-2.5-flash-lite' => 'Gemini 2.5 Flash-Lite',
+        ];
     }
 
     /**
@@ -118,7 +152,7 @@ class GeminiService
             "Sua resposta deve ser estritamente em JSON."
         ];
 
-        $response = $this->generate($prompt, 'gemini-2.5-flash', $system);
+        $response = $this->generate($prompt, self::FLASH, $system);
         
         // Clean markdown if present
         $json = preg_replace('/```json\n?|\n?```/', '', $response);

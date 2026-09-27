@@ -116,6 +116,8 @@ Route::prefix('setup')->group(function () {
 
 Route::get('/settings', [\App\Http\Controllers\SettingsController::class, 'index']);
 Route::post('/settings/ai', [\App\Http\Controllers\SettingsController::class, 'updateAi']);
+Route::post('/settings/git', [\App\Http\Controllers\SettingsController::class, 'storeGit']);
+Route::post('/settings/git/push', [\App\Http\Controllers\SettingsController::class, 'pushGit']);
 Route::post('/settings/locale', [\App\Http\Controllers\SettingsController::class, 'setLocale']);
 Route::get('/settings/backup', [\App\Http\Controllers\SettingsController::class, 'fullBackup']);
 Route::get('/settings/update/check', [\App\Http\Controllers\UpdateController::class, 'check']);

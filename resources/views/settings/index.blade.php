@@ -82,9 +82,33 @@
                             </div>
                         </div>
 
+                        <div class="mb-4">
+                            <label for="gemini_model_flash" class="form-label text-body-secondary small text-uppercase fw-bold ls-wide">{{ __('Modelo — Tarefas Rápidas (Flash)') }}</label>
+                            <select id="gemini_model_flash" name="gemini_model_flash" class="form-select bg-body border-secondary border-opacity-25 py-2 model-select">
+                                @foreach($flashModels as $value => $label)
+                                    <option value="{{ $value }}" {{ $geminiModelFlash === $value ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            <div class="form-text opacity-75 small mt-2">
+                                <i class="bi bi-info-circle"></i> {{ __('Usado por resumos, sugestões, revisão e sincronização da bíblia.') }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="gemini_model_pro" class="form-label text-body-secondary small text-uppercase fw-bold ls-wide">{{ __('Modelo — Escritor Fantasma (Pro)') }}</label>
+                            <select id="gemini_model_pro" name="gemini_model_pro" class="form-select bg-body border-secondary border-opacity-25 py-2 model-select">
+                                @foreach($proModels as $value => $label)
+                                    <option value="{{ $value }}" {{ $geminiModelPro === $value ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            <div class="form-text opacity-75 small mt-2">
+                                <i class="bi bi-info-circle"></i> {{ __('Usado apenas na geração de prosa literária.') }}
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-end mt-4">
                             <button type="submit" class="btn btn-info text-white px-4 rounded-pill shadow-sm">
-                                <i class="bi bi-save me-2"></i> Salvar API Key
+                                <i class="bi bi-save me-2"></i> {{ __('Salvar') }}
                             </button>
                         </div>
                     </form>
@@ -105,6 +129,12 @@
                     @if(session('error'))
                         <div class="alert alert-danger border-0 shadow-sm mb-4">
                             <i class="bi bi-exclamation-triangle me-2"></i> {{ session('error') }}
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="alert alert-danger border-0 shadow-sm mb-4">
+                            <i class="bi bi-exclamation-triangle me-2"></i> {{ $errors->first() }}
                         </div>
                     @endif
 
@@ -163,6 +193,82 @@
                         <a href="{{ url('/settings/backup') }}" class="btn btn-info text-white rounded-pill px-4">
                             <i class="bi bi-download me-2"></i> {{ __('Baixar Tudo como ZIP') }}
                         </a>
+                    </div>
+
+                    <!-- Seção de Versionamento Git -->
+                    <div class="mb-5 p-4 rounded-4 border border-success border-opacity-10 bg-success bg-opacity-10">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-git fs-2 text-success me-3"></i>
+                            <div>
+                                <h6 class="fw-bold mb-1">{{ __('Versionamento com Git') }}</h6>
+                                <p class="text-body-secondary small mb-0">{{ __('Cada alteração nos projetos vira um commit automático local; com um remoto configurado, você sincroniza sob demanda.') }}</p>
+                            </div>
+                        </div>
+
+                        @if(!$gitStatus['git_available'])
+                            <div class="alert alert-warning border-0 shadow-sm mb-0 small">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                {{ __('O Git não foi encontrado neste servidor. Instale o Git para habilitar o versionamento.') }}
+                            </div>
+                        @else
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="badge bg-body text-success border border-success border-opacity-25">
+                                    <i class="bi bi-check2-circle me-1"></i>{{ $gitStatus['repo'] ? __('Repositório ativo') : __('Sem repositório') }}
+                                </span>
+                                @if($gitStatus['last_commit'])
+                                    <span class="badge bg-body text-secondary border border-secondary border-opacity-25" title="{{ $gitStatus['last_commit']['subject'] }}">
+                                        <i class="bi bi-clock-history me-1"></i>{{ $gitStatus['last_commit']['subject'] }} · {{ $gitStatus['last_commit']['when'] }}
+                                    </span>
+                                @endif
+                                @if($gitStatus['dirty'])
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ __(':n alterações pendentes', ['n' => $gitStatus['dirty']]) }}
+                                    </span>
+                                @endif
+                                @if($gitStatus['last_push_status'])
+                                    <span class="badge bg-body text-body border border-secondary border-opacity-25">
+                                        <i class="bi bi-cloud-arrow-up me-1"></i>{{ $gitStatus['last_push_status'] }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            <form action="{{ url('/settings/git') }}" method="POST">
+                                @csrf
+                                <div class="form-check form-switch mb-3">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="git_versioning" name="git_versioning" value="1" {{ $gitStatus['enabled'] ? 'checked' : '' }}>
+                                    <label class="form-check-label fw-bold" for="git_versioning">{{ __('Ativar versionamento automático') }}</label>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="git_remote_url" class="form-label text-body-secondary small text-uppercase fw-bold ls-wide">{{ __('URL do Remoto (opcional)') }}</label>
+                                    <input type="text" class="form-control bg-body border-secondary border-opacity-25 py-2" id="git_remote_url" name="git_remote_url" value="{{ $gitRemoteUrl }}" placeholder="https://github.com/voce/projetos.git" autocomplete="off" {{ $gitStatus['git_available'] ? '' : 'readonly' }}>
+                                    <div class="form-text opacity-75 small mt-2">
+                                        <i class="bi bi-info-circle"></i> {{ __('Sincronização é apenas push (sem pull), para nunca misturar versões locais e remotas.') }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="git_remote_token" class="form-label text-body-secondary small text-uppercase fw-bold ls-wide">{{ __('Token de Acesso') }}</label>
+                                    <input type="password" class="form-control bg-body border-secondary border-opacity-25 py-2" id="git_remote_token" name="git_remote_token" value="{{ $gitTokenValue }}" placeholder="ghp_..." autocomplete="new-password" {{ $gitStatus['git_available'] ? '' : 'readonly' }}>
+                                    <div class="form-text opacity-75 small mt-2">
+                                        <i class="bi bi-shield-lock"></i> {{ __('Guardado apenas no banco local, nunca no git. Envie um novo valor para trocar; esvazie o campo para remover.') }}
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success rounded-pill px-4 shadow-sm">
+                                    <i class="bi bi-save me-2"></i> {{ __('Salvar') }}
+                                </button>
+                            </form>
+
+                            @if($gitStatus['remote'])
+                                <form action="{{ url('/settings/git/push') }}" method="POST" class="d-inline-block mt-3">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-success rounded-pill px-4">
+                                        <i class="bi bi-cloud-arrow-up me-2"></i> {{ __('Sincronizar agora') }}
+                                    </button>
+                                </form>
+                            @endif
+                        @endif
                     </div>
 
                     <hr class="my-5 opacity-10">
@@ -233,6 +339,7 @@
 
 <style>
     .ls-wide { letter-spacing: 0.05em; }
+    .model-select { max-width: 350px; }
     .bg-accent { background-color: #fd7e14; }
     .list-group-item.active {
         background-color: var(--bs-primary) !important;

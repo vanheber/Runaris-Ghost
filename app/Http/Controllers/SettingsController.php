@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
+    /** Sentinel exibido no campo de token quando já existe um salvo. */
+    protected const TOKEN_SENTINEL = '••••••••';
+
     protected $backupService;
     protected $updateService;
 
@@ -37,10 +40,20 @@ class SettingsController extends Controller
         }
 
         $geminiApiKey = \App\Models\SystemSetting::getSetting('gemini_api_key');
+        $geminiModelFlash = \App\Models\SystemSetting::getSetting('gemini_model_flash', \App\Services\GeminiService::MODEL_FLASH);
+        $geminiModelPro = \App\Models\SystemSetting::getSetting('gemini_model_pro', \App\Services\GeminiService::MODEL_PRO);
+        $flashModels = \App\Services\GeminiService::availableModels(\App\Services\GeminiService::FLASH);
+        $proModels = \App\Services\GeminiService::availableModels(\App\Services\GeminiService::PRO);
         $currentVersion = $this->updateService->getCurrentVersion();
         $hasRollback = \App\Models\SystemSetting::getSetting('last_auto_backup') !== null;
 
-        return view('settings.index', compact('tab', 'docContent', 'geminiApiKey', 'currentVersion', 'hasRollback'));
+        // Status do versionamento Git (apenas na aba Sistema)
+        $gitStatus = $tab === 'system' ? app(\App\Services\GitVersioningService::class)->status() : null;
+        $gitRemoteUrl = \App\Models\SystemSetting::getSetting('git_remote_url', '');
+        $gitTokenValue = \App\Models\SystemSetting::getSetting('git_remote_token')
+            ? self::TOKEN_SENTINEL : '';
+
+        return view('settings.index', compact('tab', 'docContent', 'geminiApiKey', 'geminiModelFlash', 'geminiModelPro', 'flashModels', 'proModels', 'currentVersion', 'hasRollback', 'gitStatus', 'gitRemoteUrl', 'gitTokenValue'));
     }
 
     /**
@@ -48,13 +61,71 @@ class SettingsController extends Controller
      */
     public function updateAi(Request $request)
     {
+        $flashIn = implode(',', array_keys(\App\Services\GeminiService::availableModels(\App\Services\GeminiService::FLASH)));
+        $proIn = implode(',', array_keys(\App\Services\GeminiService::availableModels(\App\Services\GeminiService::PRO)));
+
         $request->validate([
-            'gemini_api_key' => 'nullable|string'
+            'gemini_api_key' => 'nullable|string',
+            'gemini_model_flash' => 'required|string|in:' . $flashIn,
+            'gemini_model_pro' => 'required|string|in:' . $proIn,
         ]);
 
         \App\Models\SystemSetting::setSetting('gemini_api_key', $request->input('gemini_api_key'));
+        \App\Models\SystemSetting::setSetting('gemini_model_flash', $request->input('gemini_model_flash'));
+        \App\Models\SystemSetting::setSetting('gemini_model_pro', $request->input('gemini_model_pro'));
 
         return redirect('/settings?tab=ai')->with('success', __('Configurações de IA salvas com sucesso.'));
+    }
+
+    /**
+     * Salvar configuração do versionamento Git (chave + remoto).
+     */
+    public function storeGit(Request $request)
+    {
+        $request->validate([
+            'git_remote_url' => 'nullable|string|max:500',
+            'git_remote_token' => 'nullable|string|max:500',
+        ]);
+
+        $git = app(\App\Services\GitVersioningService::class);
+        $url = trim((string) $request->input('git_remote_url'));
+
+        if ($url !== '' && !preg_match('#^(https://\S+|git@\S+:\S+)$#', $url)) {
+            return redirect('/settings?tab=system')->with('error', __('URL inválida. Use https://... ou git@host:caminho.'));
+        }
+
+        if ($request->boolean('git_versioning')) {
+            if (!$git->detectGit()) {
+                return redirect('/settings?tab=system')->with('error', __('Git não está instalado neste servidor.'));
+            }
+            if (!$git->ensureRepo()) {
+                return redirect('/settings?tab=system')->with('error', __('Falha ao preparar o repositório local.'));
+            }
+        }
+
+        \App\Models\SystemSetting::setSetting('git_versioning', $request->boolean('git_versioning') ? 'true' : 'false');
+        \App\Models\SystemSetting::setSetting('git_remote_url', $url);
+
+        // Sentinel intocado = token já salvo; vazio = limpa; outro valor = novo token.
+        $token = $request->input('git_remote_token');
+        if ($token !== self::TOKEN_SENTINEL) {
+            \App\Models\SystemSetting::setSetting('git_remote_token', trim((string) $token));
+        }
+
+        return redirect('/settings?tab=system')->with('success', __('Configurações de versionamento salvas.'));
+    }
+
+    /**
+     * Sincronização manual: commit pendente + push imediato.
+     */
+    public function pushGit()
+    {
+        $git = app(\App\Services\GitVersioningService::class);
+        $git->commitIfDirty('manual: sincronização');
+        $result = $git->push(true);
+
+        return redirect('/settings?tab=system')
+            ->with($result['ok'] ? 'success' : 'error', $result['message']);
     }
 
     /**

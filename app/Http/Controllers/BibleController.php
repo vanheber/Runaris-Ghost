@@ -71,7 +71,7 @@ class BibleController extends Controller
                       "O objetivo é ter uma visão macro e fluida da história até agora, mantendo a cronologia impecável. " .
                       "Use Markdown (H2, H3, Bullets). Vá direto ao ponto, sem introduções.";
 
-            $newCerebellum = $gemini->generate($prompt, 'gemini-2.5-flash');
+            $newCerebellum = $gemini->generate($prompt, \App\Services\GeminiService::FLASH);
 
             $project->update(['bible_summary' => $newCerebellum]);
 
@@ -118,7 +118,7 @@ class BibleController extends Controller
                       "TEXTO BRUTO:\n" . $fullText;
 
             // Usa Flash para resumo rápido de grande volume
-            $newSummary = $gemini->generate($prompt, 'gemini-2.5-flash', [
+            $newSummary = $gemini->generate($prompt, \App\Services\GeminiService::FLASH, [
                 "Você é um editor literário implacável encarregado de organizar a cronologia de eventos."
             ]);
 
