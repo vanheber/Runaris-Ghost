@@ -17,6 +17,8 @@ Two instances run in parallel:
 
 A change is only done when it works on **both**: never assume a git clone, shell/artisan access, or the vault symlink exists on the user install — and keep the update path working for a non-technical user.
 
+Installations distributed as the `runaris-ghost-dist.zip` package (deps bundled, no git) are **updated by extracting the new zip over the old folder** — `storage/`, `database/database.sqlite` and `.env` are never in the zip, so data survives. The Guardian in-app update button requires git and does not apply there (see `docs/INSTALACAO.html`).
+
 ## Key terms
 
 | Term | Meaning |

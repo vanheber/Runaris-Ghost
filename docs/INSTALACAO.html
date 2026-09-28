@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Guia de Instalação — Runaris Ghost</title>
+
+    <!-- Theme Initialization Script (Avoids Flash) -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-bs-theme', theme);
+        })();
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        .step-number {
+            width: 2.5rem;
+            height: 2.5rem;
+            font-size: 1.1rem;
+        }
+        pre.code {
+            background: rgba(var(--bs-dark-rgb), .06);
+            border: 1px solid rgba(var(--bs-dark-rgb), .08);
+            border-radius: .75rem;
+            padding: 1rem;
+            font-size: .9rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .nav-link.active { font-weight: 600; }
+    </style>
+</head>
+<body class="antialiased d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg border-bottom sticky-top bg-body-tertiary">
+        <div class="container-lg px-4">
+            <span class="navbar-brand fw-bold font-display">
+                <i class="bi bi-book me-2 text-primary"></i>Runaris Ghost — Instalação
+            </span>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navguia" aria-label="Menu">
+                <i class="bi bi-list text-primary fs-4"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navguia">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#requisitos">1. Requisitos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#php">2. Instalar PHP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#instalar">3. Instalar o app</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#assistente">4. Assistente</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#atualizar">Atualizar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-lg py-5 px-4 flex-grow-1">
+        <!-- Cabeçalho -->
+        <header class="text-center mb-5">
+            <span class="badge bg-primary-subtle text-primary border border-primary border-opacity-25 mb-3">Santuário Digital para Autores</span>
+            <h1 class="font-display fw-bold mb-3">Guia de Instalação</h1>
+            <p class="text-body-secondary lead mb-0" style="max-width: 42rem; margin-inline: auto;">
+                Passo a passo para instalar o Runaris Ghost em uma máquina nova.
+                Todos os dados ficam <strong>100% locais</strong> — nada é enviado para a nuvem.
+            </p>
+        </header>
+
+        <!-- 1. Requisitos -->
+        <section id="requisitos" class="mb-5">
+            <div class="card bg-body-tertiary border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">1</span>O que você vai precisar</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>PHP 8.3 ou superior</strong> — é a única dependência de sistema. O pacote de instalação já traz todo o resto (bibliotecas e interfaces compiladas).</li>
+                    <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Um navegador</strong> — Chrome, Firefox, Edge ou Safari.</li>
+                    <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>~300 MB de espaço livre</strong> em disco.</li>
+                    <li class="mb-0"><i class="bi bi-check2-circle text-success me-2"></i><strong>Opcional:</strong> Git — apenas se você for clonar o código-fonte em vez de usar o pacote ZIP.</li>
+                </ul>
+                <div class="alert alert-info border-0 shadow-sm mt-4 mb-0 small">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Extensões necessárias do PHP: <code>pdo_sqlite</code>, <code>mbstring</code>, <code>openssl</code>, <code>tokenizer</code>, <code>xml</code>, <code>ctype</code>, <code>json</code>, <code>fileinfo</code> e <code>bcmath</code>. O assistente de instalação verifica tudo automaticamente e avisa se algo faltar.
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Instalar PHP -->
+        <section id="php" class="mb-5">
+            <div class="card bg-body-tertiary border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">2</span>Instalando o PHP</h5>
+                <p class="text-body-secondary">Escolha o seu sistema. Ao final, confirme abrindo o Terminal (ou Prompt de Comando) e digitando:</p>
+                <pre class="code mb-4">php -v</pre>
+
+                <ul class="nav nav-pills mb-3" role="tablist">
+                    <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#os-macos" type="button" role="tab">
+                            <i class="bi bi-apple me-1"></i> macOS
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#os-windows" type="button" role="tab">
+                            <i class="bi bi-windows me-1"></i> Windows
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#os-linux" type="button" role="tab">
+                            <i class="bi bi-ubuntu me-1"></i> Linux
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="os-macos" role="tabpanel">
+                        <p class="mb-2"><strong>Opção A (recomendada) — Homebrew:</strong></p>
+                        <pre class="code mb-3">brew install php</pre>
+                        <p class="mb-2"><strong>Opção B — Laravel Herd:</strong> baixe em <a href="https://herd.laravel.com" target="_blank" rel="noopener">herd.laravel.com</a> e instale. Ele traz o PHP pronto, sem comandos.</p>
+                        <p class="mb-0 small text-body-secondary">Se o Terminal não achar o <code>php</code> depois do Homebrew, reinicie o Terminal e tente de novo.</p>
+                    </div>
+                    <div class="tab-pane fade" id="os-windows" role="tabpanel">
+                        <p class="mb-2"><strong>Opção A (recomendada) — PHP oficial:</strong></p>
+                        <ol class="mb-3">
+                            <li>Baixe o ZIP em <a href="https://windows.php.net/download/" target="_blank" rel="noopener">windows.php.net/download</a> (versão <em>x64 Thread Safe</em>).</li>
+                            <li>Extraia o conteúdo para uma pasta, ex.: <code>C:\php</code>.</li>
+                            <li>Copie <code>php.ini-development</code> para <code>php.ini</code> (mesma pasta).</li>
+                            <li>Adicione <code>C:\php</code> às Variáveis de Ambiente (PATH) do Windows.</li>
+                            <li>Se o Windows pedir, instale também o <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist" target="_blank" rel="noopener">Visual C++ Redistributable</a>.</li>
+                        </ol>
+                        <p class="mb-0"><strong>Opção B — XAMPP:</strong> instale o <a href="https://www.apachefriends.org" target="_blank" rel="noopener">XAMPP</a> e marque a opção PHP. Depois use o <code>php.exe</code> da pasta <code>C:\xampp\php</code>.</p>
+                    </div>
+                    <div class="tab-pane fade" id="os-linux" role="tabpanel">
+                        <p class="mb-2"><strong>Debian / Ubuntu:</strong></p>
+                        <pre class="code mb-3">sudo apt update &amp;&amp; sudo apt install php-cli php-sqlite3 php-mbstring php-xml php-bcmath php-gd php-zip</pre>
+                        <p class="mb-2"><strong>Fedora / RHEL:</strong></p>
+                        <pre class="code mb-3">sudo dnf install php-cli php-pdo php-mbstring php-xml php-bcmath php-gd php-zip</pre>
+                        <p class="mb-0 small text-body-secondary">Após instalar, confira com <code>php -v</code> em um terminal novo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Instalar o app -->
+        <section id="instalar" class="mb-5">
+            <div class="card bg-body-tertiary border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">3</span>Instalando o Runaris Ghost</h5>
+                <ol class="mb-4">
+                    <li class="mb-3">
+                        <strong>Baixe o pacote</strong> <code>runaris-ghost-dist.zip</code> do projeto no GitHub
+                        (<a href="https://github.com/vanheber/Runaris-Ghost" target="_blank" rel="noopener">github.com/vanheber/Runaris-Ghost</a>).
+                        <div class="form-text">O pacote já contém todo o código e todas as dependências PHP — <em>não</em> é preciso rodar Composer nem npm.</div>
+                    </li>
+                    <li class="mb-3">
+                        <strong>Extraia o ZIP</strong> para onde o app vai morar, por exemplo:
+                        <pre class="code mt-2 mb-0">~/Runaris-Ghost          (macOS/Linux)
+C:\Runaris-Ghost         (Windows)</pre>
+                    </li>
+                    <li class="mb-3">
+                        <strong>Abra o Terminal dentro da pasta extraída</strong> e rode:
+                        <pre class="code mt-2 mb-0">php artisan serve</pre>
+                        <div class="form-text">Para usar outra porta: <code>php artisan serve --port=8080</code></div>
+                    </li>
+                    <li class="mb-0">
+                        <strong>Abra o navegador</strong> em <a href="http://127.0.0.1:8000" target="_blank" rel="noopener">http://127.0.0.1:8000</a> — o assistente de instalação aparece automaticamente.
+                    </li>
+                </ol>
+
+                <div class="border-start border-primary border-3 ps-3">
+                    <h6 class="fw-bold mb-1"><i class="bi bi-gear me-1"></i> Alternativa: servidor web próprio</h6>
+                    <p class="text-body-secondary small mb-0">
+                        Se você prefere Apache/Nginx/Herd em vez de <code>php artisan serve</code>, aponte o <em>document root</em> do servidor para a pasta <strong><code>public/</code></strong> dentro da instalação — nunca para a raiz do projeto.
+                        Depois acesse o endereço do servidor no navegador.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Assistente -->
+        <section id="assistente" class="mb-5">
+            <div class="card bg-body-tertiary border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">4</span>O assistente de instalação</h5>
+                <p class="text-body-secondary">O assistente guia você até o fim — são 5 passos rápidos:</p>
+                <ol class="mb-4">
+                    <li class="mb-2"><strong>Verificação de requisitos</strong> — confere versão do PHP, extensões e permissões de escrita. Se algo faltar, a tela diz exatamente o quê (o mais comum é uma extensão desativada no <code>php.ini</code>).</li>
+                    <li class="mb-2"><strong>Banco de dados</strong> — cria o arquivo SQLite automaticamente, sem configuração.</li>
+                    <li class="mb-2"><strong>Seu usuário</strong> — cria o seu login local (admin).</li>
+                    <li class="mb-2"><strong>Chave da IA (opcional)</strong> — pode pular; dá pra adicionar depois em Configurações. A IA é totalmente opcional.</li>
+                    <li class="mb-0"><strong>Concluir</strong> — fecha o assistente e libera o Santuário.</li>
+                </ol>
+                <div class="alert alert-success border-0 shadow-sm mb-0">
+                    <i class="bi bi-check-circle me-2"></i>
+                    Pronto! Seus manuscritos ficam em <code>Markdown puro</code> dentro da pasta <code>storage/</code> — legíveis por humanos, sem amarras. Faça backups em <strong>Configurações → Backup Total do Sistema</strong>.
+                </div>
+            </div>
+        </section>
+
+        <!-- Atualização -->
+        <section id="atualizar" class="mb-5">
+            <div class="card bg-body-tertiary border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-4 text-warning"><i class="bi bi-cloud-arrow-down me-2"></i>Como atualizar</h5>
+                <p class="text-body-secondary">Em instalações pelo pacote ZIP, a atualização é feita "por cima" — <strong>seus dados nunca são tocados</strong>:</p>
+                <ol class="mb-4">
+                    <li class="mb-3">
+                        Baixe o novo <code>runaris-ghost-dist.zip</code>.
+                    </li>
+                    <li class="mb-3">
+                        Extraia <strong>por cima</strong> da pasta onde o app está instalado, substituindo os arquivos:
+                        <pre class="code mt-2 mb-0">unzip -o runaris-ghost-dist.zip -d ~/Runaris-Ghost   (macOS/Linux)</pre>
+                        <div class="form-text">No Windows: extraia e escolha "Substituir arquivos no destino".</div>
+                    </li>
+                    <li class="mb-3">
+                        Reinicie o servidor: encerre o <code>php artisan serve</code> (Ctrl + C) e rode de novo.
+                    </li>
+                    <li class="mb-0">
+                        Abra o navegador — pronto, versão atualizada.
+                    </li>
+                </ol>
+                <div class="alert alert-info border-0 shadow-sm mb-0 small">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Por que assim?</strong> Os arquivos <code>database/database.sqlite</code>, <code>storage/</code> (projetos e backups) e <code>.env</code> não vêm no ZIP — eles ficam no lugar. O botão <em>"Atualizar Sistema"</em> dentro de Configurações só funciona em instalações feitas por <code>git clone</code>; numa instalação por ZIP, use este procedimento.
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacidade -->
+        <section class="mb-4">
+            <div class="card bg-primary bg-opacity-10 border-0 shadow-sm p-4">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-shield-lock fs-2 text-primary me-3"></i>
+                    <div>
+                        <h6 class="fw-bold mb-1">Privacidade por princípio</h6>
+                        <p class="text-body-secondary small mb-0">
+                            Zero telemetria. Nenhum dado seu sai da máquina — exceto, se você configurar, as chamadas à API do Google Gemini para os botões de IA.
+                            Todo o conteúdo é armazenado localmente em arquivos <code>.md</code> e SQLite, sob total controle seu.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-top py-4 text-center text-body-secondary small">
+        <div class="container-lg px-4">
+            <i class="bi bi-c-circle me-1"></i> 2024-2026 Runaris Ghost — GPL-3.0 · <a href="https://github.com/vanheber/Runaris-Ghost" target="_blank" rel="noopener" class="text-decoration-none">Código-fonte</a>
+            <div class="mt-1">Guia em <code>docs/INSTALACAO.html</code> — também acompanha o pacote de instalação.</div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

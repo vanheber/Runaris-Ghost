@@ -30,6 +30,7 @@ cp -R resources $BUILD_DIR/
 cp -R routes $BUILD_DIR/
 cp -R docs $BUILD_DIR/
 cp artisan $BUILD_DIR/
+cp version $BUILD_DIR/version
 cp composer.json $BUILD_DIR/
 cp composer.lock $BUILD_DIR/
 cp package.json $BUILD_DIR/
@@ -48,7 +49,7 @@ mkdir -p $BUILD_DIR/storage/framework/views
 mkdir -p $BUILD_DIR/storage/logs
 
 # 5. Limpar banco de dados local da dist (garantir que vá limpo)
-rm -f $BUILD_DIR/database/database.sqlite
+rm -f $BUILD_DIR/database/database.sqlite $BUILD_DIR/database/*.sqlite-wal $BUILD_DIR/database/*.sqlite-shm $BUILD_DIR/database/*.sqlite-journal
 touch $BUILD_DIR/database/.gitkeep
 
 # 6. Instalar dependências de produção no diretório de build
@@ -57,20 +58,14 @@ cd $BUILD_DIR
 composer install --no-dev --optimize-autoloader --no-interaction --quiet
 cd ..
 
-# 7. Gerar o ZIP
+# 7. Gerar o ZIP (conteúdo na raiz, sem pasta interna)
 echo "🗜️ Gerando pacote ZIP..."
-zip -r $ZIP_NAME $BUILD_DIR -x "*.DS_Store*" > /dev/null
-
-# Opcional: Renomear a pasta interna dentro do zip para facilitar
-# (O comando zip acima inclui o build_temp no caminho, vamos ajustar)
-mv $ZIP_NAME temp_$ZIP_NAME
 cd $BUILD_DIR
 zip -r ../$ZIP_NAME . -x "*.DS_Store*" > /dev/null
 cd ..
 
 # 8. Limpeza final
 rm -rf $BUILD_DIR
-rm -f temp_$ZIP_NAME
 
 echo "✅ Build concluído com sucesso!"
 echo "📦 Arquivo gerado: $ZIP_NAME"
