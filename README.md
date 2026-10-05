@@ -28,7 +28,7 @@
 
 ## 📦 Instalação (Usuário Final)
 
-Baixe o pacote `runaris-ghost-dist.zip` (raiz do repositório — já contém código + dependências), extraia e siga o passo a passo em **[docs/INSTALACAO.html](docs/INSTALACAO.html)**. Requisito único: PHP 8.3+.
+Baixe o pacote `runaris-ghost-dist.zip` (raiz do repositório — já contém código + dependências), extraia e siga o passo a passo em **[docs/INSTALACAO.html](docs/INSTALACAO.html)**. Requisito único: PHP 8.3+. Na pasta extraída também há um `index.html` com os 3 passos rápidos (links de instalação do PHP + botão para o instalador).
 
 ---
 

@@ -92,7 +92,7 @@ phpunit              # PHP tests (limited coverage)
 | `resources/css/app.css` | Centralized design system CSS (~1100 lines) |
 | `routes/web.php` | All routes (web + project-scoped) |
 | `design/` | UI mockups from design phase |
-| `docs/` | EULA + User Manual |
+| `docs/` | EULA, User Manual, install guide (`INSTALACAO.html`), dist landing page (`index.html`) |
 | `PROTOCOL.md` | Development protocol (design rules, security policy, methodology) |
 | `ROADMAP.md` | Product roadmap (Phase 1 done, Phase 2-3 planned) |
 
