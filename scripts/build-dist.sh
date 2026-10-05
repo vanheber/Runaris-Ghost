@@ -42,6 +42,7 @@ rm -rf $BUILD_DIR/public/storage   # symlink -> storage/app/public (carregaria d
 
 # 4. Página de entrada com as instruções de instalação
 cp docs/index.html $BUILD_DIR/index.html
+cp -R docs/assets $BUILD_DIR/assets
 
 # 5. Criar estrutura de storage necessária
 mkdir -p $BUILD_DIR/storage/app/public
