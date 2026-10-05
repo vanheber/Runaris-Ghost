@@ -44,8 +44,8 @@ class GeminiService
     public function generate(string $prompt, string $model = self::FLASH, ?array $systemInstruction = null): string
     {
         $model = match ($model) {
-            self::FLASH => SystemSetting::getSetting('gemini_model_flash', self::MODEL_FLASH),
-            self::PRO => SystemSetting::getSetting('gemini_model_pro', self::MODEL_PRO),
+            self::FLASH => self::effectiveModel(self::FLASH),
+            self::PRO => self::effectiveModel(self::PRO),
             default => $model,
         };
 
@@ -95,7 +95,6 @@ class GeminiService
         if ($tier === self::PRO) {
             return [
                 'gemini-3.1-pro-preview' => 'Gemini 3.1 Pro (Recomendado)',
-                'gemini-2.5-pro' => 'Gemini 2.5 Pro',
             ];
         }
 
@@ -105,9 +104,20 @@ class GeminiService
             'gemini-3.6-flash' => 'Gemini 3.6 Flash',
             'gemini-3.5-flash' => 'Gemini 3.5 Flash',
             'gemini-3.5-flash-lite' => 'Gemini 3.5 Flash-Lite',
-            'gemini-2.5-flash' => 'Gemini 2.5 Flash',
-            'gemini-2.5-flash-lite' => 'Gemini 2.5 Flash-Lite',
         ];
+    }
+
+    /**
+     * Modelo efetivo de um tier: o salvo se ainda estiver no seletor, senão o padrão.
+     * Modelos 2.5 removidos do seletor (10/2026) — a Google restringiu o acesso a
+     * projetos já ativos; instalações salvas em 2.5 caem no padrão até o usuário salvar.
+     */
+    public static function effectiveModel(string $tier): string
+    {
+        $saved = SystemSetting::getSetting($tier === self::PRO ? 'gemini_model_pro' : 'gemini_model_flash');
+        $default = $tier === self::PRO ? self::MODEL_PRO : self::MODEL_FLASH;
+
+        return isset(self::availableModels($tier)[$saved]) ? $saved : $default;
     }
 
     /**

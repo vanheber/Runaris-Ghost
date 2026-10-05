@@ -40,8 +40,8 @@ class SettingsController extends Controller
         }
 
         $geminiApiKey = \App\Models\SystemSetting::getSetting('gemini_api_key');
-        $geminiModelFlash = \App\Models\SystemSetting::getSetting('gemini_model_flash', \App\Services\GeminiService::MODEL_FLASH);
-        $geminiModelPro = \App\Models\SystemSetting::getSetting('gemini_model_pro', \App\Services\GeminiService::MODEL_PRO);
+        $geminiModelFlash = \App\Services\GeminiService::effectiveModel(\App\Services\GeminiService::FLASH);
+        $geminiModelPro = \App\Services\GeminiService::effectiveModel(\App\Services\GeminiService::PRO);
         $flashModels = \App\Services\GeminiService::availableModels(\App\Services\GeminiService::FLASH);
         $proModels = \App\Services\GeminiService::availableModels(\App\Services\GeminiService::PRO);
         $currentVersion = $this->updateService->getCurrentVersion();

@@ -81,7 +81,7 @@ php artisan serve
 *   **Core**: Laravel 12.
 *   **Frontend**: Vanilla JS + Bootstrap 5.3 (Strict Design).
 *   **Database**: SQLite.
-*   **IA**: Google Gemini 2.5 Cloud (via API Key local).
+*   **IA**: Google Gemini (modelos Flash/Pro escolhíveis, via API Key local).
 
 ---
 

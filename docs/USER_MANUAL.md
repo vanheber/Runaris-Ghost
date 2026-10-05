@@ -45,7 +45,7 @@ O Runaris Ghost prioriza a soberania dos seus dados. Você pode exportar seu tra
 *   **Restauração Externa**: Permite importar um arquivo ZIP de backup para restaurar o projeto ou movê-lo entre diferentes instalações do Runaris Ghost.
 
 ## 6. Inteligência Artificial (Botões Mágicos) 🌟
-O Runaris Ghost utiliza a tecnologia **Google Gemini 2.5** para atuar como seu co-autor:
+O Runaris Ghost utiliza a tecnologia **Google Gemini** para atuar como seu co-autor. O modelo é escolhível em *Configurações > Inteligência Artificial* — Flash para tarefas rápidas, Pro para o Escritor Fantasma:
 *   **Escritor Fantasma**: No modo *Escrita*, a IA redige parágrafos literários baseando-se no que você planejou e no lore do seu mundo. Se houver texto existente, uma confirmação aparece para evitar substituição acidental.
 *   **Sugerir Ideias**: No modo *Planejamento*, a IA sugere pontos de conflito, objetivos e reviravoltas para estruturar sua cena.
 *   **Revisor**: Corrige gramática do português brasileiro e remove padrões de "AI Slop" (clichês, travessões indevidos, advérbios em diálogo, aberturas genéricas). Possui checkboxes para controlar o que revisar: só gramática, só anti-slop, ou ambos.

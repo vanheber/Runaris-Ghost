@@ -46,7 +46,7 @@ Runaris Ghost prioritizes the sovereignty of your data. You can export your work
 *   **External Restore**: Allows importing a ZIP backup file to restore the project or move it between different Runaris Ghost installations.
 
 ## 6. Artificial Intelligence (Magic Buttons)
-Runaris Ghost uses **Google Gemini 2.5** technology to act as your co-author:
+Runaris Ghost uses **Google Gemini** technology to act as your co-author. The model can be chosen in *Settings > Artificial Intelligence* — Flash for quick tasks, Pro for the Ghost Writer:
 *   **Ghost Writer**: In *Writing* mode, the AI drafts literary paragraphs based on your planning and world lore. If existing text is present, a confirmation prompt appears to prevent accidental overwriting.
 *   **Suggest Ideas**: In *Planning* mode, the AI suggests conflict points, objectives, and plot twists to structure your scene.
 *   **Reviewer**: Corrects Brazilian Portuguese grammar and removes "AI Slop" patterns (cliches, improper em-dashes, adverbs in dialogue, generic openings). Has checkboxes to control what to review: grammar only, anti-slop only, or both.
