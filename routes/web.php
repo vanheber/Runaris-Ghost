@@ -122,6 +122,7 @@ Route::post('/settings/locale', [\App\Http\Controllers\SettingsController::class
 Route::get('/settings/backup', [\App\Http\Controllers\SettingsController::class, 'fullBackup']);
 Route::get('/settings/update/check', [\App\Http\Controllers\UpdateController::class, 'check']);
 Route::post('/settings/update', [\App\Http\Controllers\UpdateController::class, 'update']);
+Route::post('/settings/update/keep', [\App\Http\Controllers\UpdateController::class, 'keepCurrent']);
 Route::post('/settings/rollback', [\App\Http\Controllers\UpdateController::class, 'rollback']);
 Route::post('/settings/factory-reset', [\App\Http\Controllers\SettingsController::class, 'showResetProgress']);
 Route::post('/settings/factory-reset/step-files', [\App\Http\Controllers\SettingsController::class, 'stepCleanFiles']);

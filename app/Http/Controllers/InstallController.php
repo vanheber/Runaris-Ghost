@@ -166,13 +166,8 @@ class InstallController extends Controller
             Artisan::call('cache:clear');
             Artisan::call('view:clear');
 
-            // Link public/storage -> storage/app/public (galeria e exports servidos pelo navegador).
-            // A dist não inclui o link para não carregar dados locais; ele é criado aqui.
-            try {
-                Artisan::call('storage:link', ['--force' => true]);
-            } catch (\Throwable $e) {
-                Log::warning('Install - storage:link falhou: ' . $e->getMessage());
-            }
+            // ponytail: galeria e exports são servidos por controller/rota — o symlink
+            // public/storage é desnecessário (e quebra no Windows sem privilégio), removido.
 
             // Lock the .env file (remove write permissions)
             $envWriter = new EnvWriter();

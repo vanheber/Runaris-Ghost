@@ -1,81 +1,72 @@
 #!/bin/bash
+set -e
 
-# Runaris Ghost - Build Distribution Script
-# Gera um pacote ZIP pronto para instalação (sem arquivos de desenvolvimento).
+# Runaris Ghost - Build do pacote Windows (runtime FrankenPHP embutido)
+# Gera runaris-ghost-win.zip: extrair e dar dois cliques em start.bat.
+# Nao gera pacote universal. Outros SOs rodam a partir do codigo-fonte.
 
-echo "🚀 Iniciando build de distribuição..."
+FRANKEN_VERSION="${FRANKEN_VERSION:-latest}"
+if [ "$FRANKEN_VERSION" = "latest" ]; then
+    FRANKEN_URL="https://github.com/php/frankenphp/releases/latest/download/frankenphp-windows-x86_64.zip"
+else
+    FRANKEN_URL="https://github.com/php/frankenphp/releases/download/${FRANKEN_VERSION}/frankenphp-windows-x86_64.zip"
+fi
 
-# 1. Compilar Assets (Vite)
+BUILD_DIR="build_temp"
+ZIP_NAME="runaris-ghost-win.zip"
+
+echo "🚀 Build Runaris Ghost (Windows) — FrankenPHP ${FRANKEN_VERSION}"
+
 echo "📦 Compilando assets (Vite)..."
 npm run build
 
-BUILD_DIR="build_temp"
-ZIP_NAME="runaris-ghost-dist.zip"
-
-rm -rf $BUILD_DIR
-rm -f $ZIP_NAME
-mkdir $BUILD_DIR
+rm -rf "$BUILD_DIR" "$ZIP_NAME"
+mkdir -p "$BUILD_DIR"
 
 echo "📂 Preparando arquivos..."
+cp -R app bootstrap config database lang mcp public resources routes docs "$BUILD_DIR"/
+cp artisan version composer.json LICENSE .env.example "$BUILD_DIR"/
 
-# 2. Copiar apenas o necessário para executar a aplicação
-cp -R app $BUILD_DIR/
-cp -R bootstrap $BUILD_DIR/
-cp -R config $BUILD_DIR/
-cp -R database $BUILD_DIR/
-cp -R lang $BUILD_DIR/
-cp -R public $BUILD_DIR/
-cp -R resources $BUILD_DIR/
-cp -R routes $BUILD_DIR/
-cp -R docs $BUILD_DIR/
-cp artisan $BUILD_DIR/
-cp version $BUILD_DIR/version
-cp composer.json $BUILD_DIR/
-cp composer.lock $BUILD_DIR/
-cp LICENSE $BUILD_DIR/
-cp .env.example $BUILD_DIR/.env.example
+# Remover o que só serve ao desenvolvimento
+rm -rf "$BUILD_DIR"/database/factories "$BUILD_DIR"/database/seeders
+rm -rf "$BUILD_DIR"/resources/css "$BUILD_DIR"/resources/js
+rm -rf "$BUILD_DIR"/public/storage   # symlink -> storage/app/public (levaria dados locais)
 
-# 3. Remover o que só serve ao desenvolvimento
-rm -rf $BUILD_DIR/database/factories $BUILD_DIR/database/seeders
-rm -rf $BUILD_DIR/resources/css $BUILD_DIR/resources/js
-rm -rf $BUILD_DIR/public/storage   # symlink -> storage/app/public (carregaria dados locais)
+# Estrutura de storage vazia + banco limpo
+mkdir -p "$BUILD_DIR"/storage/app/public \
+         "$BUILD_DIR"/storage/framework/cache/data \
+         "$BUILD_DIR"/storage/framework/sessions \
+         "$BUILD_DIR"/storage/framework/testing \
+         "$BUILD_DIR"/storage/framework/views \
+         "$BUILD_DIR"/storage/logs
+rm -f "$BUILD_DIR"/database/*.sqlite "$BUILD_DIR"/database/*.sqlite-wal \
+      "$BUILD_DIR"/database/*.sqlite-shm "$BUILD_DIR"/database/*.sqlite-journal
+touch "$BUILD_DIR"/database/.gitkeep
 
-# 4. Página de entrada com as instruções de instalação
-cp docs/index.html $BUILD_DIR/index.html
-cp -R docs/assets $BUILD_DIR/assets
-
-# 5. Criar estrutura de storage necessária
-mkdir -p $BUILD_DIR/storage/app/public
-mkdir -p $BUILD_DIR/storage/framework/cache/data
-mkdir -p $BUILD_DIR/storage/framework/sessions
-mkdir -p $BUILD_DIR/storage/framework/testing
-mkdir -p $BUILD_DIR/storage/framework/views
-mkdir -p $BUILD_DIR/storage/logs
-
-# 6. Limpar banco de dados local da dist (garantir que vá limpo)
-rm -f $BUILD_DIR/database/*.sqlite $BUILD_DIR/database/*.sqlite-wal $BUILD_DIR/database/*.sqlite-shm $BUILD_DIR/database/*.sqlite-journal
-touch $BUILD_DIR/database/.gitkeep
-
-# 7. Instalar dependências de produção no diretório de build
 echo "📥 Instalando dependências de produção (Composer)..."
-cd $BUILD_DIR
-composer install --no-dev --optimize-autoloader --no-interaction --quiet
-cd ..
+( cd "$BUILD_DIR" && composer install --no-dev --optimize-autoloader --no-interaction --quiet )
 
-# 8. Limpar resíduos gerados durante o build
-rm -f $BUILD_DIR/.env               # criado ao subir o app no composer install — o instalador gera um novo
-rm -f $BUILD_DIR/composer.lock      # não é necessário em runtime
-rm -f $BUILD_DIR/bootstrap/cache/config.php $BUILD_DIR/bootstrap/cache/routes.php $BUILD_DIR/bootstrap/cache/events.php
+rm -f "$BUILD_DIR"/.env
+rm -f "$BUILD_DIR"/composer.lock
+rm -f "$BUILD_DIR"/bootstrap/cache/config.php "$BUILD_DIR"/bootstrap/cache/routes.php "$BUILD_DIR"/bootstrap/cache/events.php
 
-# 9. Gerar o ZIP (conteúdo na raiz, sem pasta interna)
-echo "🗜️ Gerando pacote ZIP..."
-cd $BUILD_DIR
-zip -r ../$ZIP_NAME . -x "*.DS_Store*" > /dev/null
-cd ..
+echo "⬇️  Baixando runtime FrankenPHP..."
+mkdir -p "$BUILD_DIR"/runtime
+curl -fL "$FRANKEN_URL" -o "$BUILD_DIR"/runtime/frankenphp-win.zip
+( cd "$BUILD_DIR"/runtime && unzip -o -q frankenphp-win.zip && rm frankenphp-win.zip )
 
-# 10. Limpeza final
-rm -rf $BUILD_DIR
+echo "🧩 Injetando launcher e php.ini..."
+cp scripts/dist/win/start.bat scripts/dist/win/start-mcp.bat scripts/dist/win/rollback.bat "$BUILD_DIR"/
+cp scripts/dist/win/php.ini "$BUILD_DIR"/runtime/php.ini
 
-echo "✅ Build concluído com sucesso!"
-echo "📦 Arquivo gerado: $ZIP_NAME"
-echo "💡 Para instalar: extraia o ZIP, leia o index.html e rode 'php artisan serve'."
+# Página de entrada com as instruções
+cp docs/index.html "$BUILD_DIR"/index.html
+cp -R docs/assets "$BUILD_DIR"/assets
+
+echo "🗜️  Gerando pacote ZIP..."
+( cd "$BUILD_DIR" && zip -r -q "../$ZIP_NAME" . -x "*.DS_Store*" )
+
+rm -rf "$BUILD_DIR"
+
+echo "✅ Build concluído: $ZIP_NAME"
+echo "💡 Instalar: extraia o ZIP e dê dois cliques em start.bat."

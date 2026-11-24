@@ -40,7 +40,12 @@ class ProjectBackupService
                 foreach ($files as $name => $file) {
                     // Skip the snapshots directory itself to avoid recursion
                     if (!$file->isDir()) {
-                        $filePath = $file->getRealPath();
+                        // getPathname() (não getRealPath): em instalações com
+                        // storage/app/private/projects em symlink, o real path sai
+                        // de baixo de $projectPath e o substr abaixo devolve vazio,
+                        // gravando o caminho absoluto dentro do zip — snapshot
+                        // irrecuperável ("database.sqlite não encontrado").
+                        $filePath = $file->getPathname();
                         
                         // Ignore current snapshots folder and export folder
                         if (strpos($filePath, DIRECTORY_SEPARATOR . 'snapshots' . DIRECTORY_SEPARATOR) !== false ||

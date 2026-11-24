@@ -264,9 +264,16 @@ class ProjectController extends Controller
         $project = Project::where('uuid', $project_uuid)->firstOrFail();
         
         // Delete project assets directory
-        $projectPath = "private/projects/{$project->uuid}";
-        \Illuminate\Support\Facades\Storage::disk('local')->deleteDirectory($projectPath);
-        
+        // File (caminho absoluto), não Storage: em DEV projects é symlink para o
+        // Runaris-Vault e o Flysystem recusa sair da raiz do disco (throw: false,
+        // falha silenciosa) — sobrava a pasta com banco e manuscrito.
+        \Illuminate\Support\Facades\File::deleteDirectory($project->getStoragePath());
+        // exports ficam no disco público (storage/app/public), fora da pasta do
+        // projeto: sem isto o livro exportado sobrevive ao projeto apagado.
+        \Illuminate\Support\Facades\File::deleteDirectory(
+            \Illuminate\Support\Facades\Storage::disk('public')->path("projects/{$project->uuid}")
+        );
+
         $project->delete();
 
         return response()->json(['success' => true, 'message' => __('Projeto destruido permanentemente.')]);

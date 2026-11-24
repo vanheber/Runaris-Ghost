@@ -17,7 +17,7 @@ Two instances run in parallel:
 
 A change is only done when it works on **both**: never assume a git clone, shell/artisan access, or the vault symlink exists on the user install — and keep the update path working for a non-technical user.
 
-Installations distributed as the `runaris-ghost-dist.zip` package (deps bundled, no git) are **updated by extracting the new zip over the old folder** — `storage/`, `database/database.sqlite` and `.env` are never in the zip, so data survives. The Guardian in-app update button requires git and does not apply there (see `docs/INSTALACAO.html`).
+Installations distributed as the `runaris-ghost-win.zip` package (Windows, bundles a FrankenPHP runtime in `runtime/`, no git) are **updated from inside the app** (Guardian Update System): it downloads the new zip and `start.bat` applies it on the next launch — `storage/`, `database/database.sqlite` and `.env` are never in the zip, so data survives. `rollback.bat` restores a pre-update snapshot. The Guardian in-app "update" action requires the packaged install or git (see `docs/INSTALACAO.html`).
 
 ## Key terms
 
@@ -96,7 +96,24 @@ phpunit              # PHP tests (limited coverage)
 | `PROTOCOL.md` | Development protocol (design rules, security policy, methodology) |
 | `ROADMAP.md` | Product roadmap (Phase 1 done, Phase 2-3 planned) |
 
-## Design rules (from PROTOCOL.md)
+## MCP (agentes de IA)
+
+Servidor MCP dentro do app, para um agente operar o santuário pela rede. Processo separado do app: `start-mcp.bat` (Windows) sobe o FrankenPHP com raiz `mcp/` em `0.0.0.0:7788`, enquanto a UI continua em `127.0.0.1`.
+
+| Path | Role |
+|---|---|
+| `mcp/index.php` | Front controller HTTP — único arquivo exposto; token + JSON-RPC |
+| `app/Mcp/Server.php` | Protocolo MCP/JSON-RPC (initialize, ping, tools/list, tools/call) |
+| `app/Mcp/Tools.php` | Catálogo: nome, descrição e JSON Schema das 41 ferramentas |
+| `app/Mcp/Handlers.php` | Implementação — usa os Services do app; IA chama os Controllers |
+| `app/Console/Commands/McpTokenCommand.php` | `php artisan mcp:token [--reset]` — gera e imprime URL + token |
+| `app/Console/Commands/McpServeCommand.php` | `php artisan mcp:serve` — mesmo servidor via stdio |
+| `scripts/dist/win/start-mcp.bat` | Launcher Windows (token, porta, firewall) |
+| `start-mcp.sh` | Launcher macOS/Linux (`php -S`; mesmo fluxo do .bat) |
+
+Autenticação: `MCP_TOKEN` no `.env`, header `Authorization: Bearer`. Sem token nada roda; o token sobrevive ao update porque o `.env` não entra no zip. Guia: `docs/MCP.md`.
+
+
 
 - **No `style` attribute** in HTML — use CSS classes only
 - **No `!important`** in CSS — use specificity

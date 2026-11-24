@@ -156,11 +156,18 @@
                             </div>
                         </div>
 
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2 flex-wrap">
                             <form action="{{ url('/settings/update') }}" method="POST" id="update-form">
                                 @csrf
                                 <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm" id="btn-update">
                                     <i class="bi bi-cloud-arrow-down me-2"></i> {{ __('Atualizar Sistema') }}
+                                </button>
+                            </form>
+
+                            <form action="{{ url('/settings/update/keep') }}" method="POST" id="keep-form" class="d-none">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-secondary rounded-pill px-4">
+                                    <i class="bi bi-hand-thumbs-up me-2"></i> {{ __('Manter versão atual') }}
                                 </button>
                             </form>
 
@@ -174,11 +181,22 @@
                             @endif
                         </div>
                         
+                        @php($packaged = is_dir(base_path('runtime')))
                         <div class="mt-3">
                             <p class="text-body-secondary small mb-0">
-                                <i class="bi bi-info-circle me-1"></i> 
-                                {{ __('Um backup de segurança é criado automaticamente antes de qualquer atualização.') }}
+                                <i class="bi bi-info-circle me-1"></i>
+                                @if($packaged)
+                                    {{ __('O pacote será baixado agora. Feche esta janela e execute o start.bat novamente para aplicar a atualização.') }}
+                                @else
+                                    {{ __('Um backup de segurança é criado automaticamente antes de qualquer atualização.') }}
+                                @endif
                             </p>
+                            @if($packaged)
+                                <p class="text-body-secondary small mb-0 mt-1">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i>
+                                    {{ __('Para reverter uma atualização, feche o programa e execute o rollback.bat na pasta da instalação.') }}
+                                </p>
+                            @endif
                         </div>
                     </div>
 
@@ -368,16 +386,21 @@
                         const btn = document.getElementById('btn-update');
                         btn.innerHTML = `<i class="bi bi-stars me-2"></i> ${window.__('Instalar Versão')} ${data.latest_version}`;
                         btn.classList.replace('btn-primary', 'btn-success');
+                        document.getElementById('keep-form')?.classList.remove('d-none');
                     }
                 })
                 .catch(err => console.error('Update check failed:', err));
 
             // Prevent multiple clicks
-            document.getElementById('update-form')?.addEventListener('submit', function() {
-                const btn = document.getElementById('btn-update');
-                btn.disabled = true;
-                btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> ${window.__('Atualizando...')}`;
+            const blockOnSubmit = (id, label) => document.getElementById(id)?.addEventListener('submit', function() {
+                const btn = this.querySelector('button[type=submit]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> ${window.__(label)}`;
+                }
             });
+            blockOnSubmit('update-form', 'Atualizando...');
+            blockOnSubmit('keep-form', 'Salvando...');
         @endif
     });
 </script>

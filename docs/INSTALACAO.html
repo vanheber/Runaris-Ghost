@@ -75,10 +75,10 @@
             <div class="card bg-body-tertiary border-0 shadow-sm p-4">
                 <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">1</span>O que você vai precisar</h5>
                 <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>PHP 8.3 ou superior</strong> — é a única dependência de sistema. O pacote de instalação já traz todo o resto (bibliotecas e interfaces compiladas).</li>
+                    <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>O pacote Windows já vem pronto</strong> — o PHP e todas as bibliotecas estão embutidos dentro da pasta <code>runtime/</code>. Nada a instalar.</li>
                     <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>Um navegador</strong> — Chrome, Firefox, Edge ou Safari.</li>
                     <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i><strong>~300 MB de espaço livre</strong> em disco.</li>
-                    <li class="mb-0"><i class="bi bi-check2-circle text-success me-2"></i><strong>Opcional:</strong> Git — apenas se você for clonar o código-fonte em vez de usar o pacote ZIP.</li>
+                    <li class="mb-0"><i class="bi bi-check2-circle text-success me-2"></i><strong>Opcional:</strong> Git e PHP — apenas se você for clonar o código-fonte em vez de usar o pacote ZIP.</li>
                 </ul>
                 <div class="alert alert-info border-0 shadow-sm mt-4 mb-0 small">
                     <i class="bi bi-info-circle me-2"></i>
@@ -91,6 +91,10 @@
         <section id="php" class="mb-5">
             <div class="card bg-body-tertiary border-0 shadow-sm p-4">
                 <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">2</span>Instalando o PHP</h5>
+                <div class="alert alert-warning border-0 shadow-sm small">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <strong>Só necessário para quem vai rodar o código-fonte</strong> (git clone) em vez do pacote Windows. No pacote <code>runaris-ghost-win.zip</code> o PHP já vem embutido em <code>runtime/</code> — pule esta seção.
+                </div>
                 <p class="text-body-secondary">Escolha o seu sistema. Ao final, confirme abrindo o Terminal (ou Prompt de Comando) e digitando:</p>
                 <pre class="code mb-4">php -v</pre>
 
@@ -144,34 +148,35 @@
         <!-- 3. Instalar o app -->
         <section id="instalar" class="mb-5">
             <div class="card bg-body-tertiary border-0 shadow-sm p-4">
-                <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">3</span>Instalando o Runaris Ghost</h5>
+                <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">3</span>Instalando o Runaris Ghost (Windows)</h5>
                 <ol class="mb-4">
                     <li class="mb-3">
-                        <strong>Baixe o pacote</strong> <code>runaris-ghost-dist.zip</code> do projeto no GitHub
-                        (<a href="https://github.com/vanheber/Runaris-Ghost" target="_blank" rel="noopener">github.com/vanheber/Runaris-Ghost</a>).
-                        <div class="form-text">O pacote já contém todo o código e todas as dependências PHP — <em>não</em> é preciso rodar Composer nem npm.</div>
+                        <strong>Baixe o pacote</strong> <code>runaris-ghost-win.zip</code> da página de Releases do projeto
+                        (<a href="https://github.com/vanheber/Runaris-Ghost/releases" target="_blank" rel="noopener">github.com/vanheber/Runaris-Ghost/releases</a>).
+                        <div class="form-text">O pacote contém o código, todas as dependências <em>e</em> o PHP embutido — nada a instalar.</div>
                     </li>
                     <li class="mb-3">
-                        <strong>Extraia o ZIP</strong> para onde o app vai morar, por exemplo:
-                        <pre class="code mt-2 mb-0">~/Runaris-Ghost          (macOS/Linux)
-C:\Runaris-Ghost         (Windows)</pre>
-                        <div class="form-text">Na raiz da pasta extraída existe um <code>index.html</code> — abra-o (dê dois cliques) para repetir estes 3 passos com links de download do PHP e um botão que abre o instalador.</div>
+                        <strong>Extraia o ZIP completo</strong> para onde o app vai morar, por exemplo:
+                        <pre class="code mt-2 mb-0">C:\Runaris-Ghost</pre>
+                        <div class="form-text">Extraia tudo — <em>inclusive a pasta <code>runtime/</code></em>. Na raiz existe um <code>index.html</code> (dê dois cliques) com estas mesmas instruções.</div>
                     </li>
                     <li class="mb-3">
-                        <strong>Abra o Terminal dentro da pasta extraída</strong> e rode:
-                        <pre class="code mt-2 mb-0">php artisan serve</pre>
-                        <div class="form-text">Para usar outra porta: <code>php artisan serve --port=8080</code></div>
+                        <strong>Dê dois cliques em <code>start.bat</code></strong>.
+                        <div class="form-text">Uma janela preta abre, o navegador é aberto sozinho no assistente de instalação. Deixe essa janela aberta enquanto usa o app; feche-a para encerrar.</div>
+                    </li>
+                    <li class="mb-3">
+                        <strong>Se o Windows avisar</strong> sobre um "aplicativo não reconhecido", clique em <em>Mais informações → Executar mesmo assim</em>. É o seu próprio programa local.
                     </li>
                     <li class="mb-0">
-                        <strong>Abra o navegador</strong> em <a href="http://127.0.0.1:8000" target="_blank" rel="noopener">http://127.0.0.1:8000</a> — o assistente de instalação aparece automaticamente.
+                        <strong>Pronto:</strong> siga o assistente (próxima seção).
                     </li>
                 </ol>
 
                 <div class="border-start border-primary border-3 ps-3">
-                    <h6 class="fw-bold mb-1"><i class="bi bi-gear me-1"></i> Alternativa: servidor web próprio</h6>
+                    <h6 class="fw-bold mb-1"><i class="bi bi-gear me-1"></i> Alterar a porta</h6>
                     <p class="text-body-secondary small mb-0">
-                        Se você prefere Apache/Nginx/Herd em vez de <code>php artisan serve</code>, aponte o <em>document root</em> do servidor para a pasta <strong><code>public/</code></strong> dentro da instalação — nunca para a raiz do projeto.
-                        Depois acesse o endereço do servidor no navegador.
+                        O <code>start.bat</code> detecta uma porta livre automaticamente (geralmente <code>http://127.0.0.1:8000</code>).
+                        Para fixar outra, basta iniciar a instalação por um servidor próprio apontado para a pasta <strong><code>public/</code></strong> — nunca para a raiz do projeto.
                     </p>
                 </div>
             </div>
@@ -199,27 +204,26 @@ C:\Runaris-Ghost         (Windows)</pre>
         <!-- Atualização -->
         <section id="atualizar" class="mb-5">
             <div class="card bg-body-tertiary border-0 shadow-sm p-4">
-                <h5 class="fw-bold mb-4 text-warning"><i class="bi bi-cloud-arrow-down me-2"></i>Como atualizar</h5>
-                <p class="text-body-secondary">Em instalações pelo pacote ZIP, a atualização é feita "por cima" — <strong>seus dados nunca são tocados</strong>:</p>
+                <h5 class="fw-bold mb-4 text-warning"><i class="bi bi-cloud-arrow-down me-2"></i>Como atualizar (Windows)</h5>
+                <p class="text-body-secondary">Pelo pacote Windows, a atualização é feita <strong>pelo próprio app</strong> — seus dados nunca são tocados:</p>
                 <ol class="mb-4">
                     <li class="mb-3">
-                        Baixe o novo <code>runaris-ghost-dist.zip</code>.
+                        Abra <strong>Configurações → Guardião</strong> (aba Sistema).
                     </li>
                     <li class="mb-3">
-                        Extraia <strong>por cima</strong> da pasta onde o app está instalado, substituindo os arquivos:
-                        <pre class="code mt-2 mb-0">unzip -o runaris-ghost-dist.zip -d ~/Runaris-Ghost   (macOS/Linux)</pre>
-                        <div class="form-text">No Windows: extraia e escolha "Substituir arquivos no destino".</div>
+                        Quando houver versão nova, clique em <strong>Instalar Versão X</strong>. O pacote é baixado em segundo plano.
+                        <div class="form-text">Preferiu continuar na versão atual? Clique em <strong>Manter versão atual</strong> — não avisaremos mais sobre aquela versão.</div>
                     </li>
                     <li class="mb-3">
-                        Reinicie o servidor: encerre o <code>php artisan serve</code> (Ctrl + C) e rode de novo.
+                        <strong>Feche a janela preta</strong> do <code>start.bat</code> e <strong>execute o <code>start.bat</code> novamente</strong> — ele aplica a atualização antes de iniciar.
                     </li>
                     <li class="mb-0">
-                        Abra o navegador — pronto, versão atualizada.
+                        <strong>Se algo der errado</strong>, o <code>start.bat</code> reverte sozinho para a versão anterior. Para reverter manualmente, rode o <code>rollback.bat</code>.
                     </li>
                 </ol>
                 <div class="alert alert-info border-0 shadow-sm mb-0 small">
                     <i class="bi bi-info-circle me-2"></i>
-                    <strong>Por que assim?</strong> Os arquivos <code>database/database.sqlite</code>, <code>storage/</code> (projetos e backups) e <code>.env</code> não vêm no ZIP — eles ficam no lugar. O botão <em>"Atualizar Sistema"</em> dentro de Configurações só funciona em instalações feitas por <code>git clone</code>; numa instalação por ZIP, use este procedimento.
+                    <strong>Por que assim?</strong> Os arquivos <code>database/database.sqlite</code>, <code>storage/</code> (projetos e backups) e <code>.env</code> nunca entram no pacote de atualização — ficam no lugar. O botão <em>"Atualizar Sistema"</em> só mostra a opção "Desfazer atualização" em instalações por <code>git clone</code>; no pacote Windows, o rollback é o <code>rollback.bat</code>.
                 </div>
             </div>
         </section>

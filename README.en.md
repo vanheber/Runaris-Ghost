@@ -30,7 +30,9 @@
 
 ## 📦 Installation (End User)
 
-Download the `runaris-ghost-dist.zip` package (root of the repository — already contains code + dependencies), extract, and follow the step-by-step in **[docs/INSTALACAO.html](docs/INSTALACAO.html)**. Single requirement: PHP 8.3+. In the extracted folder, there is also an `index.html` with the 3 quick steps (links for PHP installation + button for the installer).
+Download the **`runaris-ghost-win.zip`** package from the [Releases](https://github.com/vanheber/Runaris-Ghost/releases) page, extract it, and **double-click `start.bat`**. PHP is bundled — nothing to install. Follow the step-by-step in **[docs/INSTALACAO.html](docs/INSTALACAO.html)**.
+
+Other systems (macOS/Linux): run from source (see below).
 
 ---
 

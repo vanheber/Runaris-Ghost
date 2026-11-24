@@ -28,9 +28,11 @@
 
 ---
 
-## 📦 Instalação (Usuário Final)
+## 📦 Instalação (Usuário Final — Windows)
 
-Baixe o pacote `runaris-ghost-dist.zip` (raiz do repositório — já contém código + dependências), extraia e siga o passo a passo em **[docs/INSTALACAO.html](docs/INSTALACAO.html)**. Requisito único: PHP 8.3+. Na pasta extraída também há um `index.html` com os 3 passos rápidos (links de instalação do PHP + botão para o instalador).
+Baixe o pacote **`runaris-ghost-win.zip`** na página de [Releases](https://github.com/vanheber/Runaris-Ghost/releases), extraia e **dê dois cliques em `start.bat`**. O PHP já vem embutido — nada a instalar. Siga o passo a passo em **[docs/INSTALACAO.html](docs/INSTALACAO.html)**.
+
+Outros sistemas (macOS/Linux): rode a partir do código-fonte (seção abaixo).
 
 ---
 
@@ -56,6 +58,18 @@ php artisan serve
 ```
 
 *Nota: Não oferecemos suporte para problemas de ambiente ou compilação manual. Se encontrar um **bug técnico real** no código, abra uma Issue.*
+
+---
+
+## 🤖 Servidor MCP (agentes de IA)
+
+O Runaris Ghost expõe um **servidor MCP** (Model Context Protocol) para que um agente de IA — Claude, Codex, opencode e afins — leia e escreva no santuário: manuscrito, fichas, Bíblia, IA literária, exports, snapshots e saúde da instalação.
+
+- **Windows (pacote)**: dê dois cliques em **`start-mcp.bat`**. Ele gera o token, imprime a URL e abre o servidor na porta `7788`. O app continua em `127.0.0.1` — só o MCP fica exposto na rede.
+- **macOS/Linux**: `./start-mcp.sh` (mesmo comportamento na rede) ou — melhor, se o agente roda na mesma máquina — `php artisan mcp:serve`, que fala stdio sem porta nem token.
+
+Sem o token do `.env` (`MCP_TOKEN`) nenhuma ferramenta roda. Guia completo, lista de ferramentas e segurança: **[docs/MCP.md](docs/MCP.md)**.
+
 
 ---
 

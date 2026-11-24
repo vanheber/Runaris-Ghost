@@ -32,6 +32,15 @@ Introdução de um modelo de "Apoio com Benefícios" para usuários que desejam 
 - **Multi-Cloud Sync**: Integração (opcional e via API Key do usuário) com provedores de nuvem para backup automático.
 - **Plugins de Terceiros**: Arquitetura para permitir que a comunidade crie extensões para o editor.
 
+### 🖥️ Distribuição Multiplataforma
+- **Windows (pacote)**: `runaris-ghost-win.zip` com runtime FrankenPHP embutido — extrair, dois cliques em `start.bat`, nada a instalar. **Status**: implementado.
+- **macOS (pacote)**: mesmo nível de experiência do Windows (runtime embutido, dois cliques, servidor local + navegador), sem exigir PHP/Composer/Node do autor. **Status**: na fila.
+  - **Binário**: FrankenPHP `darwin-arm64` (e `x64`) baixado no build, como o `build-dist.sh` já faz no Windows.
+  - **Launcher**: `start.command` equivalente ao `start.bat` (porta livre, aplica update pendente, abre o navegador).
+  - **Gatekeeper**: o pacote chega com quarentena — ou o usuário libera na primeira execução (Ajustes > Privacidade e Segurança), ou o build passa por assinatura + notarização Apple.
+  - **Update**: o Guardian precisa de um caminho de aplicação fora do `.bat` (hoje o pacote Windows depende dele para aplicar o zip no próximo boot).
+  - **MCP**: acompanha o pacote, como no Windows (token no `.env`, sobrevive à atualização).
+
 ---
 
 ## 🔴 Fase 3: Expansão de Fronteiras (Visão de Longo Prazo)

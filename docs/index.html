@@ -135,7 +135,7 @@
         <img src="assets/lg-ghost-hz-color-inverted.svg" class="brand-logo-img mb-3" alt="Runaris Ghost">
         <span class="badge badge-soft text-uppercase fw-semibold mb-3 ls-wide">Santuário Digital para Autores</span>
         <p class="text-dim lead mb-0 mx-auto intro">
-            Este pacote já vem completo. Você só precisa do <strong>PHP</strong> e de <strong>3 passos</strong> para instalar.
+            Este pacote já vem completo — <strong>inclusive o PHP</strong>. São <strong>2 passos</strong> para instalar.
             Todos os dados ficam <strong>100% locais</strong>.
         </p>
     </header>
@@ -144,27 +144,17 @@
         <!-- Passo 1 -->
         <div class="col-lg-4">
             <div class="glass-card d-flex flex-column">
-                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">1</span>Instale o PHP 8.3+</h5>
-                <p class="text-dim small">Dependência única. Escolha o seu sistema:</p>
+                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">1</span>Extraia o pacote</h5>
+                <p class="text-dim small">Clique com o botão direito no <code>runaris-ghost-win.zip</code> e escolha <strong>"Extrair tudo"</strong>.</p>
                 <ul class="list-unstyled small mb-3">
                     <li class="mb-2">
-                        <i class="bi bi-apple me-1"></i><strong>macOS:</strong>
-                        <a class="link-soft" href="https://brew.sh" target="_blank" rel="noopener">Homebrew</a> —
-                        <code>brew install php</code>, ou <a class="link-soft" href="https://herd.laravel.com" target="_blank" rel="noopener">Laravel Herd</a>.
-                    </li>
-                    <li class="mb-2">
-                        <i class="bi bi-windows me-1"></i><strong>Windows:</strong>
-                        <a class="link-soft" href="https://windows.php.net/download/" target="_blank" rel="noopener">windows.php.net</a> (x64) ou
-                        <a class="link-soft" href="https://www.apachefriends.org" target="_blank" rel="noopener">XAMPP</a>.
+                        <i class="bi bi-folder-check me-1"></i>Uma pasta <code>runaris-ghost</code> será criada.
                     </li>
                     <li class="mb-0">
-                        <i class="bi bi-ubuntu me-1"></i><strong>Linux:</strong>
-                        <a class="link-soft" href="https://www.php.net/manual/en/install.unix.debian.php" target="_blank" rel="noopener">debian/ubuntu</a> —
-                        <code>sudo apt install php-cli php-sqlite3 php-mbstring php-xml php-bcmath php-gd php-zip</code>
+                        <i class="bi bi-cpu me-1"></i><strong>Não é preciso instalar PHP.</strong> O runtime já vem dentro do pacote.
                     </li>
                 </ul>
                 <p class="text-dim small mb-0 mt-auto">
-                    Confira abrindo o terminal e digitando <code>php -v</code>.
                     <a class="link-soft" href="docs/INSTALACAO.html">Ver guia completo com todos os detalhes &rarr;</a>
                 </p>
             </div>
@@ -173,12 +163,12 @@
         <!-- Passo 2 -->
         <div class="col-lg-4">
             <div class="glass-card d-flex flex-column">
-                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">2</span>Inicie o servidor</h5>
-                <p class="text-dim small">Abra o <strong>Terminal</strong> (Prompt de Comando no Windows) <strong>dentro desta pasta</strong> e rode:</p>
-                <pre class="code mb-3">php artisan serve</pre>
+                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">2</span>Rode o start.bat</h5>
+                <p class="text-dim small">Dentro da pasta extraída, dê <strong>dois cliques</strong> em:</p>
+                <pre class="code mb-3">start.bat</pre>
                 <p class="text-dim small mb-0 mt-auto">
-                    Deixe essa janela aberta enquanto usa o aplicativo.
-                    Para parar, pressione <kbd>Ctrl</kbd> + <kbd>C</kbd>.
+                    Uma janela preta de servidor abre e fica aberta enquanto você usa o aplicativo.
+                    Para encerrar, feche a janela.
                 </p>
             </div>
         </div>
@@ -186,25 +176,21 @@
         <!-- Passo 3 -->
         <div class="col-lg-4">
             <div class="glass-card d-flex flex-column">
-                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">3</span>Abra o instalador</h5>
-                <p class="text-dim small">Com o servidor do passo 2 rodando, o assistente estará pronto:</p>
-                <div id="server-status" class="status wait mb-3" role="status">
-                    <i class="bi bi-hourglass-split me-1"></i>Verificando se o servidor está ativo&hellip;
+                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">3</span>O navegador abre sozinho</h5>
+                <p class="text-dim small">O <code>start.bat</code> abre o navegador no assistente de instalação automaticamente:</p>
+                <div class="status ok mb-3" role="status">
+                    <i class="bi bi-check-circle-fill me-1"></i>Assistente em <code>http://127.0.0.1:8000/install</code>
                 </div>
-                <a id="install-btn" href="http://127.0.0.1:8000/install" target="_blank" rel="noopener"
-                   class="btn btn-lg w-100 mt-auto btn-brand install-cta">
-                    <i class="bi bi-rocket-takeoff me-2"></i>Abrir instalador
-                </a>
-                <div class="text-center mt-2">
-                    <a class="link-soft small" href="http://127.0.0.1:8000/install" target="_blank" rel="noopener">http://127.0.0.1:8000/install</a>
-                </div>
+                <p class="text-dim small mb-0 mt-auto">
+                    Siga os passos do assistente: requisitos, idioma, banco, usuário e — opcional — sua chave de IA.
+                </p>
             </div>
         </div>
     </div>
 
     <p class="text-center text-dim small mt-5 mb-0">
         <i class="bi bi-box-seam me-1"></i>
-        Não é preciso instalar Composer nem Node.js — as dependências já vêm embutidas neste pacote.
+        Não é preciso instalar PHP, Composer nem Node.js — tudo já vem embutido neste pacote.
     </p>
 </main>
 
@@ -217,29 +203,5 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Verifica se o `php artisan serve` já está de pé (health em /up).
-    // ponytail: no-cors resolve só com o servidor no ar e rejeita com conexão recusada.
-    (function () {
-        const statusEl = document.getElementById('server-status');
-        const btn = document.getElementById('install-btn');
-
-        async function check() {
-            try {
-                await fetch('http://127.0.0.1:8000/up', { mode: 'no-cors', cache: 'no-store' });
-                statusEl.className = 'status ok mb-3';
-                statusEl.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>Servidor ativo — tudo pronto para instalar.';
-                btn.classList.add('ready');
-            } catch (e) {
-                statusEl.className = 'status wait mb-3';
-                statusEl.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Aguardando o servidor do passo 2&hellip;';
-                btn.classList.remove('ready');
-            }
-        }
-
-        check();
-        setInterval(check, 5000);
-    })();
-</script>
 </body>
 </html>
