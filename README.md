@@ -32,7 +32,34 @@
 
 Baixe o pacote **`runaris-ghost-win.zip`** na página de [Releases](https://github.com/vanheber/Runaris-Ghost/releases), extraia e **dê dois cliques em `start.bat`**. O PHP já vem embutido — nada a instalar. Siga o passo a passo em **[docs/INSTALACAO.html](docs/INSTALACAO.html)**.
 
-Outros sistemas (macOS/Linux): rode a partir do código-fonte (seção abaixo).
+---
+
+## 🍎🐧 macOS e Linux
+
+**Pacote (recomendado)** — o PHP já vem embutido, nada a instalar:
+
+| Sistema | Arquivo | Como abrir |
+|---|---|---|
+| macOS (Apple Silicon) | `runaris-ghost-mac-arm64.zip` | extraia e dê dois cliques em **`start.command`** |
+| Linux x86_64 | `runaris-ghost-linux-x64.zip` | extraia e rode **`./start.sh`** |
+| Linux arm64 | `runaris-ghost-linux-arm64.zip` | extraia e rode **`./start.sh`** |
+
+O launcher aplica a atualização pendente, escolhe uma porta livre, abre o navegador e serve `public/`.
+Na primeira abertura o macOS pode avisar que o arquivo é de desenvolvedor não identificado: clique com o **botão direito** em `start.command` → **Abrir** (é o seu programa local).
+
+**Direto do código-fonte** — desenvolvimento, ou arquitetura fora do pacote (ex.: Mac Intel):
+
+```bash
+composer install
+npm ci && npm run build   # só na primeira vez (gera public/build)
+./start.sh                # Linux — ou ./start.command no macOS
+```
+
+- Reverter a última atualização: `./start.sh --rollback` (ou `php artisan app:rollback`).
+- Sem interface gráfica (VPS/SSH): `NO_BROWSER=1 ./start.sh` — a URL aparece no terminal.
+- O `npm run build` é obrigatório no código-fonte: sem `public/build` o app responde **500** (o Laravel procura o manifest do Vite).
+
+> Mac Intel: apenas pelo código-fonte. O pacote embutido é Apple Silicon — o FrankenPHP parou de publicar binário Intel na v1.14 e o macOS 27 já não roda em Macs Intel.
 
 ---
 
@@ -65,8 +92,8 @@ php artisan serve
 
 O Runaris Ghost expõe um **servidor MCP** (Model Context Protocol) para que um agente de IA — Claude, Codex, opencode e afins — leia e escreva no santuário: manuscrito, fichas, Bíblia, IA literária, exports, snapshots e saúde da instalação.
 
-- **Windows (pacote)**: dê dois cliques em **`start-mcp.bat`**. Ele gera o token, imprime a URL e abre o servidor na porta `7788`. O app continua em `127.0.0.1` — só o MCP fica exposto na rede.
-- **macOS/Linux**: `./start-mcp.sh` (mesmo comportamento na rede) ou — melhor, se o agente roda na mesma máquina — `php artisan mcp:serve`, que fala stdio sem porta nem token.
+- **Pacote (qualquer SO)**: **`start-mcp.bat`** no Windows, **`./start-mcp.sh`** no macOS/Linux. Ele gera o token, imprime a URL e abre o servidor na porta `7788`. O app continua em `127.0.0.1` — só o MCP fica exposto na rede.
+- **Melhor, se o agente roda na mesma máquina**: `php artisan mcp:serve`, que fala stdio sem porta nem token.
 
 Sem o token do `.env` (`MCP_TOKEN`) nenhuma ferramenta roda. Guia completo, lista de ferramentas e segurança: **[docs/MCP.md](docs/MCP.md)**.
 

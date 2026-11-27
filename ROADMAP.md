@@ -33,13 +33,18 @@ Introdução de um modelo de "Apoio com Benefícios" para usuários que desejam 
 - **Plugins de Terceiros**: Arquitetura para permitir que a comunidade crie extensões para o editor.
 
 ### 🖥️ Distribuição Multiplataforma
-- **Windows (pacote)**: `runaris-ghost-win.zip` com runtime FrankenPHP embutido — extrair, dois cliques em `start.bat`, nada a instalar. **Status**: implementado.
-- **macOS (pacote)**: mesmo nível de experiência do Windows (runtime embutido, dois cliques, servidor local + navegador), sem exigir PHP/Composer/Node do autor. **Status**: na fila.
-  - **Binário**: FrankenPHP `darwin-arm64` (e `x64`) baixado no build, como o `build-dist.sh` já faz no Windows.
-  - **Launcher**: `start.command` equivalente ao `start.bat` (porta livre, aplica update pendente, abre o navegador).
-  - **Gatekeeper**: o pacote chega com quarentena — ou o usuário libera na primeira execução (Ajustes > Privacidade e Segurança), ou o build passa por assinatura + notarização Apple.
-  - **Update**: o Guardian precisa de um caminho de aplicação fora do `.bat` (hoje o pacote Windows depende dele para aplicar o zip no próximo boot).
-  - **MCP**: acompanha o pacote, como no Windows (token no `.env`, sobrevive à atualização).
+- **Windows (pacote)**: `runaris-ghost-win.zip` com runtime FrankenPHP embutido — extrair, dois cliques em `start.bat`, nada a instalar. **Status**: implementado e revalidado no pacote final (PHP 8.5.11 sem warnings, instalador, update e rollback via `artisan`).
+- **Launcher macOS/Linux**: `start.command` e `start.sh` — dois modos no mesmo arquivo: pacote (`runtime/frankenphp` embutido) ou código-fonte (PHP do sistema). **Status**: implementado.
+- **Atualização fora do `.bat`**: `php artisan app:apply-update` e `php artisan app:rollback`, chamados pelo launcher, com o mesmo layout de `storage/updates` do Windows. **Status**: implementado e testado nos três SOs.
+  - O runtime em execução não pode ser sobrescrito (Linux: `Text file busy`; Windows: DLL carregada travada), então o pacote extrai para `storage/updates/staging` e instala por `rename()`, com `copy()` só como fallback.
+  - Nem `ZipArchive` nem `copy()` preservam o bit de execução: `ensureExecutables()` reaplica 0755 nos launchers e no runtime a cada update/rollback.
+  - O snapshot exclui `runtime/` de propósito — é binário fixo; copiar ~170 MB por update não se paga.
+- **macOS (pacote)**: `runaris-ghost-mac-arm64.zip` (~89 MB) — extrair e dar dois cliques em `start.command`, sem instalar PHP. **Status**: implementado e testado em macOS arm64 (instalador, update 1.4→1.5, rollback e MCP). Mac Intel fora do escopo.
+  - **Binário**: FrankenPHP `darwin-arm64` pinado na v1.13.0 (PHP 8.5.11) em `runtime/`, com `php.ini` próprio e o shim `runtime/artisan.php`.
+  - **Gatekeeper**: o launcher remove a quarentena de `runtime/` na primeira execução; o primeiro duplo clique em `start.command` ainda pede botão direito → Abrir. Notarização Apple segue como melhoria (nice-to-have), não como bloqueio.
+  - **MCP**: `start-mcp.sh` sobe o mesmo runtime embutido; token no `.env`, sobrevive à atualização.
+- **Linux (pacote)**: `runaris-ghost-linux-x64.zip` e `runaris-ghost-linux-arm64.zip` (~75 MB) — binário estático em `runtime/`, launcher `start.sh`. **Status**: implementado e testado em Ubuntu 26.04 x86_64 (instalador com as 9 extensões exigidas, update com o runtime *dentro* do pacote, rollback e MCP). **arm64 sem máquina para o smoke test** — build conferido, execução não.
+- **Build reprodutível**: `./scripts/build-dist.sh [win|mac|linux-x64|linux-arm64|all]` com `FRANKEN_VERSION` pinado (padrão 1.13.0) e cache de download em `build_cache/`.
 
 ---
 

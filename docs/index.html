@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Runaris Ghost — Preparar e Instalar</title>
+    <title>Runaris Ghost — Baixar e Instalar</title>
+    <meta name="description" content="Baixe o Runaris Ghost para Windows, macOS ou Linux. O PHP já vem embutido: extraia e abra. Todos os dados ficam 100% locais.">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -54,9 +55,8 @@
         .link-soft { color: #a5b4fc; text-decoration: underline; text-underline-offset: 2px; }
         .link-soft:hover { color: #c7d2fe; }
         .text-dim { color: #cbd5e1; }
-        .intro { max-width: 40rem; }
+        .intro { max-width: 42rem; }
         .ls-wide { letter-spacing: 2px; }
-        .step-number { width: 2.5rem; height: 2.5rem; font-size: 1.1rem; }
 
         .glass-card {
             background: rgba(30, 41, 59, 0.7);
@@ -83,10 +83,11 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: #e2e8f0;
             border-radius: .75rem;
-            padding: 1rem;
+            padding: .75rem 1rem;
             font-size: .9rem;
             white-space: pre-wrap;
             word-break: break-all;
+            margin-bottom: 0;
         }
 
         .btn-brand {
@@ -103,25 +104,43 @@
             box-shadow: 0 10px 20px rgba(99, 102, 241, 0.35);
             transform: translateY(-2px);
         }
-        .install-cta { pointer-events: none; opacity: .5; }
-        .install-cta.ready { pointer-events: auto; opacity: 1; }
-
-        .status {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #cbd5e1;
+        .btn-outline-brand {
+            border: 1px solid rgba(165, 180, 252, 0.45);
+            color: #c7d2fe;
+            font-weight: 600;
             border-radius: 12px;
-            padding: .75rem 1rem;
+            transition: all .25s;
         }
-        .status.ok {
-            background: rgba(34, 197, 94, 0.12);
-            border-color: rgba(34, 197, 94, 0.3);
-            color: #86efac;
+        .btn-outline-brand:hover, .btn-outline-brand:focus {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(165, 180, 252, 0.8);
+            color: #fff;
         }
-        .status.wait {
-            background: rgba(250, 204, 21, 0.1);
-            border-color: rgba(250, 204, 21, 0.3);
-            color: #fde047;
+
+        .os-icon { font-size: 2.5rem; color: #a5b4fc; }
+        .os-size { color: #94a3b8; }
+
+        /* Pills dos passos, no tom do design system */
+        .nav-pills .nav-link {
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .nav-pills .nav-link:hover { color: #fff; border-color: rgba(165, 180, 252, 0.45); }
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .step-num {
+            width: 2rem; height: 2rem;
+            flex: 0 0 2rem;
+            font-size: .95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -134,71 +153,227 @@
     <header class="text-center mb-5">
         <img src="assets/lg-ghost-hz-color-inverted.svg" class="brand-logo-img mb-3" alt="Runaris Ghost">
         <span class="badge badge-soft text-uppercase fw-semibold mb-3 ls-wide">Santuário Digital para Autores</span>
+        <h1 class="font-display fw-bold mb-3">Baixe o Runaris Ghost</h1>
         <p class="text-dim lead mb-0 mx-auto intro">
-            Este pacote já vem completo — <strong>inclusive o PHP</strong>. São <strong>2 passos</strong> para instalar.
-            Todos os dados ficam <strong>100% locais</strong>.
+            Plataforma de escrita local-first para autores. O pacote já vem completo,
+            <strong>inclusive o PHP</strong>: extraia e abra. Todos os dados ficam <strong>100% locais</strong>.
         </p>
     </header>
 
-    <div class="row g-4 justify-content-center">
-        <!-- Passo 1 -->
-        <div class="col-lg-4">
-            <div class="glass-card d-flex flex-column">
-                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">1</span>Extraia o pacote</h5>
-                <p class="text-dim small">Clique com o botão direito no <code>runaris-ghost-win.zip</code> e escolha <strong>"Extrair tudo"</strong>.</p>
-                <ul class="list-unstyled small mb-3">
-                    <li class="mb-2">
-                        <i class="bi bi-folder-check me-1"></i>Uma pasta <code>runaris-ghost</code> será criada.
-                    </li>
-                    <li class="mb-0">
-                        <i class="bi bi-cpu me-1"></i><strong>Não é preciso instalar PHP.</strong> O runtime já vem dentro do pacote.
-                    </li>
-                </ul>
-                <p class="text-dim small mb-0 mt-auto">
-                    <a class="link-soft" href="docs/INSTALACAO.html">Ver guia completo com todos os detalhes &rarr;</a>
-                </p>
-            </div>
-        </div>
-
-        <!-- Passo 2 -->
-        <div class="col-lg-4">
-            <div class="glass-card d-flex flex-column">
-                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">2</span>Rode o start.bat</h5>
-                <p class="text-dim small">Dentro da pasta extraída, dê <strong>dois cliques</strong> em:</p>
-                <pre class="code mb-3">start.bat</pre>
-                <p class="text-dim small mb-0 mt-auto">
-                    Uma janela preta de servidor abre e fica aberta enquanto você usa o aplicativo.
-                    Para encerrar, feche a janela.
-                </p>
-            </div>
-        </div>
-
-        <!-- Passo 3 -->
-        <div class="col-lg-4">
-            <div class="glass-card d-flex flex-column">
-                <h5 class="fw-bold mb-3"><span class="badge text-bg-primary step-number me-2">3</span>O navegador abre sozinho</h5>
-                <p class="text-dim small">O <code>start.bat</code> abre o navegador no assistente de instalação automaticamente:</p>
-                <div class="status ok mb-3" role="status">
-                    <i class="bi bi-check-circle-fill me-1"></i>Assistente em <code>http://127.0.0.1:8000/install</code>
+    <!-- Downloads -->
+    <section id="download" class="mb-5">
+        <div class="row g-4 justify-content-center">
+            <!-- macOS -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card d-flex flex-column text-center">
+                    <i class="bi bi-apple os-icon mb-3" aria-hidden="true"></i>
+                    <h2 class="h5 fw-bold mb-1">macOS</h2>
+                    <p class="text-dim small mb-3">Apple Silicon (M1 ou superior) · <span class="os-size">89 MB</span></p>
+                    <a class="btn btn-brand w-100 mt-auto"
+                       href="https://github.com/vanheber/Runaris-Ghost/releases/latest/download/runaris-ghost-mac-arm64.zip">
+                        <i class="bi bi-download me-2" aria-hidden="true"></i>Baixar para macOS
+                    </a>
+                    <p class="text-dim small mt-3 mb-0">Mac Intel: instale pelo código-fonte.</p>
                 </div>
-                <p class="text-dim small mb-0 mt-auto">
-                    Siga os passos do assistente: requisitos, idioma, banco, usuário e — opcional — sua chave de IA.
-                </p>
+            </div>
+
+            <!-- Windows -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card d-flex flex-column text-center">
+                    <i class="bi bi-windows os-icon mb-3" aria-hidden="true"></i>
+                    <h2 class="h5 fw-bold mb-1">Windows</h2>
+                    <p class="text-dim small mb-3">Windows 10 ou 11 · 64 bits · <span class="os-size">73 MB</span></p>
+                    <a class="btn btn-brand w-100 mt-auto"
+                       href="https://github.com/vanheber/Runaris-Ghost/releases/latest/download/runaris-ghost-win.zip">
+                        <i class="bi bi-download me-2" aria-hidden="true"></i>Baixar para Windows
+                    </a>
+                    <p class="text-dim small mt-3 mb-0">Pode pedir <em>Mais informações → Executar mesmo assim</em>.</p>
+                </div>
+            </div>
+
+            <!-- Linux -->
+            <div class="col-md-6 col-lg-4">
+                <div class="glass-card d-flex flex-column text-center">
+                    <i class="bi bi-ubuntu os-icon mb-3" aria-hidden="true"></i>
+                    <h2 class="h5 fw-bold mb-1">Linux</h2>
+                    <p class="text-dim small mb-3">Binário estático — roda em qualquer distro</p>
+                    <a class="btn btn-brand w-100 mb-2"
+                       href="https://github.com/vanheber/Runaris-Ghost/releases/latest/download/runaris-ghost-linux-x64.zip">
+                        <i class="bi bi-download me-2" aria-hidden="true"></i>x86_64 · <span class="os-size">76 MB</span>
+                    </a>
+                    <a class="btn btn-outline-brand w-100 mt-auto"
+                       href="https://github.com/vanheber/Runaris-Ghost/releases/latest/download/runaris-ghost-linux-arm64.zip">
+                        <i class="bi bi-download me-2" aria-hidden="true"></i>arm64 · <span class="os-size">74 MB</span>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <p class="text-center text-dim small mt-5 mb-0">
-        <i class="bi bi-box-seam me-1"></i>
-        Não é preciso instalar PHP, Composer nem Node.js — tudo já vem embutido neste pacote.
-    </p>
+        <p class="text-center text-dim small mt-4 mb-0">
+            <i class="bi bi-tag me-1" aria-hidden="true"></i>
+            Os links apontam sempre para a <strong>última versão</strong>.
+            Histórico e notas de cada release em
+            <a class="link-soft" href="https://github.com/vanheber/Runaris-Ghost/releases" target="_blank" rel="noopener">github.com/vanheber/Runaris-Ghost/releases</a>.
+        </p>
+    </section>
+
+    <!-- Passos -->
+    <section id="passos" class="mb-5">
+        <h2 class="font-display fw-bold text-center mb-4">Como instalar</h2>
+
+        <div class="d-flex justify-content-center mb-4">
+            <ul class="nav nav-pills gap-2" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab-win" data-bs-toggle="pill" data-bs-target="#pane-win"
+                            type="button" role="tab" aria-controls="pane-win" aria-selected="true">
+                        <i class="bi bi-windows me-1" aria-hidden="true"></i>Windows
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-mac" data-bs-toggle="pill" data-bs-target="#pane-mac"
+                            type="button" role="tab" aria-controls="pane-mac" aria-selected="false">
+                        <i class="bi bi-apple me-1" aria-hidden="true"></i>macOS
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-linux" data-bs-toggle="pill" data-bs-target="#pane-linux"
+                            type="button" role="tab" aria-controls="pane-linux" aria-selected="false">
+                        <i class="bi bi-ubuntu me-1" aria-hidden="true"></i>Linux
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content">
+            <!-- Windows -->
+            <div class="tab-pane fade show active" id="pane-win" role="tabpanel" aria-labelledby="tab-win">
+                <div class="glass-card">
+                    <ol class="list-unstyled mb-0">
+                        <li class="d-flex gap-3 mb-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">1</span>
+                            <div>
+                                <strong>Extraia o ZIP completo</strong>
+                                <p class="text-dim small mb-2">Botão direito no <code>runaris-ghost-win.zip</code> → <em>Extrair tudo</em>. Inclua a pasta <code>runtime/</code>.</p>
+                            </div>
+                        </li>
+                        <li class="d-flex gap-3 mb-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">2</span>
+                            <div class="w-100">
+                                <strong>Dê dois cliques em</strong>
+                                <pre class="code mt-2 mb-2">start.bat</pre>
+                                <p class="text-dim small mb-0">Uma janela preta abre e fica aberta enquanto você usa o app. Feche-a para encerrar.</p>
+                            </div>
+                        </li>
+                        <li class="d-flex gap-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">3</span>
+                            <div>
+                                <strong>O navegador abre sozinho</strong>
+                                <p class="text-dim small mb-0">No assistente de instalação: requisitos, banco, seu usuário e — opcional — a chave de IA.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- macOS -->
+            <div class="tab-pane fade" id="pane-mac" role="tabpanel" aria-labelledby="tab-mac">
+                <div class="glass-card">
+                    <ol class="list-unstyled mb-0">
+                        <li class="d-flex gap-3 mb-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">1</span>
+                            <div>
+                                <strong>Extraia o ZIP</strong>
+                                <p class="text-dim small mb-0">Dois cliques no <code>runaris-ghost-mac-arm64.zip</code> — o Finder cria a pasta com o app.</p>
+                            </div>
+                        </li>
+                        <li class="d-flex gap-3 mb-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">2</span>
+                            <div>
+                                <strong>Primeira abertura</strong>
+                                <p class="text-dim small mb-0">Clique com o <strong>botão direito</strong> em <code>start.command</code> → <em>Abrir</em>. O macOS avisa que o arquivo é de desenvolvedor não identificado; é o seu próprio programa local.</p>
+                            </div>
+                        </li>
+                        <li class="d-flex gap-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">3</span>
+                            <div>
+                                <strong>O navegador abre sozinho</strong>
+                                <p class="text-dim small mb-0">O Terminal fica aberto com o servidor. <code>Ctrl+C</code> ou fechá-lo encerra o app.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Linux -->
+            <div class="tab-pane fade" id="pane-linux" role="tabpanel" aria-labelledby="tab-linux">
+                <div class="glass-card">
+                    <ol class="list-unstyled mb-0">
+                        <li class="d-flex gap-3 mb-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">1</span>
+                            <div class="w-100">
+                                <strong>Extraia e rode</strong>
+                                <pre class="code mt-2 mb-2">unzip runaris-ghost-linux-x64.zip -d runaris-ghost
+cd runaris-ghost && ./start.sh</pre>
+                            </div>
+                        </li>
+                        <li class="d-flex gap-3 mb-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">2</span>
+                            <div>
+                                <strong>Se o script não abrir</strong>
+                                <p class="text-dim small mb-2">Alguns gerenciadores de arquivo perdem a permissão de execução:</p>
+                                <pre class="code mb-0">chmod +x start.sh start-mcp.sh runtime/frankenphp</pre>
+                            </div>
+                        </li>
+                        <li class="d-flex gap-3">
+                            <span class="badge text-bg-primary rounded-circle step-num">3</span>
+                            <div>
+                                <strong>O navegador abre sozinho</strong>
+                                <p class="text-dim small mb-0">Sem interface gráfica (VPS/SSH)? <code>NO_BROWSER=1 ./start.sh</code> imprime a URL no terminal.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-dim small mt-4 mb-0">
+            <i class="bi bi-box-seam me-1" aria-hidden="true"></i>
+            Não é preciso instalar PHP, Composer nem Node.js — tudo vem embutido no pacote.
+            Reserve <strong>~300 MB</strong> de espaço livre.
+        </p>
+    </section>
+
+    <!-- Atualizar / reverter -->
+    <section class="mb-4">
+        <div class="glass-card">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h3 class="h6 fw-bold mb-2"><i class="bi bi-cloud-arrow-down me-2 text-primary" aria-hidden="true"></i>Atualizar</h3>
+                    <p class="text-dim small mb-0">
+                        Pelo próprio app: <strong>Configurações → Guardião</strong>. O pacote é baixado e aplicado na próxima abertura.
+                        Seus manuscritos, seu banco e sua configuração nunca são tocados.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="h6 fw-bold mb-2"><i class="bi bi-arrow-counterclockwise me-2 text-primary" aria-hidden="true"></i>Reverter</h3>
+                    <p class="text-dim small mb-0">
+                        <code>rollback.bat</code> no Windows · <code>./start.sh --rollback</code> no macOS/Linux.
+                        O snapshot da versão anterior fica em <code>storage/updates/previous</code>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 <footer class="border-top py-4 text-center text-dim small">
     <div class="container">
-        <i class="bi bi-c-circle me-1"></i> 2024-2026 Runaris Ghost — GPL-3.0 ·
+        <i class="bi bi-c-circle me-1" aria-hidden="true"></i> 2024-2026 Runaris Ghost — GPL-3.0 ·
         <a href="https://github.com/vanheber/Runaris-Ghost" target="_blank" rel="noopener" class="link-soft">Código-fonte</a>
-        <div class="mt-1">Guia completo: <a href="docs/INSTALACAO.html" class="link-soft">docs/INSTALACAO.html</a></div>
+        <div class="mt-1">
+            Guia completo: <a href="docs/INSTALACAO.html" class="link-soft">docs/INSTALACAO.html</a>
+            · Servidor MCP: <a href="docs/MCP.md" class="link-soft">docs/MCP.md</a>
+        </div>
     </div>
 </footer>
 

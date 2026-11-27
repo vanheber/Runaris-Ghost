@@ -52,6 +52,7 @@
                     <li class="nav-item"><a class="nav-link" href="#requisitos">1. Requisitos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#php">2. Instalar PHP</a></li>
                     <li class="nav-item"><a class="nav-link" href="#instalar">3. Instalar o app</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#unix">macOS/Linux</a></li>
                     <li class="nav-item"><a class="nav-link" href="#assistente">4. Assistente</a></li>
                     <li class="nav-item"><a class="nav-link" href="#atualizar">Atualizar</a></li>
                 </ul>
@@ -151,8 +152,10 @@
                 <h5 class="fw-bold mb-4"><span class="badge text-bg-primary step-number me-2">3</span>Instalando o Runaris Ghost (Windows)</h5>
                 <ol class="mb-4">
                     <li class="mb-3">
-                        <strong>Baixe o pacote</strong> <code>runaris-ghost-win.zip</code> da página de Releases do projeto
-                        (<a href="https://github.com/vanheber/Runaris-Ghost/releases" target="_blank" rel="noopener">github.com/vanheber/Runaris-Ghost/releases</a>).
+                        <strong>Baixe o pacote</strong>
+                        <a href="https://github.com/vanheber/Runaris-Ghost/releases/latest/download/runaris-ghost-win.zip" target="_blank" rel="noopener"><code>runaris-ghost-win.zip</code></a>
+                        (73 MB) — download direto da última versão. Todos os arquivos ficam em
+                        <a href="https://github.com/vanheber/Runaris-Ghost/releases" target="_blank" rel="noopener">Releases</a>.
                         <div class="form-text">O pacote contém o código, todas as dependências <em>e</em> o PHP embutido — nada a instalar.</div>
                     </li>
                     <li class="mb-3">
@@ -179,6 +182,54 @@
                         Para fixar outra, basta iniciar a instalação por um servidor próprio apontado para a pasta <strong><code>public/</code></strong> — nunca para a raiz do projeto.
                     </p>
                 </div>
+            </div>
+        </section>
+
+        <!-- 3b. macOS / Linux -->
+        <section id="unix" class="mb-5">
+            <div class="card bg-body-tertiary border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-4"><span class="badge text-bg-secondary step-number me-2">3b</span>macOS e Linux</h5>
+
+                <p class="text-body-secondary"><strong>Pacote (recomendado)</strong> — o PHP já vem embutido, nada a instalar:</p>
+                <div class="table-responsive mb-3">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead><tr><th>Sistema</th><th>Arquivo</th><th>Como abrir</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>macOS (Apple Silicon)</td>
+                                <td><a href="https://github.com/vanheber/Runaris-Ghost/releases/latest/download/runaris-ghost-mac-arm64.zip" target="_blank" rel="noopener"><code>runaris-ghost-mac-arm64.zip</code></a><br><span class="text-body-secondary small">89 MB</span></td>
+                                <td>extraia e dê dois cliques em <code>start.command</code></td>
+                            </tr>
+                            <tr>
+                                <td>Linux x86_64</td>
+                                <td><a href="https://github.com/vanheber/Runaris-Ghost/releases/latest/download/runaris-ghost-linux-x64.zip" target="_blank" rel="noopener"><code>runaris-ghost-linux-x64.zip</code></a><br><span class="text-body-secondary small">76 MB</span></td>
+                                <td>extraia e rode <code>./start.sh</code></td>
+                            </tr>
+                            <tr>
+                                <td>Linux arm64</td>
+                                <td><a href="https://github.com/vanheber/Runaris-Ghost/releases/latest/download/runaris-ghost-linux-arm64.zip" target="_blank" rel="noopener"><code>runaris-ghost-linux-arm64.zip</code></a><br><span class="text-body-secondary small">74 MB</span></td>
+                                <td>extraia e rode <code>./start.sh</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-warning border-0 shadow-sm small mb-4">
+                    <i class="bi bi-shield-exclamation me-2"></i>
+                    <strong>Primeira abertura no macOS:</strong> o sistema pode avisar que o arquivo é de desenvolvedor não identificado.
+                    Clique com o <strong>botão direito</strong> em <code>start.command</code> → <strong>Abrir</strong>. O launcher já remove a quarentena
+                    do runtime embutido sozinho.
+                </div>
+
+                <p class="text-body-secondary mb-2"><strong>Direto do código-fonte</strong> — para desenvolvimento ou arquitetura fora do pacote (ex.: Mac Intel):</p>
+                <pre class="code mb-3">composer install
+npm ci &amp;&amp; npm run build      # só na primeira vez (gera public/build)
+./start.sh                   # Linux — ou ./start.command no macOS</pre>
+                <ul class="list-unstyled mb-0 small text-body-secondary">
+                    <li class="mb-2"><i class="bi bi-check2-circle text-success me-2"></i>O launcher aplica a atualização pendente, acha uma porta livre, abre o navegador e serve a pasta <code>public/</code>.</li>
+                    <li class="mb-2"><i class="bi bi-terminal text-success me-2"></i>Sem tela (VPS/SSH): <code>NO_BROWSER=1 ./start.sh</code> — a URL aparece no terminal.</li>
+                    <li class="mb-2"><i class="bi bi-arrow-counterclockwise text-warning me-2"></i>Reverter a última atualização: <code>./start.sh --rollback</code> (ou <code>php artisan app:rollback</code>).</li>
+                    <li class="mb-0"><i class="bi bi-exclamation-triangle text-warning me-2"></i>No código-fonte o <code>npm run build</code> é obrigatório: sem <code>public/build</code> o app responde erro 500 (o Laravel procura o manifest do Vite).</li>
+                </ul>
             </div>
         </section>
 
@@ -224,6 +275,13 @@
                 <div class="alert alert-info border-0 shadow-sm mb-0 small">
                     <i class="bi bi-info-circle me-2"></i>
                     <strong>Por que assim?</strong> Os arquivos <code>database/database.sqlite</code>, <code>storage/</code> (projetos e backups) e <code>.env</code> nunca entram no pacote de atualização — ficam no lugar. O botão <em>"Atualizar Sistema"</em> só mostra a opção "Desfazer atualização" em instalações por <code>git clone</code>; no pacote Windows, o rollback é o <code>rollback.bat</code>.
+                </div>
+                <div class="alert alert-secondary border-0 shadow-sm mt-3 mb-0 small">
+                    <i class="bi bi-terminal me-2"></i>
+                    <strong>macOS/Linux:</strong> instalação por pacote aplica a atualização no boot do launcher
+                    (<code>php artisan app:apply-update</code>) e reverte com <code>./start.sh --rollback</code>
+                    (<code>php artisan app:rollback</code>). O snapshot fica em <code>storage/updates/previous</code>.
+                    Instalação por <code>git clone</code> continua atualizando com <code>git pull</code>.
                 </div>
             </div>
         </section>

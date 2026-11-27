@@ -28,11 +28,38 @@
 
 ---
 
-## 📦 Installation (End User)
+## 📦 Installation (End User — Windows)
 
 Download the **`runaris-ghost-win.zip`** package from the [Releases](https://github.com/vanheber/Runaris-Ghost/releases) page, extract it, and **double-click `start.bat`**. PHP is bundled — nothing to install. Follow the step-by-step in **[docs/INSTALACAO.html](docs/INSTALACAO.html)**.
 
-Other systems (macOS/Linux): run from source (see below).
+---
+
+## 🍎🐧 macOS and Linux
+
+**Package (recommended)** — PHP is bundled, nothing to install:
+
+| System | File | How to open |
+|---|---|---|
+| macOS (Apple Silicon) | `runaris-ghost-mac-arm64.zip` | extract and double-click **`start.command`** |
+| Linux x86_64 | `runaris-ghost-linux-x64.zip` | extract and run **`./start.sh`** |
+| Linux arm64 | `runaris-ghost-linux-arm64.zip` | extract and run **`./start.sh`** |
+
+The launcher applies a pending update, picks a free port, opens the browser and serves `public/`.
+On first launch macOS may warn about an unidentified developer: **right-click** `start.command` → **Open** (it is your own local program).
+
+**From source** — development, or an architecture outside the package (e.g. Intel Mac):
+
+```bash
+composer install
+npm ci && npm run build   # first run only (generates public/build)
+./start.sh                # Linux — or ./start.command on macOS
+```
+
+- Revert the last update: `./start.sh --rollback` (or `php artisan app:rollback`).
+- Headless (VPS/SSH): `NO_BROWSER=1 ./start.sh` — the URL is printed in the terminal.
+- `npm run build` is mandatory from source: without `public/build` the app answers **500** (Laravel looks for the Vite manifest).
+
+> Intel Mac: source install only. The bundled package is Apple Silicon — FrankenPHP stopped publishing Intel binaries in v1.14 and macOS 27 no longer runs on Intel Macs.
 
 ---
 
@@ -58,6 +85,17 @@ php artisan serve
 ```
 
 *Note: We do not offer support for environment or manual compilation issues. If you find a **real technical bug** in the code, open an Issue.*
+
+---
+
+## 🤖 MCP Server (AI agents)
+
+Runaris Ghost exposes an **MCP server** (Model Context Protocol) so an AI agent — Claude, Codex, opencode and the like — can read and write in the sanctuary: manuscript, cards, Bible, literary AI, exports, snapshots and installation health.
+
+- **Package (any OS)**: **`start-mcp.bat`** on Windows, **`./start-mcp.sh`** on macOS/Linux. It generates the token, prints the URL and serves on port `7788`. The app stays on `127.0.0.1` — only the MCP is exposed on the network.
+- **Better, when the agent runs on the same machine**: `php artisan mcp:serve`, which speaks stdio with no port and no token.
+
+Without the `.env` token (`MCP_TOKEN`) nothing runs. Full guide, tool list and security: **[docs/MCP.md](docs/MCP.md)**.
 
 ---
 

@@ -19,6 +19,12 @@ A change is only done when it works on **both**: never assume a git clone, shell
 
 Installations distributed as the `runaris-ghost-win.zip` package (Windows, bundles a FrankenPHP runtime in `runtime/`, no git) are **updated from inside the app** (Guardian Update System): it downloads the new zip and `start.bat` applies it on the next launch — `storage/`, `database/database.sqlite` and `.env` are never in the zip, so data survives. `rollback.bat` restores a pre-update snapshot. The Guardian in-app "update" action requires the packaged install or git (see `docs/INSTALACAO.html`).
 
+For macOS/Linux the same flow runs in PHP instead of a `.bat`: `./start.sh` (Linux) / `./start.command` (macOS) call `php artisan app:apply-update` before serving, and `./start.sh --rollback` calls `php artisan app:rollback`. Both commands share the `start.bat` layout (`storage/updates/pending.zip` + `storage/updates/previous`), so a snapshot made by one restores in the other. A failed update restores itself; `.env`, `storage/` and the SQLite files are never touched.
+
+Packages are built per OS by `./scripts/build-dist.sh [win|mac|linux-x64|linux-arm64|all]`, with FrankenPHP pinned (`FRANKEN_VERSION`, default `1.13.0` = PHP 8.5.11) for a reproducible build. Each package carries the runtime in `runtime/` — on macOS/Linux that is `frankenphp`, `php.ini` and `artisan.php` (a shim: the FrankenPHP `php-cli` puts the binary in `$argv[0]`, so Artisan needs the argv normalised). The launchers live at the package root and use `runtime/frankenphp` when present, falling back to the system PHP otherwise. Mac Intel is out of scope for packages (arm64 only).
+
+Two platform lessons are baked into the update flow: the running runtime binary cannot be overwritten (Linux returns `Text file busy`, Windows locks loaded DLLs), so a package is extracted to `storage/updates/staging` and installed with `rename()` (`copy()` only as fallback); and neither `ZipArchive` nor `copy()` preserves the unix exec bit, so `ensureExecutables()` reapplies `0755` to the launchers and runtime after every apply/rollback. The snapshot deliberately excludes `runtime/`.
+
 ## Key terms
 
 | Term | Meaning |
@@ -62,6 +68,7 @@ npm install          # JS dependencies
 php artisan serve    # Dev server (port 8000)
 npm run dev          # Vite dev server (HMR on port 5173)
 php artisan migrate  # Run database migrations
+./start.sh           # Launcher macOS/Linux (porta livre + navegador); ./start.sh --rollback reverte update
 ```
 
 ```bash
@@ -109,7 +116,9 @@ Servidor MCP dentro do app, para um agente operar o santuário pela rede. Proces
 | `app/Console/Commands/McpTokenCommand.php` | `php artisan mcp:token [--reset]` — gera e imprime URL + token |
 | `app/Console/Commands/McpServeCommand.php` | `php artisan mcp:serve` — mesmo servidor via stdio |
 | `scripts/dist/win/start-mcp.bat` | Launcher Windows (token, porta, firewall) |
+| `scripts/build-dist.sh` | Build dos pacotes por SO (runtime pinado, cache em `build_cache/`) |
 | `start-mcp.sh` | Launcher macOS/Linux (`php -S`; mesmo fluxo do .bat) |
+| `start.sh` / `start.command` | Launcher macOS/Linux do app (pacote ou código-fonte; porta livre, update, navegador) |
 
 Autenticação: `MCP_TOKEN` no `.env`, header `Authorization: Bearer`. Sem token nada roda; o token sobrevive ao update porque o `.env` não entra no zip. Guia: `docs/MCP.md`.
 
