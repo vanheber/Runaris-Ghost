@@ -697,7 +697,7 @@ class Handlers
             'staged' => $packaged,
             'restart_required' => $packaged,
             'message' => $packaged
-                ? 'Pacote baixado. Feche o start.bat e abra novamente para aplicar a atualização.'
+                ? 'Pacote baixado. Feche o launcher e abra o Runaris Ghost novamente para aplicar a atualização.'
                 : 'Sistema atualizado.',
         ];
     }

@@ -32,7 +32,7 @@ class UpdateController extends Controller
             $this->updateService->runUpdate();
 
             if ($this->updateService->isPackagedInstall()) {
-                return redirect('/settings?tab=system')->with('success', __('Atualização baixada! Feche esta janela e execute o start.bat novamente para aplicar.'));
+                return redirect('/settings?tab=system')->with('success', __('Atualização baixada! Feche esta janela e abra o Runaris Ghost novamente para aplicar.'));
             }
 
             return redirect('/settings?tab=system')->with('success', __('Sistema atualizado com sucesso para a versão mais recente.'));

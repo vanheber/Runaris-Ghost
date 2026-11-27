@@ -3,6 +3,8 @@
 /.env
 /.phpunit.result.cache
 /build_temp
+/build_payload
+/build_cache
 /runaris-ghost-*.zip
 /public/build
 /public/hot

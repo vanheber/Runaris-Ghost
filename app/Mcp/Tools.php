@@ -389,7 +389,7 @@ class Tools
 
             // ----------------------------------------------------------------- ops
             'system_status' => [
-                'description' => 'Saúde da instalação: versão, modo (pacote Windows ou git), PHP, banco, IA configurada, token do MCP, update pendente.',
+                'description' => 'Saúde da instalação: versão, modo (pacote com runtime embutido ou git), PHP, banco, IA configurada, token do MCP, update pendente.',
                 'handler' => 'systemStatus',
                 'inputSchema' => $this->schema([]),
             ],
@@ -399,7 +399,7 @@ class Tools
                 'inputSchema' => $this->schema([]),
             ],
             'update_apply' => [
-                'description' => 'Baixa a atualização. Em instalação empacotada (Windows) ela é aplicada ao reabrir o start.bat.',
+                'description' => 'Baixa a atualização. Em instalação empacotada ela é aplicada ao reabrir o launcher (start.bat, start.command ou start.sh).',
                 'handler' => 'updateApply',
                 'inputSchema' => $this->schema([]),
             ],

@@ -181,12 +181,12 @@
                             @endif
                         </div>
                         
-                        @php($packaged = is_dir(base_path('runtime')))
+                        @php($packaged = app(\App\Services\UpdateService::class)->isPackagedInstall())
                         <div class="mt-3">
                             <p class="text-body-secondary small mb-0">
                                 <i class="bi bi-info-circle me-1"></i>
                                 @if($packaged)
-                                    {{ __('O pacote será baixado agora. Feche esta janela e execute o start.bat novamente para aplicar a atualização.') }}
+                                    {{ __('O pacote será baixado agora. Feche esta janela e abra o Runaris Ghost novamente para aplicar a atualização.') }}
                                 @else
                                     {{ __('Um backup de segurança é criado automaticamente antes de qualquer atualização.') }}
                                 @endif
@@ -194,7 +194,7 @@
                             @if($packaged)
                                 <p class="text-body-secondary small mb-0 mt-1">
                                     <i class="bi bi-arrow-counterclockwise me-1"></i>
-                                    {{ __('Para reverter uma atualização, feche o programa e execute o rollback.bat na pasta da instalação.') }}
+                                    {{ __('Para reverter uma atualização, feche o programa e use o launcher de rollback da sua instalação (rollback.bat, ou ./start.sh --rollback).') }}
                                 </p>
                             @endif
                         </div>
